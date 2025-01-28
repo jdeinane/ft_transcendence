@@ -1,5 +1,7 @@
 version: latest
 
+
+
 services:
   # backend:
   #   container_name: backend
@@ -29,3 +31,5 @@ services:
 networks:
   ft_transcendence:
     driver: bridge
+
+# pour tester: http://localhost:8080/

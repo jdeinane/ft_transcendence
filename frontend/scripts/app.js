@@ -1,7 +1,14 @@
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 const routes = {
-	"/": "<h1>Bienvenue sur ft_transcendence</h1>",
+	"/": `
+	<h1>Bienvenue sur ft_transcendence</h1>
+	<button id="play-now"> Jouer maintenant !</button>
+	`,
+	"/game": `
+	<h1>Jouez au Pong</h1>
+	<canvas id="pong" width="800" height="400" style="border: 1px solid black;"></canvas>
+	`,
 	"/login": `
 	  <h1>Connexion</h1>
 	  <form id="login-form">
@@ -37,7 +44,7 @@ const routes = {
 	const app = document.getElementById("app");
 	const cleanPath = path.replace("#", ""); // Enlève le hash #
 	app.innerHTML = routes[cleanPath] || routes["*"]; // Affiche la route correspondante ou 404
-  
+
 	// Gestion de la page Connexion
 	if (cleanPath === "/login") {
 	  const form = document.getElementById("login-form");
@@ -71,8 +78,17 @@ const routes = {
 		console.log("Inscription réussie :", username);
 	  });
 	}
-  
-	// Met à jour le lien actif
+
+	if (cleanPath == "/") {
+		const playNowButton = document.getElementById("play-now");
+		playNowButton.addEventListener("click", () => {
+			navigate("#/game");
+		});
+	}
+
+	if (cleanPath == "/game") {
+		loadGameScript();
+	}
 	updateActiveLink(cleanPath);
   }
   
@@ -88,7 +104,16 @@ const routes = {
 	});
   }
   
-
+  function loadGameScript() {
+	const existingScript = document.querySelector('script[src="./scripts/pongGame.js"]');
+	if (existingScript) existingScript.remove(); // Évite de charger plusieurs fois le même script
+  
+	const script = document.createElement("script");
+	script.src = "./scripts/pongGame.js";
+	document.body.appendChild(script);
+  }
+  
+  
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
 
   document.addEventListener("DOMContentLoaded", () => {
