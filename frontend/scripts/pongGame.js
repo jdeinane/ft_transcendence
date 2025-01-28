@@ -25,8 +25,8 @@ export function startPongGame(canvas, isSinglePlayer) {
 	const keys = {
 	  w: false, // Joueur 1 haut
 	  s: false, // Joueur 1 bas
-	  ArrowUp: false, // Joueur 2 haut
-	  ArrowDown: false, // Joueur 2 bas
+	  i: false, // Joueur 2 haut
+	  k: false, // Joueur 2 bas
 	};
   
 	function draw() {
@@ -97,9 +97,9 @@ export function startPongGame(canvas, isSinglePlayer) {
 	  if (keys.s) paddle1Y += 5;
   
 	  if (!isSinglePlayer) {
-		// Mode 2 joueurs : Déplacer le paddle 2 avec ArrowUp et ArrowDown
-		if (keys.ArrowUp) paddle2Y -= 5;
-		if (keys.ArrowDown) paddle2Y += 5;
+		// Mode 2 joueurs : Déplacer le paddle 2 avec I et K
+		if (keys.i) paddle2Y -= 5;
+		if (keys.k) paddle2Y += 5;
 	  } else {
 		// Mode 1 joueur : IA pour le paddle 2
 		if (ballY < paddle2Y + paddleHeight / 2) {
