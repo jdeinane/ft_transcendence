@@ -14,58 +14,61 @@ const routes = {
   };
 
 
-// NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
+  // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
-function navigate(path) {
+  function navigate(path) {
 	const app = document.getElementById("app");
-	app.innerHTML = routes[path] || "<h1>Page non trouvée</h1>";
+	const cleanPath = path.replace("#", ""); // Enlève le hash #
+	app.innerHTML = routes[cleanPath] || "<h1>Page non trouvée</h1>";
 	window.history.pushState({}, "", path); // Met a jour l'URL sans recharger la page
-
-	if (path == "/login") {
-		const form = document.getElementById("login-form");
-		form.addEventListener("submit", async (e) => {
-			e.preventDefault();
-			const data = new FormData(form);
-			console.log("Nom d'utilisateur :", data.get("username"));
-			console.log("Mot de passe :", data.get("password"));
-		});
+  
+	if (cleanPath === "/login") {
+	  const form = document.getElementById("login-form");
+	  form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const data = new FormData(form);
+		console.log("Nom d'utilisateur :", data.get("username"));
+		console.log("Mot de passe :", data.get("password"));
+	  });
 	}
-}
+  }
 
 
-// FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
-document.addEventListener("DOMContentLoaded", () => {
+  // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
+  document.addEventListener("DOMContentLoaded", () => {
 	document.body.addEventListener("click", (e) => {
 	  if (e.target.matches("[data-link]")) {
 		e.preventDefault();
 		navigate(e.target.getAttribute("href"));
 	  }
 	});
-	navigate(window.location.pathname);
-  });		
-// Exemple basique, ces donnees seront envoyees au backend via une API
 
 
-// GESTION MULTILINGUE: Charge les traductions depuis lang.json
-async function loadLanguage(lang = "en") {
-	const response = await fetch("lang.json");
-	const translations = await response.json();
+	// GESTION MULTILINGUE: Ajoute un sélecteur de langues dynamiques
 
-	const app = document.getElementById("app");
-	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
-}
-
-document.addEventListener("DOMContentLoaded", () => {
 	const languageSelector = document.createElement("select");
 	languageSelector.innerHTML = `
-		<option value="en">English</option>
-		<option value="fr">Français</option>
+	  <option value="en">English</option>
+	  <option value="fr">Français</option>
 	`;
 	document.body.insertBefore(languageSelector, document.getElementById("app"));
-
+  
 	languageSelector.addEventListener("change", (e) => {
-		loadLanguage(e.target.value);
+	  loadLanguage(e.target.value);
 	});
-
+  
 	loadLanguage();
-});
+	navigate(window.location.hash || "#/" );
+  });
+
+
+  // GESTION MULTILINGUE: Charge les traductions depuis lang.json
+
+  async function loadLanguage(lang = "en") {
+	const response = await fetch("lang.json");
+	const translations = await response.json();
+  
+	const app = document.getElementById("app");
+	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
+  }
+  

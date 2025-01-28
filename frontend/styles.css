@@ -24,6 +24,19 @@ header nav a:hover {
 #app {
 	padding: 2em;
 	text-align: center;
+	min-height: 80vh;
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;  
+}
+
+select {
+	margin: 1em;
+	padding: 0.5em;
+	border-radius: 5px;
+	border: 1px solid #ccc;
+	font-size: 1em;
 }
 
 footer {
