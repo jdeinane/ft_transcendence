@@ -27,22 +27,29 @@ export function handleSignUp() {
 		e.preventDefault();
 		const data = new FormData(form);
 		if (!validateSignupForm(data)) return;
-
-		const response = await fetch("/api/signup", {
-			method: "POST",
-			headers: {"Content-Type": "application/json"},
-			body: JSON.stringify({
-				username: data.get("username"),
-				email: data.get("email"),
-				password: data.get("password"),
-			}),
-		});
-		const result = await response.json();
-		if (response.ok) {
-			alert("Inscription réussie !");
-			navigate("/");
-		} else {
-			alert(`Erreur: ${result.message}`);
+		
+		showLoader();
+		try {
+			const response = await fetch("/api/signup", {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({
+					username: data.get("username"),
+					email: data.get("email"),
+					password: data.get("password"),
+				}),
+			});
+			const result = await response.json();
+			if (response.ok) {
+				alert("Inscription réussie !");
+				navigate("/");
+			} else {
+				alert(`Erreur: ${result.message}`);
+			}
+		} catch (error) {
+			alert("Une erreur s'est produite, veuillez réessayer.");
+		} finally {
+			hideLoader();
 		}
 	});
 }
@@ -52,20 +59,27 @@ export function handleLogin() {
 	form.addEventListener("submit", async (e) => {
 		e.preventDefault();
 		const data = new FormData(form);
-		const response = await fetch("/api/login", {
-			method: "POST",
-			headers: {"Content-Type": "application/json"},
-			body: JSON.stringify({
-				username: data.get("username"),
-				password: data.get("password"),
-			}),
-		});
-		const result = await response.json();
-		if (response.ok) {
-			alert("Connexion réussie !");
-			navigate("/");
-		} else {
-			alert(`Erreur: ${result.message}`);
+		showLoader();
+		try {
+			const response = await fetch("/api/login", {
+				method: "POST",
+				headers: {"Content-Type": "application/json"},
+				body: JSON.stringify({
+					username: data.get("username"),
+					password: data.get("password"),
+				}),
+			});
+			const result = await response.json();
+			if (response.ok) {
+				alert("Connexion réussie !");
+				navigate("/");
+			} else {
+				alert(`Erreur: ${result.message}`);
+			}
+		} catch (error) {
+			alert("Une erreur s'est produite, veuillez réessayer.");
+		} finally {
+			hideLoader();
 		}
 	});
 }
@@ -89,4 +103,16 @@ function validateSignupForm(data) {
 		alert("Le mot de passe doit contenir au moins 6 caractères.");
 	}
 	return true;
+}
+
+function showLoader() {
+	const loader = document.createElement("div");
+	loader.id = "loader";
+	loader.textContent = "Chargement...";
+	document.body.appendChild(loader);
+}
+
+function hideLoader() {
+	const loader = document.getElementById("loader");
+	if (loader) loader.remove();
 }
