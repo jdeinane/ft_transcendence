@@ -44,4 +44,28 @@ document.addEventListener("DOMContentLoaded", () => {
 	navigate(window.location.pathname);
   });		
 // Exemple basique, ces donnees seront envoyees au backend via une API
-  
+
+
+// GESTION MULTILINGUE: Charge les traductions depuis lang.json
+async function loadLanguage(lang = "en") {
+	const response = await fetch("lang.json");
+	const translations = await response.json();
+
+	const_app = document.getElementById("app");
+	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+	const languageSelector = document.createElement("select");
+	languageSelector.innerHTML = `
+		<option value="en">English</option>
+		<option value="fr">Français</option>
+	`;
+	document.body.insertBefore(languageSelector, document.getElementById("app"));
+
+	languageSelector.addEventListener("change", (e) => {
+		loadLanguage(e.target.value);
+	});
+
+	loadLanguage;
+});
