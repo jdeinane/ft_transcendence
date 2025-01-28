@@ -9,8 +9,17 @@ const routes = {
 	`,
 	"/game": `
 	<h1>PONG!</h1>
-  		<canvas id="pong" width="800" height="400" style="border:1px solid #000;"></canvas>
-  		<button id="back-home">Retour à l'accueil</button>
+	<div>
+		<label>
+		<input type="radio" name="mode" value="1" checked /> 1 joueur
+		</label>
+		<label>
+		<input type="radio" name="mode" value="2" /> 2 joueurs
+		</label>
+		<button id="start-game">Commencer le jeu</button>
+	</div>
+	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
+	<button id="back-home">Retour à l'accueil</button>
 	`,
 	"/login": `
 	  <h1>Connexion</h1>
@@ -90,19 +99,23 @@ const routes = {
 	}
 
 	if (cleanPath === "/game") {
+		const startButton = document.getElementById("start-game");
 		const canvas = document.getElementById("pong");
-		if (canvas) {
-		  startPongGame(canvas); // Charge le jeu Pong
-		}
+	  
+		startButton.addEventListener("click", () => {
+		  const mode = document.querySelector('input[name="mode"]:checked').value;
+		  const isSinglePlayer = mode === "1"; // Si "1 joueur" est sélectionné
+	  
+		  // Affiche le canvas et démarre le jeu
+		  canvas.style.display = "block";
+		  startPongGame(canvas, isSinglePlayer);
+		});
 	  
 		const backButton = document.getElementById("back-home");
-		if (backButton) {
-		  backButton.addEventListener("click", () => {
-			navigate("#/"); // Redirige vers l'accueil
-		  });
-		}
+		backButton.addEventListener("click", () => {
+		  navigate("#/");
+		});
 	  }
-	  
 	updateActiveLink(cleanPath);
   }
   
@@ -124,8 +137,6 @@ const routes = {
   
 	const script = document.createElement("script");
 	script.src = "/frontend/scripts/pongGame.js";
-	// script.onload = () => console.log("pongGame.js chargé !");
-	// script.onerror = () => console.error("Erreur lors du chargement de pongGame.js !");
 	document.body.appendChild(script);
   }
   

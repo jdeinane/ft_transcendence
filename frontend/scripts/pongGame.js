@@ -1,4 +1,4 @@
-export function startPongGame(canvas) {
+export function startPongGame(canvas, isSinglePlayer) {
 	const ctx = canvas.getContext("2d");
   
 	// Variables du jeu
@@ -17,9 +17,6 @@ export function startPongGame(canvas) {
 	// Scores
 	let player1Score = 0;
 	let player2Score = 0;
-  
-	// Mode de jeu (1 joueur ou 2 joueurs)
-	const isSinglePlayer = true;
   
 	// IA
 	const aiSpeed = 2;
@@ -49,13 +46,14 @@ export function startPongGame(canvas) {
   
 	  // Dessiner les paddles
 	  ctx.fillStyle = "black";
-	  ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
-	  ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
+	  ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight); // Paddle joueur 1
+	  ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
   
 	  // Dessiner les scores
 	  ctx.font = "20px Arial";
-	  ctx.fillText(player1Score, canvas.width / 4, 20);
-	  ctx.fillText(player2Score, (canvas.width * 3) / 4, 20);
+	  ctx.fillStyle = "black";
+	  ctx.fillText(player1Score, canvas.width / 4, 20); // Score joueur 1
+	  ctx.fillText(player2Score, (canvas.width * 3) / 4, 20); // Score joueur 2
 	}
   
 	function update() {
@@ -94,14 +92,16 @@ export function startPongGame(canvas) {
 		resetBall();
 	  }
   
-	  // Déplacer les paddles
+	  // Déplacer le paddle 1
 	  if (keys.w) paddle1Y -= 5;
 	  if (keys.s) paddle1Y += 5;
+  
 	  if (!isSinglePlayer) {
+		// Mode 2 joueurs : Déplacer le paddle 2 avec ArrowUp et ArrowDown
 		if (keys.ArrowUp) paddle2Y -= 5;
 		if (keys.ArrowDown) paddle2Y += 5;
 	  } else {
-		// Mouvement de l'IA
+		// Mode 1 joueur : IA pour le paddle 2
 		if (ballY < paddle2Y + paddleHeight / 2) {
 		  paddle2Y -= aiSpeed;
 		} else {
@@ -128,14 +128,16 @@ export function startPongGame(canvas) {
   
 	// Gérer les entrées clavier
 	window.addEventListener("keydown", (e) => {
-	  if (e.key in keys) {
-		keys[e.key] = true;
+	  const key = e.key.toLowerCase(); // Normaliser en minuscule
+	  if (key in keys) {
+		keys[key] = true;
 	  }
 	});
   
 	window.addEventListener("keyup", (e) => {
-	  if (e.key in keys) {
-		keys[e.key] = false;
+	  const key = e.key.toLowerCase(); // Normaliser en minuscule
+	  if (key in keys) {
+		keys[key] = false;
 	  }
 	});
   
