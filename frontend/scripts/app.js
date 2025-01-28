@@ -1,11 +1,16 @@
-import { renderSignupForm, renderLoginForm, handleLogin, handleSignUp } from "./scripts/auth";
-
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 const routes = {
 	"/": "<h1>Bienvenue sur ft_transcendence</h1>",
-	"/signup": renderSignupForm(),
-	"/login": renderLoginForm(),
+	"/login": `
+	  <h1>Connexion</h1>
+	  <form id="login-form">
+		<input type="text" name="username" placeholder="Nom d'utilisateur" required />
+		<input type="password" name="password" placeholder="Mot de passe" required />
+		<button type="submit">Se connecter</button>
+	  </form>
+	`,
+	"/profile": "<h1>Profil utilisateur</h1>"
   };
 
 
@@ -13,12 +18,19 @@ const routes = {
 
   function navigate(path) {
 	const app = document.getElementById("app");
-	app.innerHTML = routes[path] || "<h1>Page non trouvée</h1>";
-
-	if (path == "/signup") handleSignUp();
-	if (path == "/login") handleLogin();
-
-	window.history.pushState({}, "", path);
+	const cleanPath = path.replace("#", ""); // Enlève le hash #
+	app.innerHTML = routes[cleanPath] || "<h1>Page non trouvée</h1>";
+	window.history.pushState({}, "", path); // Met a jour l'URL sans recharger la page
+  
+	if (cleanPath === "/login") {
+	  const form = document.getElementById("login-form");
+	  form.addEventListener("submit", async (e) => {
+		e.preventDefault();
+		const data = new FormData(form);
+		console.log("Nom d'utilisateur :", data.get("username"));
+		console.log("Mot de passe :", data.get("password"));
+	  });
+	}
   }
 
 
@@ -39,7 +51,6 @@ const routes = {
 	languageSelector.innerHTML = `
 	  <option value="en">English</option>
 	  <option value="fr">Français</option>
-	  <option value ="ch">Chinese</option>
 	`;
 	document.body.insertBefore(languageSelector, document.getElementById("app"));
   
@@ -58,8 +69,6 @@ const routes = {
 	const response = await fetch("lang.json");
 	const translations = await response.json();
   
-	const app = document.querySelector("h1");
-	if (title) {
-		title.textContent = translations[lang].welcome;
-	}
+	const app = document.getElementById("app");
+	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
   }

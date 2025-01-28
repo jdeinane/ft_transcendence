@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  nginx:
+    image: nginx
+    container_name: nginx
+    build:
+      context: 
+      dockerfile: 	
+    volumes:
+    depends_on:
+    ports:
+    networks:
+    restart:
+    env_file:
