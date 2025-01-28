@@ -14,7 +14,7 @@ const routes = {
   };
 
 
-// CNAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
+// NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 function navigate(path) {
 	const app = document.getElementById("app");
