@@ -35,6 +35,7 @@ const routes = {
 
 
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
+
   document.addEventListener("DOMContentLoaded", () => {
 	document.body.addEventListener("click", (e) => {
 	  if (e.target.matches("[data-link]")) {
@@ -71,4 +72,3 @@ const routes = {
 	const app = document.getElementById("app");
 	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
   }
-  
