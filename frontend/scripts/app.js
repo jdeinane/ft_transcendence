@@ -51,6 +51,7 @@ const routes = {
 	languageSelector.innerHTML = `
 	  <option value="en">English</option>
 	  <option value="fr">Français</option>
+	  <option value ="ch">Chinois</option>
 	`;
 	document.body.insertBefore(languageSelector, document.getElementById("app"));
   

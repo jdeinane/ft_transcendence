@@ -8,5 +8,10 @@
 		"welcome": "Bienvenue sur ft_transcendence",
 		"login": "Connexion",
 		"profile": "Profil"
+	},
+	"ch": {
+		"welcome": "歡迎來到 ft_transcendence",
+		"login": "聯繫",
+		"profile": "輪廓"
 	}
 }
