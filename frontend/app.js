@@ -51,7 +51,7 @@ async function loadLanguage(lang = "en") {
 	const response = await fetch("lang.json");
 	const translations = await response.json();
 
-	const_app = document.getElementById("app");
+	const app = document.getElementById("app");
 	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
 }
 
@@ -67,5 +67,5 @@ document.addEventListener("DOMContentLoaded", () => {
 		loadLanguage(e.target.value);
 	});
 
-	loadLanguage;
+	loadLanguage();
 });
