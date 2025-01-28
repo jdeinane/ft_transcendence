@@ -1,0 +1,13 @@
+{
+	"en": {
+	  "welcome": "Welcome to ft_transcendence",
+	  "login": "Login",
+	  "profile": "Profile"
+	},
+	"fr": {
+	  "welcome": "Bienvenue sur ft_transcendence",
+	  "login": "Connexion",
+	  "profile": "Profil"
+	}
+  }
+  
