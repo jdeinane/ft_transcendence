@@ -12,6 +12,13 @@
 	  "profile": "Profil",
 	  "about": "À propos de nous",
 	  "signup": "Inscription"
+	},
+	"es": {
+	  "welcome": "Hola Shakira",
+	  "login": "Connexion",
+	  "profile": "Profil",
+	  "about": "À propos de nous",
+	  "signup": "Inscription"
 	}
   }
   

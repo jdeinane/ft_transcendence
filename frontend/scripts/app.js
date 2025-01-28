@@ -1,3 +1,5 @@
+import { startPongGame } from "./pongGame.js";
+
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 const routes = {
@@ -6,8 +8,9 @@ const routes = {
 	<button id="play-now"> Jouer maintenant !</button>
 	`,
 	"/game": `
-	<h1>Jouez au Pong</h1>
-	<canvas id="pong" width="800" height="400" style="border: 1px solid black;"></canvas>
+	<h1>PONG!</h1>
+  		<canvas id="pong" width="800" height="400" style="border:1px solid #000;"></canvas>
+  		<button id="back-home">Retour à l'accueil</button>
 	`,
 	"/login": `
 	  <h1>Connexion</h1>
@@ -86,9 +89,20 @@ const routes = {
 		});
 	}
 
-	if (cleanPath == "/game") {
-		loadGameScript();
-	}
+	if (cleanPath === "/game") {
+		const canvas = document.getElementById("pong");
+		if (canvas) {
+		  startPongGame(canvas); // Charge le jeu Pong
+		}
+	  
+		const backButton = document.getElementById("back-home");
+		if (backButton) {
+		  backButton.addEventListener("click", () => {
+			navigate("#/"); // Redirige vers l'accueil
+		  });
+		}
+	  }
+	  
 	updateActiveLink(cleanPath);
   }
   
@@ -105,13 +119,16 @@ const routes = {
   }
   
   function loadGameScript() {
-	const existingScript = document.querySelector('script[src="./scripts/pongGame.js"]');
+	const existingScript = document.querySelector('script[src="/scripts/pongGame.js"]');
 	if (existingScript) existingScript.remove(); // Évite de charger plusieurs fois le même script
   
 	const script = document.createElement("script");
-	script.src = "./scripts/pongGame.js";
+	script.src = "/frontend/scripts/pongGame.js";
+	// script.onload = () => console.log("pongGame.js chargé !");
+	// script.onerror = () => console.error("Erreur lors du chargement de pongGame.js !");
 	document.body.appendChild(script);
   }
+  
   
   
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
@@ -153,6 +170,12 @@ const routes = {
 	const response = await fetch("lang.json");
 	const translations = await response.json();
   
+	if (!translations[lang]) {
+	  console.error(`Langue ${lang} non trouvée dans lang.json`);
+	  return;
+	}
+  
 	const app = document.getElementById("app");
 	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
   }
+  

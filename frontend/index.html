@@ -1,25 +1,29 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>		<!-- Definit les metadonnees du site -->
+<head> 		<!-- Définit les métadonnées du site -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ft_transcendence</title>
   <link rel="stylesheet" href="./styles/styles.css">
 </head>
-<body>		<!-- Contient le contenu principal -->
-  <header>	<!-- Barre de navigation avec des liens dynamiques pour changer de page -->
+<body> 		<!-- Contient le contenu principal -->
+  <header> 	<!-- Barre de navigation avec des liens dynamiques pour changer de page -->
     <nav>
       <a href="#/" data-link>Accueil</a>
       <a href="#/login" data-link>Connexion</a>
+      <a href="#/signup" data-link>Inscription</a>
       <a href="#/profile" data-link>Profil</a>
+      <a href="#/about" data-link>À propos</a>
+      <a href="#/game" data-link>Jouer</a>
     </nav>
   </header>
   <main id="app"> <!-- Contenu dynamique -->
-    <!-- Contenu dynamique -->
+    <!-- Le contenu des pages sera injecté ici -->
   </main>
   <footer>
     <p>&copy; 2025 ft_transcendence</p>
   </footer>
-  <script src="./scripts/app.js"></script>
+  <script type="module" src="./scripts/app.js"></script>
+  <script type="module" src="./scripts/pongGame.js"></script>
 </body>
 </html>
