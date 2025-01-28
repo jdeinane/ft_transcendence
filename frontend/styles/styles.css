@@ -48,3 +48,32 @@ footer {
 	bottom: 0;
 	width: 100%;
 }
+
+form {
+	display: flex;
+	flex-direction: column;
+	gap: 1em;
+	max-width: 300px;
+	margin: 2em auto;
+  }
+  
+  input {
+	padding: 0.5em;
+	font-size: 1em;
+	border: 1px solid #ccc;
+	border-radius: 5px;
+  }
+  
+  button {
+	padding: 0.5em;
+	background-color: #333;
+	color: white;
+	border: none;
+	border-radius: 5px;
+	cursor: pointer;
+  }
+  
+  button:hover {
+	background-color: #555;
+  }
+  
