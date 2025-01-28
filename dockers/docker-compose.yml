@@ -1,32 +1,30 @@
 version: latest
 
 services:
-  backend:
-    postgresql:
-      image: postgresql
-      container_name: postgresql
-      build:
-        context: ./dockers/postgresql
-        dockerfile: Dockerfile
-      env_file: .env
-      volumes:
-        - postgresql:/var/lib/postgresql
-      expose:
-        - "3306"
-      restart: unless-stopped
-      networks:
-        - ft_transcendence
-      healthcheck:
-        test: myadmin ping --host=localhost -p${PSQL_ROOT_PASSWD};
-        interval: 5s
-        timeout:  1s
-        retries: 10
-        start_period: 5s
-
+  postgresql:
+    image: postgres
+    container_name: postgresql
+    build:
+      context: ../backend/postgresql
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - postgresql:/var/lib/postgresql
+    expose:
+      - "3306"
+    restart: unless-stopped
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $${PSQL_USER}"]
+      interval: 5s
+      timeout:  1s
+      retries: 10
+      start_period: 5s
   nginx:
     container_name: nginx
     build:
-      context: ./nginx
+      context: ../frontend/nginx
       dockerfile: Dockerfile
     volumes: 
       - ./frontend:/usr/share/nginx/html
@@ -36,7 +34,7 @@ services:
     ports: 
       - "8080:80"
     networks: 
-      - ft_transcendence
+      - frontend
     restart: on-failure:5
 
 volumes:
@@ -45,9 +43,12 @@ volumes:
     driver_opts:
       type: 'none'
       o: 'bind'
-      device: '/home/jubaldo/data/postgresql'
+      device: '/home/tyron/data/postgresql'
 
 networks:
-  ft_transcendence:
-    name: ft_transcendence
+  backend:
+    name: backend
     driver: bridge
+  frontend:
+    name: frontend
+    driver: bridge 

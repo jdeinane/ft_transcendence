@@ -42,21 +42,26 @@ clean_virtual_env()
 	then
 		rm -rf venv
 	fi
+	if [ -d "django/venv" ]; then
+		rm -rf django/venv
+    fi
 }
 
 create_virtual_env()
 {
-	python3 -m venv venv
+	python3 -m venv django/venv
 	source venv/bin/activate
+	check_django_version
 }
 
 check_python_version
 clean_virtual_env
+
+django-admin --version
+django-admin startprojetct django
+
 create_virtual_env
 check_django_version
 
-django-admin --version
-django-admin startprojetct ft_transcendence
-
-cd ft_transcendance
+cd django
 python manage.py runserver
