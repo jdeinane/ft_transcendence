@@ -1,5 +1,5 @@
 all			:
-					scripts
+					./backend/scripts
 					mkdir -p /backend/postgresql
 					mkdir -p /frontend/nginx
 					docker-compose -f ./docker-compose.yml --build
