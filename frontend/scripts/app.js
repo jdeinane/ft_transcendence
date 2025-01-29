@@ -113,6 +113,14 @@ const routes = {
 	}
 
 	if (cleanPath === "/game") {
+		const user = getCurrentUser();
+
+		if (!user) {
+			alert("you have to be logged in first!");
+			navigate("#/login");
+			return;
+		}
+		
 		const startButton = document.getElementById("start-game");
 		const canvas = document.getElementById("pong");
 
