@@ -14,7 +14,7 @@ check_python_version()
 		sudo apt-get install -y \
 		python3 python3-pip python3-venv
 	else
-		python_version = $(python3 --version 2>&1)
+		python_version=$(python3 --version 2>&1)
 	fi
 }
 
@@ -25,8 +25,8 @@ check_django_version()
 		pip install --upgrade pip
 		pip install django
 	else 
-		django_version = $(django-admin --version)
-		required_version = "3.2"
+		django_version=$(django-admin --version)
+		required_version="3.2"
 		if ! [["$django_version" >= "$required_version"]];
 		then
 			pip uninstall -y django
@@ -50,7 +50,7 @@ clean_virtual_env()
 create_virtual_env()
 {
 	python3 -m venv django/venv
-	source venv/bin/activate
+	source django/venv/bin/activate
 	check_django_version
 }
 
@@ -58,7 +58,7 @@ check_python_version
 clean_virtual_env
 
 django-admin --version
-django-admin startprojetct django
+django-admin startproject django
 
 create_virtual_env
 check_django_version

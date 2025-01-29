@@ -1,4 +1,4 @@
-version: latest
+version: '3.8'
 
 services:
   postgresql:
@@ -11,12 +11,12 @@ services:
     volumes:
       - postgresql:/var/lib/postgresql
     expose:
-      - "3306"
+      - "5432"
     restart: unless-stopped
     networks:
       - backend
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U $${PSQL_USER}"]
+      test: ["CMD-SHELL", "pg_isready -U ${PSQL_USER}"]
       interval: 5s
       timeout:  1s
       retries: 10
@@ -30,7 +30,8 @@ services:
       - ./frontend:/usr/share/nginx/html
     depends_on:
       backend:
-        postgresql: service_healthy
+        postgresql:
+          condition: service_healthy
     ports: 
       - "8080:80"
     networks: 

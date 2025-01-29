@@ -1,8 +1,8 @@
 all			:
-					./backend/scripts
+					bash ./backend/scripts/setup_django.sh
 					mkdir -p /backend/postgresql
 					mkdir -p /frontend/nginx
-					docker-compose -f ./docker-compose.yml --build
+					docker-compose -f ./dockers/docker-compose.yml --build
 					docker-compose -f ./dockers/docker-compose.yml up -d
 
 down		:

@@ -1,9 +1,9 @@
 [postgresql]
 
-datadir			=	/var/lib/postgresql
-socker			=	/run/postgresql/postgresql.sock
-bind_address	=	*
-port			=	3306
-user			=	postgresql
+datadir				= /var/lib/postgresql
+socket				= /run/postgresql/postgresql.sock
+listen_addresses	= '*'
+port				= 5432
+user				= postgresql
 
-log_error		=	/var/log/postgresql/error.log
+log_error			= /var/log/postgresql/error.log
