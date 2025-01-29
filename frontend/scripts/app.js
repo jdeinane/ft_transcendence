@@ -52,70 +52,75 @@ const routes = {
 
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
-  function navigate(path) {
+  function navigate(path, addToHistory = true) {
 	const app = document.getElementById("app");
 	const cleanPath = path.replace("#", ""); // Enlève le hash #
 	app.innerHTML = routes[cleanPath] || routes["*"]; // Affiche la route correspondante ou 404
-  
+
+	// Met à jour l'URL dans l'historique du navigateur si demandé
+	if (addToHistory) {
+		window.history.pushState({ path: cleanPath }, "", `#${cleanPath}`);
+	}
+
 	if (cleanPath === "/login") {
-	  const form = document.getElementById("login-form");
-	  form.addEventListener("submit", async (e) => {
-		e.preventDefault();
-		const data = new FormData(form);
-		console.log("Nom d'utilisateur :", data.get("username"));
-		console.log("Mot de passe :", data.get("password"));
-	  });
-  
-	  const goToSignup = document.getElementById("go-to-signup");
-	  goToSignup.addEventListener("click", () => {
-		navigate("#/signup");
-	  });
+		const form = document.getElementById("login-form");
+		form.addEventListener("submit", async (e) => {
+			e.preventDefault();
+			const data = new FormData(form);
+			console.log("Nom d'utilisateur :", data.get("username"));
+			console.log("Mot de passe :", data.get("password"));
+		});
+
+		const goToSignup = document.getElementById("go-to-signup");
+		goToSignup.addEventListener("click", () => {
+			navigate("#/signup");
+		});
 	}
-  
+
 	if (cleanPath === "/signup") {
-	  const form = document.getElementById("signup-form");
-	  form.addEventListener("submit", (e) => {
-		e.preventDefault();
-		const username = form.username.value;
-		const password = form.password.value;
-		const confirmPassword = form["confirm-password"].value;
-		
-		if (password !== confirmPassword) {
-		  alert("Les mots de passe ne correspondent pas !");
-		  return;
-		}
-		console.log("Inscription réussie :", username);
-	  });
+		const form = document.getElementById("signup-form");
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			const username = form.username.value;
+			const password = form.password.value;
+			const confirmPassword = form["confirm-password"].value;
+
+			if (password !== confirmPassword) {
+				alert("Les mots de passe ne correspondent pas !");
+				return;
+			}
+			console.log("Inscription réussie :", username);
+		});
 	}
-  
+
 	if (cleanPath === "/") {
-	  const playNowButton = document.getElementById("play-now");
-	  playNowButton.addEventListener("click", () => {
-		navigate("#/game");
-	  });
+		const playNowButton = document.getElementById("play-now");
+		playNowButton.addEventListener("click", () => {
+			navigate("#/game");
+		});
 	}
-  
+
 	if (cleanPath === "/game") {
-	  const startButton = document.getElementById("start-game");
-	  const canvas = document.getElementById("pong");
-	  
-	  startButton.addEventListener("click", () => {
-		const mode = document.querySelector('input[name="mode"]:checked').value;
-		const isSinglePlayer = mode === "1";
-		
-		canvas.style.display = "block";
-		startPongGame(canvas, isSinglePlayer);
-	  });
-  
-	  const backButton = document.getElementById("back-home");
-	  backButton.addEventListener("click", () => {
-		navigate("#/");
-	  });
+		const startButton = document.getElementById("start-game");
+		const canvas = document.getElementById("pong");
+
+		startButton.addEventListener("click", () => {
+			const mode = document.querySelector('input[name="mode"]:checked').value;
+			const isSinglePlayer = mode === "1";
+
+			canvas.style.display = "block";
+			startPongGame(canvas, isSinglePlayer);
+		});
+
+		const backButton = document.getElementById("back-home");
+		backButton.addEventListener("click", () => {
+			navigate("#/");
+		});
 	}
-  
+
 	updateActiveLink(cleanPath);
-  }
-  
+}
+
   
 
 	// METTRE A JOUR LE LIEN ACTIF
@@ -145,21 +150,30 @@ const routes = {
 
   document.addEventListener("DOMContentLoaded", () => {
 	document.body.addEventListener("click", (e) => {
-	  if (e.target.matches("[data-link]")) {
-		e.preventDefault();
-		navigate(e.target.getAttribute("href"));
-	  }
+		if (e.target.matches("[data-link]")) {
+			e.preventDefault();
+			navigate(e.target.getAttribute("href"));
+		}
 	});
-  
-	// Redirection vers home directement
+
+	// Rediriger vers home si aucune route n'est définie
 	if (!window.location.hash || window.location.hash === "#") {
-	  window.location.replace("#/");
+		window.location.replace("#/");
 	}
-  
-	// Charger la page en fonction de l'URL actuelle
+
+	// Charger la page correspondante
 	navigate(window.location.hash);
+
+	// Gérer les boutons "Back" et "Forward"
+	window.addEventListener("popstate", (event) => {
+		const path = event.state?.path || "/";
+		navigate(`#${path}`, false); // Ne pas ajouter à l'historique (déjà géré par le navigateur)
+	});
+
+	// Charger la sélection de langue
 	setupLanguageSelector();
-  });
+});
+
   
 
 
