@@ -1,5 +1,5 @@
 import { startPongGame } from "./pongGame.js";
-
+import { setupLanguageSelector } from "./language.js";
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 const routes = {
@@ -151,13 +151,14 @@ const routes = {
 	  }
 	});
   
-	// Si l'utilisateur arrive sur le site sans hash, on le redirige vers la home
+	// Redirection vers home directement
 	if (!window.location.hash || window.location.hash === "#") {
 	  window.location.replace("#/");
 	}
   
 	// Charger la page en fonction de l'URL actuelle
 	navigate(window.location.hash);
+	setupLanguageSelector();
   });
   
 
