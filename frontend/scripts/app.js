@@ -4,22 +4,22 @@ import { startPongGame } from "./pongGame.js";
 
 const routes = {
 	"/": `
-	<h1>Bienvenue sur ft_transcendence</h1>
-	<button id="play-now"> Jouer maintenant !</button>
+	<h1 class="welcome-title">welcome to ft_transcendence</h1>
+	<button id="play-now"> play now</button>
 	`,
 	"/game": `
 	<h1>PONG!</h1>
 	<div>
 		<label>
-		<input type="radio" name="mode" value="1" checked /> 1 joueur
+		<input type="radio" name="mode" value="1" checked /> solo player
 		</label>
 		<label>
-		<input type="radio" name="mode" value="2" /> 2 joueurs
+		<input type="radio" name="mode" value="2" /> multiplayer
 		</label>
-		<button id="start-game">Commencer le jeu</button>
+		<button id="start-game">game start!</button>
 	</div>
 	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
-	<button id="back-home">Retour à l'accueil</button>
+	<button id="back-home">back to home</button>
 	`,
 	"/login": `
 	  <h1>Connexion</h1>

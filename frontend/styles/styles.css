@@ -1,9 +1,13 @@
+@import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
+
 body {
-	font-family: Arial, sans-serif;
-	margin: 0;
-	padding: 0;
-	box-sizing: border-box;
-}
+	background-image: url('../assets/images/pong2.jpg'); 
+	background-repeat: no-repeat;
+	background-size: cover; 
+	background-position: center;
+	font-family: 'Audiowide', sans-serif;
+  }
+  
 
 header {
 	background-color: #333;
@@ -71,10 +75,43 @@ form {
 	border: none;
 	border-radius: 5px;
 	cursor: pointer;
+	font-family: 'Audiowide', sans-serif;
   }
   
   button:hover {
 	background-color: #555;
   }
   
+  .welcome-title {
+	color: #FBE66C;
+	text-align: center;
+	font-family: 'Audiowide', sans-serif; /* Police Audiowide */
+	font-size: 64px;
+	font-style: normal;
+	font-weight: 400;
+	line-height: normal;
+	letter-spacing: 1.28px;
+	filter: blur(2px);
+	animation: glow 2s infinite ease-in-out; /* Animation lumineuse */
+  }
   
+  @keyframes glow {
+	0%, 100% {
+	  text-shadow: 0 0 10px #FBE66C, 0 0 20px #FBE66C, 0 0 30px #FBE66C;
+	}
+	50% {
+	  text-shadow: 0 0 20px #FBE66C, 0 0 40px #FBE66C, 0 0 60px #FBE66C;
+	}
+  }
+
+  @media (max-width: 768px) {
+	header nav {
+	  display: flex;
+	  flex-direction: column;
+	  gap: 1em;
+	}
+  
+	form {
+	  width: 90%;
+	}
+  }
