@@ -1,5 +1,7 @@
 import { startPongGame } from "./pongGame.js";
 import { setupLanguageSelector } from "./language.js";
+import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
+
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 const routes = {
@@ -34,6 +36,7 @@ const routes = {
 	<h1>sign up</h1>
 	<form id="signup-form">
 		<input type="text" name="username" placeholder="username" required />
+		<input type="email" name="email" placeholder="email" required />
 		<input type="password" name="password" placeholder="password" required />
 		<input type="password" name="confirm-password" placeholder="confirm password" required />
 		<button type="submit">sign up!</button>
@@ -52,7 +55,7 @@ const routes = {
 
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
-  function navigate(path, addToHistory = true) {
+  export function navigate(path, addToHistory = true) {
 	const app = document.getElementById("app");
 	const cleanPath = path.replace("#", ""); // Enlève le hash #
 	app.innerHTML = routes[cleanPath] || routes["*"]; // Affiche la route correspondante ou 404
@@ -64,35 +67,44 @@ const routes = {
 
 	if (cleanPath === "/login") {
 		const form = document.getElementById("login-form");
-		form.addEventListener("submit", async (e) => {
-			e.preventDefault();
-			const data = new FormData(form);
-			console.log("Nom d'utilisateur :", data.get("username"));
-			console.log("Mot de passe :", data.get("password"));
+		form.addEventListener("submit", (e) => {
+		  e.preventDefault();
+		  const username = form.username.value;
+		  const password = form.password.value;
+		  loginUser(username, password);
 		});
-
+	  
 		const goToSignup = document.getElementById("go-to-signup");
 		goToSignup.addEventListener("click", () => {
-			navigate("#/signup");
+		  navigate("#/signup");
 		});
-	}
-
-	if (cleanPath === "/signup") {
+	  }
+	  
+	  if (cleanPath === "/signup") {
 		const form = document.getElementById("signup-form");
 		form.addEventListener("submit", (e) => {
-			e.preventDefault();
-			const username = form.username.value;
-			const password = form.password.value;
-			const confirmPassword = form["confirm-password"].value;
-
-			if (password !== confirmPassword) {
-				alert("Les mots de passe ne correspondent pas !");
-				return;
-			}
-			console.log("Inscription réussie :", username);
+		  e.preventDefault();
+		  const username = form.username.value;
+		  const password = form.password.value;
+		  const email = form.email.value;
+		  createUser(username, password, email);
 		});
-	}
-
+	  }
+	  
+	  if (cleanPath === "/profile") {
+		const user = getCurrentUser();
+		if (!user) {
+		  alert("you have to log in !");
+		  navigate("#/login");
+		} else {
+		  document.getElementById("app").innerHTML += `
+			<p>Bienvenue, ${user.username} !</p>
+			<button id="logout">Déconnexion</button>
+		  `;
+		  document.getElementById("logout").addEventListener("click", logoutUser);
+		}
+	  }
+	  
 	if (cleanPath === "/") {
 		const playNowButton = document.getElementById("play-now");
 		playNowButton.addEventListener("click", () => {
