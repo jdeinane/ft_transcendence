@@ -56,8 +56,7 @@ const routes = {
 	const app = document.getElementById("app");
 	const cleanPath = path.replace("#", ""); // Enlève le hash #
 	app.innerHTML = routes[cleanPath] || routes["*"]; // Affiche la route correspondante ou 404
-
-	// Gestion de la page Connexion
+  
 	if (cleanPath === "/login") {
 	  const form = document.getElementById("login-form");
 	  form.addEventListener("submit", async (e) => {
@@ -67,14 +66,12 @@ const routes = {
 		console.log("Mot de passe :", data.get("password"));
 	  });
   
-	  // Bouton pour rediriger vers Inscription
 	  const goToSignup = document.getElementById("go-to-signup");
 	  goToSignup.addEventListener("click", () => {
-		navigate("#/signup"); // Redirige vers la page d'inscription
+		navigate("#/signup");
 	  });
 	}
   
-	// Gestion de la page Inscription
 	if (cleanPath === "/signup") {
 	  const form = document.getElementById("signup-form");
 	  form.addEventListener("submit", (e) => {
@@ -82,7 +79,7 @@ const routes = {
 		const username = form.username.value;
 		const password = form.password.value;
 		const confirmPassword = form["confirm-password"].value;
-  
+		
 		if (password !== confirmPassword) {
 		  alert("Les mots de passe ne correspondent pas !");
 		  return;
@@ -90,34 +87,35 @@ const routes = {
 		console.log("Inscription réussie :", username);
 	  });
 	}
-
-	if (cleanPath == "/") {
-		const playNowButton = document.getElementById("play-now");
-		playNowButton.addEventListener("click", () => {
-			navigate("#/game");
-		});
+  
+	if (cleanPath === "/") {
+	  const playNowButton = document.getElementById("play-now");
+	  playNowButton.addEventListener("click", () => {
+		navigate("#/game");
+	  });
 	}
-
+  
 	if (cleanPath === "/game") {
-		const startButton = document.getElementById("start-game");
-		const canvas = document.getElementById("pong");
+	  const startButton = document.getElementById("start-game");
+	  const canvas = document.getElementById("pong");
 	  
-		startButton.addEventListener("click", () => {
-		  const mode = document.querySelector('input[name="mode"]:checked').value;
-		  const isSinglePlayer = mode === "1"; // Si "1 joueur" est sélectionné
-	  
-		  // Affiche le canvas et démarre le jeu
-		  canvas.style.display = "block";
-		  startPongGame(canvas, isSinglePlayer);
-		});
-	  
-		const backButton = document.getElementById("back-home");
-		backButton.addEventListener("click", () => {
-		  navigate("#/");
-		});
-	  }
+	  startButton.addEventListener("click", () => {
+		const mode = document.querySelector('input[name="mode"]:checked').value;
+		const isSinglePlayer = mode === "1";
+		
+		canvas.style.display = "block";
+		startPongGame(canvas, isSinglePlayer);
+	  });
+  
+	  const backButton = document.getElementById("back-home");
+	  backButton.addEventListener("click", () => {
+		navigate("#/");
+	  });
+	}
+  
 	updateActiveLink(cleanPath);
   }
+  
   
 
 	// METTRE A JOUR LE LIEN ACTIF
@@ -130,6 +128,7 @@ const routes = {
 	  }
 	});
   }
+  
   
   function loadGameScript() {
 	const existingScript = document.querySelector('script[src="/scripts/pongGame.js"]');
@@ -145,35 +144,22 @@ const routes = {
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
 
   document.addEventListener("DOMContentLoaded", () => {
-	
 	document.body.addEventListener("click", (e) => {
 	  if (e.target.matches("[data-link]")) {
 		e.preventDefault();
 		navigate(e.target.getAttribute("href"));
 	  }
 	});
-
-
-	// GESTION MULTILINGUE: Ajoute un sélecteur de langues dynamiques
-
-	const languageSelector = document.createElement("select");
-	languageSelector.innerHTML = `
-	  <option value="en">English</option>
-	  <option value="fr">Français</option>
-	  <option value="es">Español</option>
-	`;
-	document.body.insertBefore(languageSelector, document.getElementById("app"));
   
-	languageSelector.addEventListener("change", (e) => {
-		const selectedLanguage = e.target.value;
-		localStorage.setItem("preferredLanguage", selectedLanguage);
-		loadLanguage(selectedLanguage);
-	});
-	
-	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
-	loadLanguage(savedLanguage);
-	navigate(window.location.hash || "#/" );
+	// Si l'utilisateur arrive sur le site sans hash, on le redirige vers la home
+	if (!window.location.hash || window.location.hash === "#") {
+	  window.location.replace("#/");
+	}
+  
+	// Charger la page en fonction de l'URL actuelle
+	navigate(window.location.hash);
   });
+  
 
 
   // GESTION MULTILINGUE: Charge les traductions depuis lang.json
@@ -181,11 +167,6 @@ const routes = {
   async function loadLanguage(lang = "en") {
 	const response = await fetch("lang.json");
 	const translations = await response.json();
-  
-	if (!translations[lang]) {
-	  console.error(`Langue ${lang} non trouvée dans lang.json`);
-	  return;
-	}
   
 	const app = document.getElementById("app");
 	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
