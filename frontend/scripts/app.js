@@ -22,31 +22,31 @@ const routes = {
 	<button id="back-home">back to home</button>
 	`,
 	"/login": `
-	  <h1>Connexion</h1>
+	  <h1>login</h1>
 	  <form id="login-form">
-		<input type="text" name="username" placeholder="Nom d'utilisateur" required />
-		<input type="password" name="password" placeholder="Mot de passe" required />
-		<button type="submit">Se connecter</button>
+		<input type="text" name="username" placeholder="Username" required />
+		<input type="password" name="password" placeholder="Password" required />
+		<button type="submit">login</button>
 	  </form>
-	  <p>Pas encore inscrit ? <button id="go-to-signup" class="link-button">Créer un compte</button></p>
+	  <p>no account ? <button id="go-to-signup" class="link-button">sign up</button></p>
 	`,
 	"/signup": `
-	<h1>Inscription</h1>
+	<h1>sign up</h1>
 	<form id="signup-form">
-		<input type="text" name="username" placeholder="Nom d'utilisateur" required />
-		<input type="password" name="password" placeholder="Mot de passe" required />
-		<input type="password" name="confirm-password" placeholder="Confirmer le mot de passe" required />
-		<button type="submit">S'inscrire</button>
+		<input type="text" name="username" placeholder="username" required />
+		<input type="password" name="password" placeholder="password" required />
+		<input type="password" name="confirm-password" placeholder="confirm password" required />
+		<button type="submit">sign up!</button>
 	</form>
 	`,
 	"/profile": `
-	<h1>Profil utilisateur</h1>
-	<p>Nom d'utilisateur : <strong>Nom</strong><p>
-	<p>Nombre de parties jouées : <strong>12</strong></p>
-	<p> Dernière connexion : <strong>2025-01-28</strong></p>
+	<h1>user profile</h1>
+	<p>username : <strong>Nom</strong><p>
+	<p>number of games played : <strong>12</strong></p>
+	<p> last seen : <strong>2025-01-28</strong></p>
 	`,
-	"/about": "<h1>À propos de ft_transcendence</h1><p>Un projet ambitieux et unique !</p>",
-	"*": "<h1>404 - Page non trouvée</h1><p>La page demandée est introuvable.</p>"  
+	"/about": "<h1>about ft_transcendence</h1><p>not your problem</p>",
+	"*": "<h1>404 - not found</h1><p>page could not be found.</p>"  
   };
 
 
@@ -145,6 +145,7 @@ const routes = {
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
 
   document.addEventListener("DOMContentLoaded", () => {
+	
 	document.body.addEventListener("click", (e) => {
 	  if (e.target.matches("[data-link]")) {
 		e.preventDefault();
