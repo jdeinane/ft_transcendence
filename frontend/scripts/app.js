@@ -68,19 +68,26 @@ const routes = {
 	}
 
 	if (cleanPath === "/login") {
+		const user = getCurrentUser();
+		if (user) {
+		  alert("✅ You are already logged in!");
+		  navigate("#/profile");
+		  return;
+		}
+	  
 		const form = document.getElementById("login-form");
 		form.addEventListener("submit", (e) => {
 		  e.preventDefault();
 		  const username = form.username.value;
 		  const password = form.password.value;
 		  loginUser(username, password);
-		});
-	  
+		});	
+
 		const goToSignup = document.getElementById("go-to-signup");
 		goToSignup.addEventListener("click", () => {
 		  navigate("#/signup");
-		});
-	  }
+		});  
+	}
 	  
 	  if (cleanPath === "/signup") {
 		const form = document.getElementById("signup-form");
@@ -144,16 +151,19 @@ const routes = {
 }
 
 
-	// AFFICHE LA SECTION 'PROFILE' SEULEMENT SI LE USER EST CO
+	// AFFICHE/CACHE DES SECTIONS SELON UNE CONNEXION D'USER
 
   export function updateNavigation() {
 	const user = getCurrentUser();
 	const profileLink = document.querySelector('a[href="#/profile"]');
-	
+	const loginLink = document.querySelector('a[href="#/login"]');
+
 	if (user) {
 	profileLink.style.display = "inline";
+	loginLink.style.display = "none";
 	} else {
 	profileLink.style.display = "none";
+	loginLink.style.display = "inline";
 	}
 }
 	
@@ -197,6 +207,11 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   navigate(window.location.hash);
+  window.addEventListener("popstate", (event) => {
+	const path = event.state?.path || "/";
+	navigate(`#${path}`, false);
+
+  })
   updateNavigation();
 
   setupLanguageSelector();
