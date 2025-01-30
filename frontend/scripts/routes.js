@@ -18,6 +18,19 @@ export const routes = {
 	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
 	<button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
 	`,
+	"/tournament": `
+	<h1>Tournament Mode</h1>
+	<form id="tournament-form">
+		<input type="text" name="player" placeholder="Enter your alias" required />
+		<button type="submit">Join Tournament</button>
+	</form>
+	<h2>Players</h2>
+	<ul id="player-list"></ul>
+	<button id="start-tournament" disabled>Start Tournament</button>
+	<h2>Matchmaking</h2>
+	<p id="current-match">Waiting for players...</p>
+	<button id="play-match" style="display: none;">Play Match</button>
+	`,
 	"/login": `
 	  <h1>login</h1>
 	  <form id="login-form">
