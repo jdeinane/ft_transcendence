@@ -13,7 +13,7 @@ function showError(elementId, message) {
 	  errorElement.classList.add("shake"); // effet secousse
 	  setTimeout(() => errorElement.classList.remove("shake"), 500); // enleve l'effet apres 0.5s
 	}
-  }  
+  }
 
 export function createUser(username, password, email) {
 	if (!username || !password || !email) {

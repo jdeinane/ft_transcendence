@@ -46,7 +46,6 @@ const routes = {
 	`,
 	"/profile": `
 	<h1>user profile</h1>
-	<p>username : <strong>Nom</strong><p>
 	<p>number of games played : <strong>12</strong></p>
 	<p> last seen : <strong>2025-01-28</strong></p>
 	`,
