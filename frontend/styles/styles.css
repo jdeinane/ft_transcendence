@@ -138,3 +138,35 @@ form {
 	animation: shake 0.5s ease-in-out;
   }
   
+
+  .mode-selection {
+	display: flex;
+	justify-content: center;
+	gap: 20px;
+	margin-bottom: 20px;
+  }
+  
+  .mode-button {
+	padding: 10px 20px;
+	font-size: 18px;
+	border: 2px solid white;
+	background-color: transparent;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	border-radius: 5px;
+	text-transform: uppercase;
+  }
+  
+  .mode-button:hover {
+	background-color: white;
+	color: black;
+  }
+  
+  .active-mode {
+	background-color: #fbe66c; /* Couleur jaune active */
+	color: black;
+	font-weight: bold;
+	transform: scale(1.1);
+  }
+  

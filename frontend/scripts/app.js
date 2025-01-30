@@ -11,15 +11,13 @@ const routes = {
 	`,
 	"/game": `
 	<h1>PONG!</h1>
-	<div>
-		<label>
-		<input type="radio" name="mode" value="1" checked /> solo player
-		</label>
-		<label>
-		<input type="radio" name="mode" value="2" /> multiplayer
-		</label>
-		<button id="start-game">game start!</button>
+	<div class="mode-selection">
+		<button class="mode-button" data-mode="solo">Solo Player</button>
+		<button class="mode-button" data-mode="multiplayer">Multiplayer</button>
+		<button class="mode-button" data-mode="tournament">Tournament</button>
 	</div>
+	<button id="start-game">Game Start!</button>
+	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
 	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
 	<button id="back-home">back to home</button>
 	`,
@@ -46,6 +44,7 @@ const routes = {
 	`,
 	"/profile": `
 	<h1>user profile</h1>
+	<p>username : <strong>Nom</strong><p>
 	<p>number of games played : <strong>12</strong></p>
 	<p> last seen : <strong>2025-01-28</strong></p>
 	`,
@@ -129,16 +128,32 @@ const routes = {
 			return;
 		}
 		
+		let selectedMode = "solo";
+		const modeButtons = document.querySelectorAll(".mode-button");
+		modeButtons.forEach(button => {
+		  button.addEventListener("click", () => {
+			// Retire la classe active de tous les boutons
+			modeButtons.forEach(btn => btn.classList.remove("active-mode"));
+			// Ajoute la classe active au bouton sélectionné
+			button.classList.add("active-mode");
+			selectedMode = button.dataset.mode;
+		  });
+		});	  
+
 		const startButton = document.getElementById("start-game");
 		const canvas = document.getElementById("pong");
 
 		startButton.addEventListener("click", () => {
-			const mode = document.querySelector('input[name="mode"]:checked').value;
-			const isSinglePlayer = mode === "1";
-
+			if (selectedMode === "tournament") {
+			  navigate("#/tournament"); // Redirige vers le mode tournoi
+			  return;
+			}
+		
+			const isSinglePlayer = selectedMode === "solo";
 			canvas.style.display = "block";
 			startPongGame(canvas, isSinglePlayer);
-		});
+		  });
+		
 
 		const backButton = document.getElementById("back-home");
 		backButton.addEventListener("click", () => {
