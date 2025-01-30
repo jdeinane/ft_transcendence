@@ -143,7 +143,20 @@ const routes = {
 	updateActiveLink(cleanPath);
 }
 
-  
+
+	// AFFICHE LA SECTION 'PROFILE' SEULEMENT SI LE USER EST CO
+
+  export function updateNavigation() {
+	const user = getCurrentUser();
+	const profileLink = document.querySelector('a[href="#/profile"]');
+	
+	if (user) {
+	profileLink.style.display = "inline";
+	} else {
+	profileLink.style.display = "none";
+	}
+}
+	
 
 	// METTRE A JOUR LE LIEN ACTIF
 
@@ -170,33 +183,25 @@ const routes = {
   
   // FORMULAIRE DE CONNEXION: Lorsqu'il est soumis, il affiche les valeurs saisies dans la console
 
-  document.addEventListener("DOMContentLoaded", () => {
-	document.body.addEventListener("click", (e) => {
-		if (e.target.matches("[data-link]")) {
-			e.preventDefault();
-			navigate(e.target.getAttribute("href"));
-		}
-	});
+document.addEventListener("DOMContentLoaded", () => {
+  document.body.addEventListener("click", (e) => {
+    if (e.target.matches("[data-link]")) {
+      e.preventDefault();
+      navigate(e.target.getAttribute("href"));
+      updateNavigation(); // Mettre à jour le menu après navigation
+    }
+  });
 
-	// Rediriger vers home si aucune route n'est définie
-	if (!window.location.hash || window.location.hash === "#") {
-		window.location.replace("#/");
-	}
+  if (!window.location.hash || window.location.hash === "#") {
+    window.location.replace("#/");
+  }
 
-	// Charger la page correspondante
-	navigate(window.location.hash);
+  navigate(window.location.hash);
+  updateNavigation();
 
-	// Gérer les boutons "Back" et "Forward"
-	window.addEventListener("popstate", (event) => {
-		const path = event.state?.path || "/";
-		navigate(`#${path}`, false); // Ne pas ajouter à l'historique (déjà géré par le navigateur)
-	});
-
-	// Charger la sélection de langue
-	setupLanguageSelector();
+  setupLanguageSelector();
 });
 
-  
 
 
   // GESTION MULTILINGUE: Charge les traductions depuis lang.json

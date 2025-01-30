@@ -4,7 +4,7 @@
 // 1. ouvrir la console dev sur le navigateur (F12)
 // 2. taper la commande ` JSON.parse(localStorage.getItem("users")) `
 
-import { navigate } from "./app.js"
+import { navigate, updateNavigation } from "./app.js"
 
 function showError(elementId, message) {
 	const errorElement = document.getElementById(elementId);
@@ -42,9 +42,9 @@ export function loginUser(username, password) {
 	const user = existingUsers.find(user => user.username === username && user.password === password);
 
 	if (user) {
-		alert("you are now logged in!");
 		localStorage.setItem("loggedInUser", JSON.stringify(user));
 		navigate("/#profile");
+		updateNavigation();
 	} else {
 		showError("login-error", "incorrect username/password!")
 	}
@@ -54,6 +54,7 @@ export function logoutUser() {
 	localStorage.removeItem("loggedInUser");
 	alert("you are now logged out!");
 	navigate("#/");
+	updateNavigation();
 }
 
 export function getCurrentUser() {
