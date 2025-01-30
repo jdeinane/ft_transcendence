@@ -170,3 +170,22 @@ form {
 	transform: scale(1.1);
   }
   
+
+#back-to-mode-selection {
+	padding: 10px 20px;
+	font-size: 18px;
+	border: 2px solid white;
+	background-color: transparent;
+	color: white;
+	cursor: pointer;
+	transition: all 0.3s ease-in-out;
+	border-radius: 5px;
+	text-transform: uppercase;
+	margin-top: 20px;
+  }
+  
+  #back-to-mode-selection:hover {
+	background-color: white;
+	color: black;
+  }
+  

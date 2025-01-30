@@ -11,15 +11,16 @@ const routes = {
 	`,
 	"/game": `
 	<h1>PONG!</h1>
-	<div class="mode-selection">
+	<div id="mode-selection-container">
+		<div class="mode-selection">
 		<button class="mode-button" data-mode="solo">Solo Player</button>
 		<button class="mode-button" data-mode="multiplayer">Multiplayer</button>
 		<button class="mode-button" data-mode="tournament">Tournament</button>
+		</div>
+		<button id="start-game">Game Start!</button>
 	</div>
-	<button id="start-game">Game Start!</button>
 	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
-	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
-	<button id="back-home">back to home</button>
+	<button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
 	`,
 	"/login": `
 	  <h1>login</h1>
@@ -121,47 +122,52 @@ const routes = {
 
 	if (cleanPath === "/game") {
 		const user = getCurrentUser();
-
+	  
 		if (!user) {
-			alert("you have to be logged in first!");
-			navigate("#/login");
-			return;
+		  alert("❌ You have to be logged in first!");
+		  navigate("#/login");
+		  return;
 		}
-		
+	  
 		let selectedMode = "solo";
+	  
+		const modeSelectionContainer = document.getElementById("mode-selection-container");
 		const modeButtons = document.querySelectorAll(".mode-button");
+		const startButton = document.getElementById("start-game");
+		const canvas = document.getElementById("pong");
+		const backButton = document.getElementById("back-to-mode-selection");
+	  
 		modeButtons.forEach(button => {
 		  button.addEventListener("click", () => {
-			// Retire la classe active de tous les boutons
 			modeButtons.forEach(btn => btn.classList.remove("active-mode"));
-			// Ajoute la classe active au bouton sélectionné
 			button.classList.add("active-mode");
 			selectedMode = button.dataset.mode;
 		  });
-		});	  
-
-		const startButton = document.getElementById("start-game");
-		const canvas = document.getElementById("pong");
-
-		startButton.addEventListener("click", () => {
-			if (selectedMode === "tournament") {
-			  navigate("#/tournament"); // Redirige vers le mode tournoi
-			  return;
-			}
-		
-			const isSinglePlayer = selectedMode === "solo";
-			canvas.style.display = "block";
-			startPongGame(canvas, isSinglePlayer);
-		  });
-		
-
-		const backButton = document.getElementById("back-home");
-		backButton.addEventListener("click", () => {
-			navigate("#/");
 		});
-	}
-
-	updateActiveLink(cleanPath);
+	  
+		startButton.addEventListener("click", () => {
+		  if (selectedMode === "tournament") {
+			navigate("#/tournament"); // Redirige vers le mode tournoi
+			return;
+		  }
+	  
+		  modeSelectionContainer.style.display = "none"; // Cacher la sélection de mode
+		  canvas.style.display = "block"; // Afficher le jeu
+		  backButton.style.display = "block"; // Afficher le bouton retour
+	  
+		  const isSinglePlayer = selectedMode === "solo";
+		  startPongGame(canvas, isSinglePlayer);
+		});
+	  
+		// Gérer le retour vers la sélection du mode
+		backButton.addEventListener("click", () => {
+		  canvas.style.display = "none"; // Cacher le jeu
+		  backButton.style.display = "none"; // Cacher le bouton retour
+		  modeSelectionContainer.style.display = "block"; // Réafficher la sélection du mode
+		});
+	  }
+	  
+		  updateActiveLink(cleanPath);
 }
 
 
