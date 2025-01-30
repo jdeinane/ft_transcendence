@@ -29,6 +29,7 @@ const routes = {
 		<input type="text" name="username" placeholder="Username" required />
 		<input type="password" name="password" placeholder="Password" required />
 		<button type="submit">login</button>
+	    <p id="login-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
 	  </form>
 	  <p>no account ? <button id="go-to-signup" class="link-button">sign up</button></p>
 	`,
@@ -40,6 +41,7 @@ const routes = {
 		<input type="password" name="password" placeholder="password" required />
 		<input type="password" name="confirm-password" placeholder="confirm password" required />
 		<button type="submit">sign up!</button>
+    	<p id="signup-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
 	</form>
 	`,
 	"/profile": `
@@ -154,7 +156,7 @@ const routes = {
 	});
   }
   
-  
+
   function loadGameScript() {
 	const existingScript = document.querySelector('script[src="/scripts/pongGame.js"]');
 	if (existingScript) existingScript.remove(); // Évite de charger plusieurs fois le même script

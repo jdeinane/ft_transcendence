@@ -6,9 +6,18 @@
 
 import { navigate } from "./app.js"
 
+function showError(elementId, message) {
+	const errorElement = document.getElementById(elementId);
+	if (errorElement) {
+	  errorElement.textContent = message;
+	  errorElement.classList.add("shake"); // effet secousse
+	  setTimeout(() => errorElement.classList.remove("shake"), 500); // enleve l'effet apres 0.5s
+	}
+  }  
+
 export function createUser(username, password, email) {
 	if (!username || !password || !email) {
-		alert("all fields are required !");
+		showError("signup-error", "all fields are required !");
 		return;
 	}
 
@@ -16,7 +25,7 @@ export function createUser(username, password, email) {
 	const userExists = existingUsers.some(user => user.username == username);
 
 	if (userExists) {
-		alert("username already taken");
+		showError("signup-error", "username already taken");
 		return;
 	}
 
@@ -37,7 +46,7 @@ export function loginUser(username, password) {
 		localStorage.setItem("loggedInUser", JSON.stringify(user));
 		navigate("/#profile");
 	} else {
-		alert("incorrect username/password!")
+		showError("login-error", "incorrect username/password!")
 	}
 }
 
