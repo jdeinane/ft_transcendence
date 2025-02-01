@@ -4,6 +4,7 @@ export function setupTicTacToeGame() {
     const startButton = document.getElementById("start-ttt-game");
     const backButton = document.getElementById("back-to-mode-selection");
 
+	document.getElementById("back-to-mode-selection").style.display = "none";
     document.querySelectorAll(".mode-button").forEach(button => {
         button.addEventListener("click", () => {
             document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
@@ -29,7 +30,7 @@ function startTicTacToeGame(boardElement, mode) {
 	let board = ["", "", "", "", "", "", "", "", ""];
 	let currentPlayer = "X";
 	let gameActive = true;
-	
+
 	const backButton = document.getElementById("back-to-mode-selection");
 	backButton.style.display = "block"; // Affiche le bouton lorsqu'on commence le jeu
 	backButton.addEventListener("click", () => {
