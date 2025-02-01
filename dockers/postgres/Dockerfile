@@ -1,12 +1,14 @@
-FROM alpine:latest
+FROM debian:latest
 
-RUN apk update && \
-	apk upgrade && \
-	apk add --no-cache \
+RUN apt-get update && \
+	apt-get upgrade && \
+	apt-get isnstall -y --no-install-recommends \
 	wget \
 	postgresql-server \
 	postgresql-client \
-	procps
+	procps && \
+	apt-get clean && \
+	rm -rf /var/lib/apt/lists/*
 
 COPY conf/50-server.cnf /etc/postgresql/postgresql.conf.d/50-server.cnf
 COPY .tools/psql_script.sh ./

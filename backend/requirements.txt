@@ -1,0 +1,6 @@
+Django>=4.2,<5.0
+djangorestframework>=3.14,<4.0
+psycopg2-binary>=2.9  # postgreSQL
+django-cors-headers>=4.0  # pour gérer les requêtes cross-origin
+gunicorn>=21.2  # serveur WSGI pour la production
+whitenoise>=6.5  # gestion des fichiers statiques en production
