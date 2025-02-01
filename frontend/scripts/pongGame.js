@@ -1,8 +1,11 @@
+import { navigate } from "./app.js"
+
 export function setupPongGame() {
     let selectedMode = "solo";
     const canvas = document.getElementById("pong");
     const startButton = document.getElementById("start-game");
     const backButton = document.getElementById("back-to-mode-selection");
+    const gameSelectionButton = document.getElementById("back-to-game-selection");
     const modeSelectionContainer = document.querySelector(".mode-selection-container");
 
     document.querySelectorAll(".mode-button").forEach(button => {
@@ -31,6 +34,10 @@ export function setupPongGame() {
         canvas.style.display = "none";
         backButton.style.display = "none";
         modeSelectionContainer.style.display = "block";
+    });
+
+    gameSelectionButton.addEventListener("click", () => {
+        navigate("#/game");
     });
 }
 

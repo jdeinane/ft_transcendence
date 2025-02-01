@@ -3,8 +3,8 @@ export function setupTicTacToeGame() {
     const board = document.getElementById("tic-tac-toe-board");
     const startButton = document.getElementById("start-ttt-game");
     const backButton = document.getElementById("back-to-mode-selection");
+    const gameSelectionButton = document.getElementById("back-to-game-selection");
 
-	document.getElementById("back-to-mode-selection").style.display = "none";
     document.querySelectorAll(".mode-button").forEach(button => {
         button.addEventListener("click", () => {
             document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
@@ -24,7 +24,12 @@ export function setupTicTacToeGame() {
         backButton.style.display = "none";
         document.querySelector(".mode-selection-container").style.display = "block";
     });
+
+    gameSelectionButton.addEventListener("click", () => {
+        navigate("#/game");
+    });
 }
+
 
 function startTicTacToeGame(boardElement, mode) {
 	let board = ["", "", "", "", "", "", "", "", ""];
