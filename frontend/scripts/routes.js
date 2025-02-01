@@ -28,6 +28,7 @@ export const routes = {
 	</div>
     <canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
     <button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
+	<button id="back-to-game-selection">Back to Game Selection</button>
 	`,
 	"/tic-tac-toe":`
 	<h1>TIC TAC TOE!</h1>
@@ -41,6 +42,7 @@ export const routes = {
 	</div>
     <div id="tic-tac-toe-board" style="display: none;"></div>
     <button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
+	<button id="back-to-game-selection">Back to Game Selection</button>
 	`,
 	"/tournament": `
 	<h1>Tournament Mode</h1>

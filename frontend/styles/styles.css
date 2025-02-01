@@ -215,3 +215,19 @@ form {
 .ttt-cell:hover {
     background: #555;
 }
+
+#back-to-game-selection {
+    background-color: #ff4757;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    cursor: pointer;
+    margin-top: 15px;
+    border-radius: 5px;
+    transition: background 0.3s ease;
+}
+
+#back-to-game-selection:hover {
+    background-color: #e84118;
+}
