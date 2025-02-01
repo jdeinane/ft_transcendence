@@ -1,4 +1,4 @@
-FROM nginx:alpine
+FROM nginx:bullseye
 
 COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
 

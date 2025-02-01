@@ -1,0 +1,74 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres
+    container_name: postgres
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    env_file: .env
+    volumes:
+      - postgres:/var/lib/postgres
+    expose:
+      - "5432"
+    restart: unless-stopped
+    networks:
+      - backend
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PSQL_USER}"]
+      interval: 5s
+      timeout:  1s
+      retries: 10
+      start_period: 5s
+
+  nginx:
+    container_name: nginx
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    volumes: 
+      - ./frontend:/usr/share/nginx/html
+    depends_on:
+      backend:
+        postgresql:
+          condition: service_healthy
+    ports: 
+      - "8080:80"
+    networks: 
+      - frontend
+    restart: on-failure:5
+  
+  backend:
+    imsge: tr_backend
+    container_name: backend
+    env_file:
+      - /docker/.env
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    volumes: 
+      - ./backend:/usr/src/app
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks: 
+      - backend
+      - database
+    restart: always
+
+volumes:
+  postgres:
+    driver: local
+    driver_opts:
+      type: 'none'
+      o: 'bind'
+      device: '/home/tyron/data/postgresql'
+
+networks:
+  backend:
+    name: backend
+    driver: bridge
+  frontend:
+    name: frontend
+    driver: bridge 
