@@ -2,7 +2,7 @@ FROM debian:latest
 
 RUN apt-get update && \
 	apt-get upgrade && \
-	apt-get isnstall -y --no-install-recommends \
+	apt-get install -y --no-install-recommends \
 	wget \
 	postgresql-server \
 	postgresql-client \

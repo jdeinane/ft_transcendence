@@ -2,14 +2,14 @@ version: '3.8'
 
 services:
   postgres:
-    image: postgres
+    image: postgres:15
     container_name: postgres
     build:
-      context: ./
-      dockerfile: Dockerfile
-    env_file: .env
+      context: .
+      dockerfile: dockers/postgres/Dockerfile
+    env_file: dockers/.env
     volumes:
-      - postgres:/var/lib/postgres
+      - postgres_data:/var/lib/postgresql/data
     expose:
       - "5432"
     restart: unless-stopped
@@ -18,57 +18,42 @@ services:
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${PSQL_USER}"]
       interval: 5s
-      timeout:  1s
+      timeout: 1s
       retries: 10
       start_period: 5s
+
+  backend:
+    image: tr_backend
+    container_name: backend
+    build:
+      context: .
+      dockerfile: dockers/django/Dockerfile
+    env_file: dockers/.env
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - backend
+    restart: always
+    command: ["gunicorn", "rest.wsgi:application", "--bind", "0.0.0.0:8000"]
 
   nginx:
     container_name: nginx
     build:
-      context: ./
-      dockerfile: Dockerfile
-    volumes: 
-      - ./frontend:/usr/share/nginx/html
+      context: .
+      dockerfile: dockers/nginx/Dockerfile
     depends_on:
       backend:
-        postgresql:
-          condition: service_healthy
-    ports: 
-      - "8080:80"
-    networks: 
-      - frontend
-    restart: on-failure:5
-  
-  backend:
-    imsge: tr_backend
-    container_name: backend
-    env_file:
-      - /docker/.env
-    build:
-      context: ./
-      dockerfile: ./Dockerfile
-    volumes: 
-      - ./backend:/usr/src/app
-    depends_on:
-      postgres:
         condition: service_healthy
-    networks: 
+    ports:
+      - "8080:80"
+    networks:
       - backend
-      - database
-    restart: always
+    restart: on-failure:5
 
 volumes:
-  postgres:
-    driver: local
-    driver_opts:
-      type: 'none'
-      o: 'bind'
-      device: '/home/tyron/data/postgresql'
+  postgres_data:
 
 networks:
   backend:
-    name: backend
     driver: bridge
-  frontend:
-    name: frontend
-    driver: bridge 

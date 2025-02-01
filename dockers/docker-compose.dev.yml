@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: postgres_dev
+    env_file: dockers/.env
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - backend
+
+  backend:
+    build:
+      context: .
+      dockerfile: dockers/django/Dockerfile
+    container_name: backend_dev
+    env_file: dockers/.env
+    volumes:
+      - ./backend:/usr/src/app
+    depends_on:
+      - postgres
+    networks:
+      - backend
+    ports:
+      - "8000:8000"
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
+
+  frontend:
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app
+    ports:
+      - "3000:3000"
+    command: ["npm", "start"]
+
+volumes:
+  postgres_data:
+
+networks:
+  backend:
+    driver: bridge
