@@ -1,16 +1,16 @@
 import { routes } from "./routes.js"
-import { startPongGame } from "./pongGame.js";
 import { setupLanguageSelector } from "./language.js";
 import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
-import { startPongTournament } from "./tournament.js";
+import { setupPongGame } from "./pongGame.js";
+import { setupTicTacToeGame } from "./tttGame.js";
+
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {
 	const app = document.getElementById("app");
-	const cleanPath = path.replace("#", ""); // Enlève le hash #
-	app.innerHTML = routes[cleanPath] || routes["*"]; // Affiche la route correspondante ou 404
+	const cleanPath = path.replace("#", "");
+	app.innerHTML = routes[cleanPath] || routes["*"]; 
 
-	// Met à jour l'URL dans l'historique du navigateur si demandé
 	if (addToHistory) {
 		window.history.pushState({ path: cleanPath }, "", `#${cleanPath}`);
 	}
@@ -18,9 +18,9 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/login") {
 		const user = getCurrentUser();
 		if (user) {
-		  alert("✅ You are already logged in!");
-		  navigate("#/profile");
-		  return;
+			alert("✅ You are already logged in!");
+			navigate("#/profile");
+			return;
 		}
 	  
 		const form = document.getElementById("login-form");
@@ -33,8 +33,8 @@ export function navigate(path, addToHistory = true) {
 
 		const goToSignup = document.getElementById("go-to-signup");
 		goToSignup.addEventListener("click", () => {
-		  navigate("#/signup");
-		});  
+			navigate("#/signup");
+		});
 	}
 	  
 	if (cleanPath === "/signup") {
@@ -47,7 +47,7 @@ export function navigate(path, addToHistory = true) {
 			createUser(username, password, email);
 		});
 	  }
-	  
+
 	if (cleanPath === "/profile") {
 		const user = getCurrentUser();
 		if (!user) {
@@ -55,8 +55,8 @@ export function navigate(path, addToHistory = true) {
 			navigate("#/login");
 		} else {
 			document.getElementById("app").innerHTML += `
-			<p>Bienvenue, ${user.username} !</p>
-			<button id="logout">Déconnexion</button>
+			<p>welcome back, ${user.username} !</p>
+			<button id="logout">logout</button>
 			`;
 			document.getElementById("logout").addEventListener("click", logoutUser);
 		}
@@ -71,136 +71,42 @@ export function navigate(path, addToHistory = true) {
 
 	if (cleanPath === "/game") {
 		const user = getCurrentUser();
-		
 		if (!user) {
 		  alert("❌ You have to be logged in first!");
 		  navigate("#/login");
 		  return;
 		}
 	  
-		const canvas = document.getElementById("pong");
-		const backButton = document.getElementById("back-to-mode-selection");
-		const modeSelectionContainer = document.getElementById("mode-selection-container");
-		const tournamentMatch = JSON.parse(localStorage.getItem("tournamentMatch"));
-	  
-		if (tournamentMatch) {
-			modeSelectionContainer.style.display = "none";
-			canvas.style.display = "block";
-			backButton.style.display = "block";
-
-			startPongTournament(canvas, tournamentMatch.player1, tournamentMatch.player2, (winner) => {
-				alert(`${winner} wins the match!`);
-				navigate("#/tournament");
-				return;
-			});
-
-		  // en attendant la database
-			localStorage.removeItem("tournamentMatch");
-
-		} else {
-		  // Mode normal avec le choix du mode
-		  let selectedMode = "solo";
-	  
-		  const modeButtons = document.querySelectorAll(".mode-button");
-		  const startButton = document.getElementById("start-game");
-	  
-		  modeButtons.forEach(button => {
+		document.querySelectorAll(".mode-button").forEach(button => {
 			button.addEventListener("click", () => {
-			  modeButtons.forEach(btn => btn.classList.remove("active-mode"));
-			  button.classList.add("active-mode");
-			  selectedMode = button.dataset.mode;
+				const selectedGame = button.dataset.game;
+				if (selectedGame === "pong")
+					navigate("#/pong");
+				else if (selectedGame === "tic-tac-toe")
+					navigate("#/tic-tac-toe");
 			});
-		  });
-	  
-		  startButton.addEventListener("click", () => {
-			if (selectedMode === "tournament") {
-			  navigate("#/tournament");
-			  return;
-			}
-	  
-			modeSelectionContainer.style.display = "none";
-			canvas.style.display = "block";
-			backButton.style.display = "block";
-	  
-			const isSinglePlayer = selectedMode === "solo";
-			startPongGame(canvas, isSinglePlayer);
-		  });
-	  
-		  backButton.addEventListener("click", () => {
-			canvas.style.display = "none";
-			backButton.style.display = "none";
-			modeSelectionContainer.style.display = "block";
-		  });
-		}
-	  }
-	  
+		});
+	}
+
+	if (cleanPath === "/pong") {
+		setupPongGame();
+	}
+
+
+	if (cleanPath === "/tic-tac-toe") {
+		setupTicTacToeGame();
+	}
 
 	if (cleanPath === "/tournament") {
-		const players = [];
-		let currentMatchIndex = 0;
-	  
-		const form = document.getElementById("tournament-form");
-		const playerList = document.getElementById("player-list");
-		const startTournamentButton = document.getElementById("start-tournament");
-		const currentMatch = document.getElementById("current-match");
-		const playMatchButton = document.getElementById("play-match");
-	  
-		form.addEventListener("submit", (e) => {
-		  e.preventDefault();
-		  const playerName = e.target.player.value.trim();
-	  
-		  if (playerName && !players.includes(playerName)) {
-			players.push(playerName);
-			const li = document.createElement("li");
-			li.textContent = playerName;
-			playerList.appendChild(li);
-			e.target.reset();
-		  }
-	  
-		  if (players.length >= 2) {
-			startTournamentButton.disabled = false;
-		  }
-		});
-	  
-		startTournamentButton.addEventListener("click", () => {
-		  if (players.length < 2) {
-			alert("At least 2 players are needed to start a tournament!");
-			return;
-		  }
-		  startMatchmaking();
-		});
-	  
-		function startMatchmaking() {
-		  if (currentMatchIndex < players.length - 1) {
-			currentMatch.textContent = `Next Match: ${players[currentMatchIndex]} vs ${players[currentMatchIndex + 1]}`;
-			playMatchButton.style.display = "block";
-		  } else {
-			currentMatch.textContent = "Tournament Finished!";
-			playMatchButton.style.display = "none";
-		  }
-		}
-	  
-		playMatchButton.addEventListener("click", () => {
-		  if (currentMatchIndex >= players.length - 1) return;
-	  
-		  const player1 = players[currentMatchIndex];
-		  const player2 = players[currentMatchIndex + 1];
-	  
-		  // Stocker les joueurs actuels dans `localStorage`
-		  localStorage.setItem("tournamentMatch", JSON.stringify({ player1, player2 }));
-	  
-		  alert(`Match: ${player1} vs ${player2} starts now!`);
-		  navigate("#/game"); // Aller directement au jeu
-	  
-		  currentMatchIndex += 2;
-		  startMatchmaking();
-		});
-	  }
-	  
-
+		setupTournament();
+	}
 	updateActiveLink(cleanPath);
 }
 
+window.onpopstate = (event) => {
+	if (event.state && event.state.path)
+		navigate(event.state.path, false);
+}
 
 	// AFFICHE/CACHE DES SECTIONS SELON UNE CONNEXION D'USER
 

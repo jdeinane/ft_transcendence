@@ -6,17 +6,41 @@ export const routes = {
 	<button id="play-now"> play now</button>
 	`,
 	"/game": `
-	<h1>PONG!</h1>
-	<div id="mode-selection-container">
+	<h1>GAME SELECTION</h1>
+	<div class="mode-selection-container">
 		<div class="mode-selection">
-		<button class="mode-button" data-mode="solo">Solo Player</button>
-		<button class="mode-button" data-mode="multiplayer">Multiplayer</button>
-		<button class="mode-button" data-mode="tournament">Tournament</button>
+			<button class="mode-button" data-game="pong">Pong</button>
+			<button class="mode-button" data-game="tic-tac-toe">Tic Tac Toe</button>
 		</div>
-		<button id="start-game">Game Start!</button>
 	</div>
 	<canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
 	<button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
+	`,
+	"/pong": `
+	<h1>PONG!</h1>
+	<div class="mode-selection-container">
+		<div class="mode-selection">
+			<button class="mode-button" data-mode="solo">Solo Player</button>
+			<button class="mode-button" data-mode="multiplayer">Multiplayer</button>
+			<button class="mode-button" data-mode="tournament">Tournament</button>
+		</div>
+		<button id="start-game">Game start!</button>
+	</div>
+    <canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
+    <button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
+	`,
+	"/tic-tac-toe":`
+	<h1>TIC TAC TOE!</h1>
+	<div class="mode-selection-container">
+		<div class="mode-selection">
+			<button class="mode-button" data-mode="solo">Solo Player</button>
+			<button class="mode-button" data-mode="multiplayer">Multiplayer</button>
+			<button class="mode-button" data-mode="tournament">Tournament</button>
+		</div>
+		<button id="start-ttt-game">Game start!</button>
+	</div>
+    <div id="tic-tac-toe-board" style="display: none;"></div>
+    <button id="back-to-mode-selection" style="display: none;">Back to Select Game Mode</button>
 	`,
 	"/tournament": `
 	<h1>Tournament Mode</h1>

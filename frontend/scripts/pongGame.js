@@ -1,4 +1,41 @@
-export function startPongGame(canvas, isSinglePlayer) {
+export function setupPongGame() {
+    let selectedMode = "solo";
+    const canvas = document.getElementById("pong");
+    const startButton = document.getElementById("start-game");
+    const backButton = document.getElementById("back-to-mode-selection");
+    const modeSelectionContainer = document.querySelector(".mode-selection-container");
+
+    document.querySelectorAll(".mode-button").forEach(button => {
+        button.addEventListener("click", () => {
+            document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
+            button.classList.add("active-mode");
+            selectedMode = button.dataset.mode;
+        });
+    });
+
+    startButton.addEventListener("click", () => {
+        if (selectedMode === "tournament") {
+            navigate("#/tournament");
+            return;
+        }
+
+        modeSelectionContainer.style.display = "none";
+        canvas.style.display = "block";
+        backButton.style.display = "block";
+
+        const isSinglePlayer = selectedMode === "solo";
+        startPongGame(canvas, isSinglePlayer);
+    });
+
+    backButton.addEventListener("click", () => {
+        canvas.style.display = "none";
+        backButton.style.display = "none";
+        modeSelectionContainer.style.display = "block";
+    });
+}
+
+
+function startPongGame(canvas, isSinglePlayer) {
 	const ctx = canvas.getContext("2d");
   
 	// Variables du jeu
