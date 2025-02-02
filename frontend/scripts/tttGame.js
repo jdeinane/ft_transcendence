@@ -1,3 +1,5 @@
+import { navigate } from "./app.js";
+
 export function setupTicTacToeGame() {
     let selectedMode = "solo";
     const board = document.getElementById("tic-tac-toe-board");

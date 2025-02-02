@@ -1,5 +1,5 @@
 import { routes } from "./routes.js"
-import { setupLanguageSelector } from "./language.js";
+import { loadLanguage, setupLanguageSelector } from "./language.js";
 import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
 import { setupPongGame } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
@@ -100,6 +100,8 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/tournament") {
 		setupTournament();
 	}
+	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
+	loadLanguage(savedLanguage);
 	updateActiveLink(cleanPath);
 }
 
@@ -147,18 +149,6 @@ function loadGameScript() {
 	document.body.appendChild(script);
   }
 
-
-  	// GESTION MULTILINGUE: Charge les traductions depuis lang.json
-
-async function loadLanguage(lang = "en") {
-	const response = await fetch("lang.json");
-	const translations = await response.json();
-  
-	const app = document.getElementById("app");
-	app.innerHTML = `<h1>${translations[lang].welcome}</h1>`;
-  }
-
-
 	// GESTIONAIRE D'EVENEMENT
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -183,3 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
   updateNavigation();
   setupLanguageSelector();
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+	setupLanguageSelector(); 
+  });
+  
