@@ -1,7 +1,8 @@
 #!/bin/bash
 
 # load environment variables from dockers/.env
-if [ -f dockers/.env ]; then
+if [ -f dockers/.env ];
+then
 	echo "Loading environment variables from dockers/.env..."
 	set -o allexport
 	source dockers/.env
@@ -11,15 +12,12 @@ else
 fi
 
 # check if Docker rootless is running
-if ! pgrep -x "dockerd" > /dev/null; then
-    echo "Docker rootless mode is not active. Starting..."
-    export PATH=$HOME/bin:$PATH
-    export DOCKER_HOST=unix://$XDG_RUNTIME_DIR/docker.sock
-    dockerd-rootless.sh > /dev/null 2>&1 &
-
-    # wait for Docker to be ready
-    sleep 5
+if ! docker info > /dev/null 2>&1;
+then
+    echo "Docker is not running. Please start Docker Desktop manually."
+    exit 1
 fi
+
 
 # start prod environment
 echo "Starting the production environment..."

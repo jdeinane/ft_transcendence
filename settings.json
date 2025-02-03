@@ -1,6 +1,0 @@
-{
-    "python.pythonPath": "dockers/django/venv/bin/python",
-    "python.analysis.extraPaths": [
-        "dockers/django/venv/lib/python3.13/site-packages"
-    ]
-}

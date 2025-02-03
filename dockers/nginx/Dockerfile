@@ -1,5 +1,6 @@
-FROM nginx:bullseye
+FROM nginx:latest
 
-COPY conf/nginx.conf /etc/nginx/conf.d/default.conf
+# copy nginx configuration
+COPY ./nginx.conf /etc/nginx/conf.d/default.conf
 
 EXPOSE 80

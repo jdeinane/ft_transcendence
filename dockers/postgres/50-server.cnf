@@ -3,7 +3,7 @@
 datadir				= /var/lib/postgresql
 socket				= /run/postgresql/postgresql.sock
 listen_addresses	= '*'
-port				= 5432
+port				= 8000
 user				= postgresql
 
 log_error			= /var/log/postgresql/error.log

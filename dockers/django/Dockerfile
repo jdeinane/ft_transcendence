@@ -1,21 +1,23 @@
-FROM pythpon:3.10
+FROM python:3.10
 
-WORKDIR /app
+WORKDIR /backend
 
-# copy the required files to avoid cache invalidation
-COPY backend/requirements.txt .
+# create a virtual environment inside the container
+RUN python -m venv /app/venv
 
-# dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# activate venv and install dependencies
+COPY ./backend/requirements.txt .
+RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-# copy the source code of backend/
-COPY backend /app
+# copy the source code
+COPY ./backend /app/backend
 
-# setting the environment variables
-ENV PYTHONUNBEFFERED=1
+# set environment variables
+ENV PYTHONUNBUFFERED=1
 ENV DJANGO_SETTINGS_MODULE=backend.settings
+ENV PATH="/app/venv/bin:$PATH"
 
-EXPOSE 8000
+EXPOSE 9000
 
-# launching django with gunicorn
-CMD ["gunicorn", "backend.wsgi:application", "--bind", "0.0.0.0:8000"]
+# launch Django with Gunicorn in production
+CMD ["/app/venv/bin/gunicorn", "--bind", "0.0.0.0:9000", "config.wsgi:application"]
