@@ -18,22 +18,21 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/login") {
 		const user = getCurrentUser();
 		if (user) {
+			alert("✅ You are already logged in!");
 			navigate("#/profile");
 			return;
 		}
-	  
+	
 		const form = document.getElementById("login-form");
-		form.addEventListener("submit", (e) => {
-			e.preventDefault();
-			const username = form.username.value;
-			const password = form.password.value;
-			loginUser(username, password);
-		});	
-
-		const goToSignup = document.getElementById("go-to-signup");
-		goToSignup.addEventListener("click", () => {
-			navigate("#/signup");
-		});
+		// if (form) 
+		// 	form.innerHTML += `<p><button id="go-to-signup" class="link-button">Sign Up</button></p>`;
+	
+		const goToSignup = document.getElementById("go-to-signup");	
+		if (goToSignup) {
+			goToSignup.addEventListener("click", () => {
+				navigate("#/signup");
+			});
+		}
 	}
 	  
 	if (cleanPath === "/signup") {
@@ -170,9 +169,3 @@ document.addEventListener("DOMContentLoaded", () => {
   updateNavigation();
   setupLanguageSelector();
 });
-
-
-document.addEventListener("DOMContentLoaded", () => {
-	setupLanguageSelector(); 
-  });
-  

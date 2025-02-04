@@ -247,3 +247,31 @@ form {
 	border-radius: 4px;
   }
   
+  #go-to-signup {
+    display: inline-block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    font-size: 16px;
+    padding: 10px 15px;
+    background-color: #4CAF50; /* Vert */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.link-button {
+    display: block;
+    margin: 15px auto; /* Centre le bouton */
+    padding: 10px 20px;
+    background-color: #4CAF50; /* Vert */
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.link-button:hover {
+    background-color: #45a049;
+}

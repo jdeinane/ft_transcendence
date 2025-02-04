@@ -56,14 +56,16 @@ export const routes = {
 	<button id="play-match" style="display: none;" data-translate="play-match">Play Match</button>
 	`,
 	"/login": `
-	  <h1 data-translate="login">login</h1>
-	  <form id="login-form">
+	<h1 data-translate="login">login</h1>
+	<form id="login-form">
 		<input type="text" name="username" placeholder="Username" required data-translate="username"/>
 		<input type="password" name="password" placeholder="Password" required data-translate="password"/>
 		<button type="submit" data-translate="login">login</button>
-	    <p id="login-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
-	  </form>
-	  <p data-translate="no-account">no account ? <button id="go-to-signup" class="link-button" data-translate="sign-up">sign up</button></p>
+	    <p id="login-error" class="error-message"></p>
+	</form>
+	<p data-translate="no-account">No account?
+	<p><button id="go-to-signup" class="link-button" data-translate="sign-up">Sign Up</button></p>
+	</p>
 	`,
 	"/signup": `
 	<h1 data-translate="sign-up">sign up</h1>
