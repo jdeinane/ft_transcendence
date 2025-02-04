@@ -1,16 +1,19 @@
 services:
   backend:
     image: ft_transcendence_backend
+    build:
+      context: .
+      dockerfile: ./dockers/django/Dockerfile
+    pull_policy: never
     restart: always
     env_file:
-      - example.env
+      - ./dockers/.env.dev
+    volumes:
+      - ./backend:/app/backend
     environment:
       - BACKEND_PORT=${BACKEND_PORT}
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:8000/${POSTGRES_DB}
       - ENVIRONMENT=production
-    build:
-      context: ./dockers/django
-      dockerfile: Dockerfile
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
@@ -20,10 +23,13 @@ services:
       - database
 
   postgres:
-    image: postgres
+    build:
+      context: ./dockers/postgres
+      dockerfile: Dockerfile
+    pull_policy: never
     restart: always
     env_file:
-      - example.env
+      - ./dockers/.env.dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./dockers/postgres/conf/50-server.cnf:/etc/postgresql/postgresql.conf
@@ -36,23 +42,24 @@ services:
     environment:
       - ADMINER_DEFAULT_SERVER=postgres
       - ADMINER_DESIGN=table
-    networks:
-      - database
-    depends_on:
-      - postgres
     ports:
       - 9000:8080
+    depends_on:
+      - postgres
+    networks:
+      - database
+
   nginx:
     build:
       context: ./dockers/nginx
       dockerfile: Dockerfile
+    pull_policy: never
     restart: always
     ports:
       - "80:80"
       - "443:443"
     networks:
       - frontend
-    
 
 volumes:
   postgres_data:

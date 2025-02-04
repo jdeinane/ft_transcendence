@@ -1,1 +1,3 @@
-gunicorn
+Django>=3.2
+djangorestframework
+gunircorn

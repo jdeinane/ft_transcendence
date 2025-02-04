@@ -1,21 +1,22 @@
 FROM python:3.10
 
-WORKDIR /backend
+# set the working directory inside django's container
+WORKDIR /app
 
-# create a virtual environment inside the container
-RUN python -m venv /app/venv
+# copy the requirements file
+COPY ./backend/requirements.txt /app/
 
-# activate venv and install dependencies
-COPY ./backend/requirements.txt .
-RUN /app/venv/bin/pip install --no-cache-dir -r requirements.txt
+# create a venv and install the dependencies
+RUN python -m venv /app/venv && \
+	/app/venv/bin/pip install --no-cache-dir -r requirements.txt
 
-# copy the source code
+# copy the rest of the source code without venv/
 COPY ./backend /app/backend
 
 # set environment variables
-ENV PYTHONUNBUFFERED=1
-ENV DJANGO_SETTINGS_MODULE=backend.settings
-ENV PATH="/app/venv/bin:$PATH"
+ENV PYTHONUNBUFFERED=1 \
+	DJANGO_SETTINGS_MODULE=backend.settings \
+	PATH="/app/venv/bin:$PATH"
 
 EXPOSE 9000
 
