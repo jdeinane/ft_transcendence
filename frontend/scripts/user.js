@@ -52,7 +52,6 @@ export function loginUser(username, password) {
 
 export function logoutUser() {
 	localStorage.removeItem("loggedInUser");
-	alert("you are now logged out!");
 	navigate("#/");
 	updateNavigation();
 }

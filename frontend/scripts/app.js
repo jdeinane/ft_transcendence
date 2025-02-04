@@ -18,7 +18,6 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/login") {
 		const user = getCurrentUser();
 		if (user) {
-			alert("✅ You are already logged in!");
 			navigate("#/profile");
 			return;
 		}
@@ -51,7 +50,6 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/profile") {
 		const user = getCurrentUser();
 		if (!user) {
-			alert("you have to log in !");
 			navigate("#/login");
 		} else {
 			document.getElementById("app").innerHTML += `
@@ -72,7 +70,6 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/game") {
 		const user = getCurrentUser();
 		if (!user) {
-		  alert("❌ You have to be logged in first!");
 		  navigate("#/login");
 		  return;
 		}
