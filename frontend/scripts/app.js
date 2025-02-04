@@ -24,8 +24,12 @@ export function navigate(path, addToHistory = true) {
 		}
 	
 		const form = document.getElementById("login-form");
-		// if (form) 
-		// 	form.innerHTML += `<p><button id="go-to-signup" class="link-button">Sign Up</button></p>`;
+		form.addEventListener("submit", (e) => {
+			e.preventDefault();
+			const username = form.username.value;
+			const password = form.password.value;
+			loginUser(username, password);
+		});	
 	
 		const goToSignup = document.getElementById("go-to-signup");	
 		if (goToSignup) {
