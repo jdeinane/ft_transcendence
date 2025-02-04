@@ -36,7 +36,8 @@
 	  "number-of-games": "Number of games played",
 	  "last-seen": "Last seen",
 	  "not-found": "404 - Not Found",
-	  "page-not-found": "Page could not be found."
+	  "page-not-found": "Page could not be found.",
+	  "logout": "logout"
 	},
 	"fr": {
 	  "home": "accueil",
@@ -75,7 +76,8 @@
 	  "last-seen": "Dernière connexion",
 	  "about": "à propos de",
 	  "not-found": "404 - Page non trouvée",
-	  "page-not-found": "La page demandée est introuvable."
+	  "page-not-found": "La page demandée est introuvable.",
+	  "logout": "se déconnecter"
 	},
 	"es": {
 	  "home": "hogar",
@@ -114,7 +116,8 @@
 	  "last-seen": "Última conexión",
 	  "about": "acerca de",
 	  "not-found": "404 - Página no encontrada",
-	  "page-not-found": "La página no pudo ser encontrada."
+	  "page-not-found": "La página no pudo ser encontrada.",
+	  "logout": "cerrar sesión"
 	}
   }
   

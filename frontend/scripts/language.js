@@ -21,16 +21,27 @@ export async function loadLanguage(lang = "en") {
 }
 
 export function setupLanguageSelector() {
-	const languageSelector = document.getElementById("language-selector");
+    const flags = document.querySelectorAll(".lang-flag");
 
-	languageSelector.addEventListener("change", (e) => {
-		const selectedLanguage = e.target.value;
-		localStorage.setItem("preferredLanguage", selectedLanguage);
-		loadLanguage(selectedLanguage);
-	});
+    flags.forEach(flag => {
+        flag.addEventListener("click", () => {
+            const selectedLanguage = flag.dataset.lang;
+            localStorage.setItem("preferredLanguage", selectedLanguage);
+            loadLanguage(selectedLanguage);
 
-	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
-	languageSelector.value = savedLanguage;
-	loadLanguage(savedLanguage);
+            // Mettre à jour l'apparence pour indiquer la langue active
+            flags.forEach(f => f.classList.remove("active"));
+            flag.classList.add("active");
+        });
+    });
+
+    // Charger la langue sauvegardée
+    const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
+    loadLanguage(savedLanguage);
+    
+    // Mettre le drapeau actif
+    const activeFlag = document.querySelector(`.lang-flag[data-lang="${savedLanguage}"]`);
+    if (activeFlag) {
+        activeFlag.classList.add("active");
+    }
 }
-  

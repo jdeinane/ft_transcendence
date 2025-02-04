@@ -1,277 +1,206 @@
+/* Import Google Font */
 @import url('https://fonts.googleapis.com/css2?family=Audiowide&display=swap');
 
+/* 🎨 Global Styles */
+:root {
+  --primary-color: #fbe66c;
+  --secondary-color: #4CAF50;
+  --dark-bg: #1a1a2e;
+  --light-bg: #282846;
+  --text-color: #ffffff;
+  --button-hover: #f8d90f;
+  --shadow-color: rgba(255, 255, 255, 0.2);
+}
+
+/* 🌎 Reset */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: 'Audiowide', sans-serif;
+}
+
 body {
-	background-image: url('../assets/images/pong2.jpg'); 
-	background-repeat: no-repeat;
-	background-size: cover; 
-	background-position: center;
-	font-family: 'Audiowide', sans-serif;
-  }
-  
+  background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
+  color: var(--text-color);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  text-align: center;
+}
 
+/* 📌 Header */
 header {
-	background-color: #333;
-	padding: 1em;
-	text-align: center;
+  width: 100%;
+  background: var(--dark-bg);
+  padding: 1rem;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  top: 0;
+  z-index: 1000;
+  box-shadow: 0px 2px 10px var(--shadow-color);
 }
 
-header nav a {
-	color: white;
-	text-decoration: none;
-	margin: 0 1em;
+nav {
+  display: flex;
+  gap: 1.5rem;
 }
 
-header nav a:hover {
-	text-decoration: underline;
+nav a {
+  color: var(--text-color);
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.3s ease-in-out;
 }
 
+nav a:hover {
+  color: var(--primary-color);
+  text-shadow: 0 0 5px var(--primary-color);
+}
+
+/* 📌 Main Content */
 #app {
-	padding: 2em;
-	text-align: center;
-	min-height: 80vh;
-	display: flex;
-	flex-direction: column;
-	justify-content: center;
-	align-items: center;  
+  padding: 4rem 1rem;
+  width: 100%;
+  max-width: 800px;
 }
 
-select {
-	margin: 1em;
-	padding: 0.5em;
-	border-radius: 5px;
-	border: 1px solid #ccc;
-	font-size: 1em;
+/* 🎮 Game Selection */
+.mode-selection-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 15px;
+  padding: 2rem;
 }
 
-footer {
-	background-color: #333;
-	color: white;
-	text-align: center;
-	padding: 1em;
-	position: fixed;
-	bottom: 0;
-	width: 100%;
+/* 🎮 Buttons */
+button {
+  padding: 12px 20px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: 2px solid var(--primary-color);
+  background: transparent;
+  color: var(--text-color);
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
 }
 
+button:hover {
+  background: var(--primary-color);
+  color: black;
+  transform: scale(1.1);
+}
+
+/* 🏆 Tournament Styles */
+#player-list {
+  list-style: none;
+  padding: 0;
+}
+
+#player-list li {
+  background: var(--light-bg);
+  padding: 10px;
+  margin: 5px 0;
+  border-radius: 5px;
+}
+
+/* 🕹 Pong Game */
+canvas {
+  background: black;
+  border: 2px solid var(--primary-color);
+  box-shadow: 0 0 20px var(--primary-color);
+}
+
+/* 🔘 Forms */
 form {
-	display: flex;
-	flex-direction: column;
-	gap: 1em;
-	max-width: 300px;
-	margin: 2em auto;
-  }
-  
-  input {
-	padding: 0.5em;
-	font-size: 1em;
-	border: 1px solid #ccc;
-	border-radius: 5px;
-  }
-  
-  button {
-	padding: 0.5em;
-	background-color: #333;
-	color: white;
-	border: none;
-	border-radius: 5px;
-	cursor: pointer;
-	font-family: 'Audiowide', sans-serif;
-  }
-  
-  button:hover {
-	background-color: #555;
-  }
-  
-  .welcome-title {
-	color: #FBE66C;
-	text-align: center;
-	font-family: 'Audiowide', sans-serif; /* Police Audiowide */
-	font-size: 64px;
-	font-style: normal;
-	font-weight: 400;
-	line-height: normal;
-	letter-spacing: 1.28px;
-	filter: blur(2px);
-	animation: glow 2s infinite ease-in-out; /* Animation lumineuse */
-  }
-  
-  @keyframes glow {
-	0%, 100% {
-	  text-shadow: 0 0 10px #FBE66C, 0 0 20px #FBE66C, 0 0 30px #FBE66C;
-	}
-	50% {
-	  text-shadow: 0 0 20px #FBE66C, 0 0 40px #FBE66C, 0 0 60px #FBE66C;
-	}
-  }
-
-  @media (max-width: 768px) {
-	header nav {
-	  display: flex;
-	  flex-direction: column;
-	  gap: 1em;
-	}
-  
-	form {
-	  width: 90%;
-	}
-  }
-
-  .error-message {
-	color: red;
-	font-size: 14px;
-	margin-top: 5px;
-	text-align: center;
-	opacity: 1;
-	transition: opacity 0.5s;
-  }
-  
-  /* Effet de secousse */
-  @keyframes shake {
-	0% { transform: translateX(0); }
-	25% { transform: translateX(-5px); }
-	50% { transform: translateX(5px); }
-	75% { transform: translateX(-5px); }
-	100% { transform: translateX(0); }
-  }
-  
-  .shake {
-	animation: shake 0.5s ease-in-out;
-  }
-  
-
-  .mode-selection {
-	display: flex;
-	justify-content: center;
-	gap: 20px;
-	margin-bottom: 20px;
-  }
-  
-  .mode-button {
-	padding: 10px 20px;
-	font-size: 18px;
-	border: 2px solid white;
-	background-color: transparent;
-	color: white;
-	cursor: pointer;
-	transition: all 0.3s ease-in-out;
-	border-radius: 5px;
-	text-transform: uppercase;
-  }
-  
-  .mode-button:hover {
-	background-color: white;
-	color: black;
-  }
-  
-  .active-mode {
-	background-color: #fbe66c; /* Couleur jaune active */
-	color: black;
-	font-weight: bold;
-	transform: scale(1.1);
-  }
-  
-
-#back-to-mode-selection {
-	padding: 10px 20px;
-	font-size: 18px;
-	border: 2px solid white;
-	background-color: transparent;
-	color: white;
-	cursor: pointer;
-	transition: all 0.3s ease-in-out;
-	border-radius: 5px;
-	text-transform: uppercase;
-	margin-top: 20px;
-  }
-  
-  #back-to-mode-selection:hover {
-	background-color: white;
-	color: black;
-  }
-
-  #tic-tac-toe-board {
-    display: grid;
-    grid-template-columns: repeat(3, 100px);
-    grid-template-rows: repeat(3, 100px);
-    gap: 5px;
-    justify-content: center;
-    margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  max-width: 300px;
+  margin: auto;
 }
 
-.ttt-cell {
-    width: 100px;
-    height: 100px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2rem;
-    background: #333;
-    color: white;
-    border: 2px solid white;
-    cursor: pointer;
-    transition: background 0.3s;
+input {
+  padding: 10px;
+  font-size: 1rem;
+  border: 2px solid var(--primary-color);
+  border-radius: 5px;
+  background: var(--dark-bg);
+  color: var(--text-color);
+  outline: none;
+  transition: border 0.3s ease-in-out;
 }
 
-.ttt-cell:hover {
-    background: #555;
+input:focus {
+  border-color: var(--button-hover);
 }
 
-#back-to-game-selection {
-    background-color: #ff4757;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    margin-top: 15px;
-    border-radius: 5px;
-    transition: background 0.3s ease;
+/* 🛑 Error Message */
+.error-message {
+  color: #ff4c4c;
+  font-size: 0.9rem;
+  animation: fadeIn 0.3s ease-in-out;
 }
 
-#back-to-game-selection:hover {
-    background-color: #e84118;
+/* ✨ Animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes glow {
+  0%, 100% {
+    text-shadow: 0 0 10px var(--primary-color), 0 0 20px var(--primary-color);
+  }
+  50% {
+    text-shadow: 0 0 20px var(--primary-color), 0 0 40px var(--primary-color);
+  }
+}
+
+/* ⚡ Responsive Design */
+@media (max-width: 768px) {
+  nav {
+    flex-direction: column;
+    gap: 10px;
+  }
+  
+  form {
+    width: 90%;
+  }
+
+  .mode-selection-container {
+    width: 100%;
+    padding: 1rem;
+  }
 }
 
 #language-selector-container {
-	position: absolute;
-	top: 10px;
-	left: 10px;
-	z-index: 100;
-  }
-  
-  #language-selector {
-	padding: 5px;
-	font-size: 16px;
-	background-color: white;
-	border: 1px solid black;
-	border-radius: 4px;
-  }
-  
-  #go-to-signup {
-    display: inline-block !important;
-    visibility: visible !important;
-    opacity: 1 !important;
-    font-size: 16px;
-    padding: 10px 15px;
-    background-color: #4CAF50; /* Vert */
-    color: white;
-    border: none;
-    cursor: pointer;
-    border-radius: 5px;
+    position: absolute;
+    top: 10px;
+    right: 20px;
+    display: flex;
+    gap: 10px; /* Espacement entre les drapeaux */
+    align-items: center;
+    z-index: 1000;
 }
 
-.link-button {
-    display: block;
-    margin: 15px auto; /* Centre le bouton */
-    padding: 10px 20px;
-    background-color: #4CAF50; /* Vert */
-    color: white;
-    border: none;
+.lang-flag {
+    width: 32px; /* Taille uniforme */
+    height: auto; /* Garde les proportions correctes */
+    aspect-ratio: 1 / 1; /* Assure une forme parfaitement ronde */
     cursor: pointer;
-    border-radius: 5px;
-    font-size: 16px;
+    border-radius: 50%; /* Rend le drapeau circulaire */
+    border: 2px solid transparent;
+    transition: transform 0.2s ease-in-out, border 0.2s;
+    object-fit: cover; /* Ajuste bien l’image dans un rond */
 }
 
-.link-button:hover {
-    background-color: #45a049;
+.lang-flag:hover, .lang-flag.active {
+    transform: scale(1.1);
+    border: 2px solid #fbe66c; /* Contour doré au drapeau sélectionné */
 }

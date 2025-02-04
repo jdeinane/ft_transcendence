@@ -18,11 +18,10 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/login") {
 		const user = getCurrentUser();
 		if (user) {
-			alert("✅ You are already logged in!");
 			navigate("#/profile");
 			return;
 		}
-	
+	  
 		const form = document.getElementById("login-form");
 		form.addEventListener("submit", (e) => {
 			e.preventDefault();
@@ -30,13 +29,11 @@ export function navigate(path, addToHistory = true) {
 			const password = form.password.value;
 			loginUser(username, password);
 		});	
-	
-		const goToSignup = document.getElementById("go-to-signup");	
-		if (goToSignup) {
-			goToSignup.addEventListener("click", () => {
-				navigate("#/signup");
-			});
-		}
+
+		const goToSignup = document.getElementById("go-to-signup");
+		goToSignup.addEventListener("click", () => {
+			navigate("#/signup");
+		});
 	}
 	  
 	if (cleanPath === "/signup") {
@@ -53,11 +50,12 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/profile") {
 		const user = getCurrentUser();
 		if (!user) {
+			alert("you have to log in !");
 			navigate("#/login");
 		} else {
 			document.getElementById("app").innerHTML += `
 			<p>welcome back, ${user.username} !</p>
-			<button id="logout">logout</button>
+			<button id="logout" data-translate="logout">logout</button>
 			`;
 			document.getElementById("logout").addEventListener("click", logoutUser);
 		}
@@ -173,3 +171,9 @@ document.addEventListener("DOMContentLoaded", () => {
   updateNavigation();
   setupLanguageSelector();
 });
+
+
+document.addEventListener("DOMContentLoaded", () => {
+	setupLanguageSelector(); 
+  });
+  
