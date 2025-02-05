@@ -68,7 +68,12 @@ export function navigate(path, addToHistory = true) {
 
 		const chatWidget = document.getElementById("chat-widget");
 		chatWidget.addEventListener("click", () => {
-			navigate("#livechat");
+			navigate("#/livechat");
+		});
+
+		const dashboardWidget = document.getElementById("dashboard-widget");
+		dashboardWidget.addEventListener("click", () => {
+			navigate("#/dashboard");
 		});
 	}
 

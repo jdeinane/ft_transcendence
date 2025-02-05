@@ -5,12 +5,13 @@ export const routes = {
     <div class="widgets-container">
         <div id="game-widget">
             <img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
-            <div class="game-info">
-                <p class="game-title">Play Games</p>
-                <p class="game-subtitle">Pong & Tic-Tac-Toe</p>
-            </div>
+        	<div class="game-info">
+          	<p class="game-title">Play Games</p>
+        	<p class="game-subtitle">Pong & Tic-Tac-Toe</p>
         </div>
+    </div>
 
+    <div class="bottom-widgets">
         <div id="chat-widget">
             <img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">
             <div class="chat-info">
@@ -18,7 +19,17 @@ export const routes = {
                 <p class="chat-subtitle">Join the conversation</p>
             </div>
         </div>
+
+            <div id="dashboard-widget">
+                <img src="assets/icons/dashboard.png" alt="Dashboard Icon" class="dashboard-icon">
+                <div class="dashboard-info">
+                    <p class="dashboard-title">Dashboard</p>
+                    <p class="dashboard-subtitle">View stats & matches</p>
+                </div>
+            </div>
+        </div>
     </div>
+
     `,
 	"/game": `
 	<h1 data-translate="game-selection">GAME SELECTION</h1>
