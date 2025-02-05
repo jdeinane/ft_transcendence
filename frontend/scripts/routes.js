@@ -1,10 +1,25 @@
 // ROUTES: Un objet 'routes' associe chaque chemin a un contenu HTML
 
 export const routes = {
-	"/": `
-	<h1 class="welcome-title" data-translate="welcome">welcome to ft_transcendence</h1>
-	<button id="play-now" data-translate="play-now"> play now</button>
-	`,
+    "/": `
+    <div class="widgets-container">
+        <div id="game-widget">
+            <img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
+            <div class="game-info">
+                <p class="game-title">Play Games</p>
+                <p class="game-subtitle">Pong & Tic-Tac-Toe</p>
+            </div>
+        </div>
+
+        <div id="chat-widget">
+            <img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">
+            <div class="chat-info">
+                <p class="chat-title">Live Chat</p>
+                <p class="chat-subtitle">Join the conversation</p>
+            </div>
+        </div>
+    </div>
+    `,
 	"/game": `
 	<h1 data-translate="game-selection">GAME SELECTION</h1>
 	<div class="mode-selection-container">
@@ -13,7 +28,7 @@ export const routes = {
 			<button class="mode-button" data-game="tic-tac-toe" data-translate="tic-tac-toe">Tic Tac Toe</button>
 		</div>
 	</div>
-	`,
+    `,
 	"/pong": `
 	<h1>PONG!</h1>
 	<div class="mode-selection-container">

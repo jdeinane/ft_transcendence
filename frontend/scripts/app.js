@@ -54,7 +54,6 @@ export function navigate(path, addToHistory = true) {
 			navigate("#/login");
 		} else {
 			document.getElementById("app").innerHTML += `
-			<p>welcome back, ${user.username} !</p>
 			<button id="logout" data-translate="logout">logout</button>
 			`;
 			document.getElementById("logout").addEventListener("click", logoutUser);
@@ -62,9 +61,14 @@ export function navigate(path, addToHistory = true) {
 	  }
 	  
 	if (cleanPath === "/") {
-		const playNowButton = document.getElementById("play-now");
-		playNowButton.addEventListener("click", () => {
+		const gameWidget = document.getElementById("game-widget");
+		gameWidget.addEventListener("click", () => {
 			navigate("#/game");
+		});
+
+		const chatWidget = document.getElementById("chat-widget");
+		chatWidget.addEventListener("click", () => {
+			navigate("#livechat");
 		});
 	}
 
@@ -169,10 +173,9 @@ document.addEventListener("DOMContentLoaded", () => {
   })
 
   updateNavigation();
-  setupLanguageSelector();
 });
 
-
+// ne pas supprimer sinon les trad ne marchent plus
 document.addEventListener("DOMContentLoaded", () => {
 	setupLanguageSelector(); 
   });

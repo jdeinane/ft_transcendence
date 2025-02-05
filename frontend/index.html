@@ -8,15 +8,19 @@
   <link href="https://fonts.googleapis.com/css2?family=Audiowide&display=swap" rel="stylesheet">
 </head>
 <body> 		<!-- Contient le contenu principal -->
-  <header> 	<!-- Barre de navigation avec des liens dynamiques pour changer de page -->
-    <nav>
-      <a href="#/" data-link data-translate="home">home</a>
-      <a href="#/login" data-link data-translate="login">login</a>
-      <a href="#/profile" data-link data-translate="profile">profile</a>
-      <a href="#/about" data-link data-translate="about">about</a>
-      <a href="#/game" data-link data-translate="play">play!</a>
-    </nav>
-  </header>
+<header>
+    <div class="nav-container">
+        <div class="nav-left">
+            <a href="#/profile" data-link data-translate="profile">profile</a>
+        </div>
+        <div class="nav-right">
+            <a href="#/" data-link data-translate="home">home</a>
+            <a href="#/login" data-link data-translate="login">login</a>
+            <a href="#/about" data-link data-translate="about">about</a>
+            <a href="#/game" data-link data-translate="play">play!</a>
+        </div>
+    </div>
+</header>
   <div id="language-selector-container">
     <img src="assets/icons/united-kingdom.png" alt="English" class="lang-flag" data-lang="en">
     <img src="assets/icons/france.png" alt="Français" class="lang-flag" data-lang="fr">
