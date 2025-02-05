@@ -2,6 +2,11 @@
 
 export const routes = {
     "/": `
+
+	<div class="clock-container">
+		<canvas id="clockCanvas" width="400" height="400"></canvas>
+	</div>
+
     <div class="widgets-container">
         <div id="game-widget">
             <img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
