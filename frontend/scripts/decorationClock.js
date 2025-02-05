@@ -1,6 +1,9 @@
-function initializeClock() {
-    const canvas = document.getElementById("clockCanvas");
+export function initializeClock() {
+	const canvas = document.getElementById("clockCanvas");
 
+	if (!canvas)
+		return;
+	
     const ctx = canvas.getContext("2d");
     const width = canvas.width;
     const height = canvas.height;
@@ -15,7 +18,7 @@ function initializeClock() {
         ctx.fillRect(5, 5, width - 10, height - 10);
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
-        ctx.strokeRect(5, 5, width - 10, height - 10);
+        ctx.strokeRect(	5, 5, width - 10, height - 10);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
         ctx.fillStyle = "gray";
@@ -27,9 +30,9 @@ function initializeClock() {
         const hourNumbers = ["12", "3", "6", "9"];
         const hourPositions = [
             { x: centerX, y: centerY - radius + 2 }, // 12h
-            { x: centerX + radius - 25, y: centerY }, // 3h
+            { x: centerX + radius - 10, y: centerY }, // 3h
             { x: centerX, y: centerY + radius - 30 }, // 6h
-            { x: centerX - radius + 25, y: centerY }  // 9h
+            { x: centerX - radius + 15, y: centerY }  // 9h
         ];
 
         for (let i = 0; i < hourNumbers.length; i++) {
@@ -56,7 +59,7 @@ function initializeClock() {
 		drawHand(minutes * 6, radius * 0.8, "gray", 4);
 		drawHand(seconds * 6, radius * 0.4, "red", 5);
 		ctx.fillStyle = "#333333";
-		ctx.fillRect(centerX - 3, centerY - 6, 12, 12);
+		ctx.fillRect(centerX - 5, centerY - 6, 12, 12);
 		
 		requestAnimationFrame(drawClock);
 	}
@@ -76,7 +79,12 @@ function initializeClock() {
 
     drawClock();
 }
-
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(initializeClock, 100);
+	setTimeout(initializeClock, 100);
+});
+
+window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#/") {
+        initializeClock();
+    }
 });

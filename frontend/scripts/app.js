@@ -3,6 +3,7 @@ import { loadLanguage, setupLanguageSelector } from "./language.js";
 import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
 import { setupPongGame } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
+import { initializeClock } from "./decorationClock.js";
 
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
@@ -61,6 +62,10 @@ export function navigate(path, addToHistory = true) {
 	  }
 	  
 	if (cleanPath === "/") {
+		setTimeout(() => {
+			initializeClock();
+		}, 50);
+
 		const gameWidget = document.getElementById("game-widget");
 		gameWidget.addEventListener("click", () => {
 			navigate("#/game");
