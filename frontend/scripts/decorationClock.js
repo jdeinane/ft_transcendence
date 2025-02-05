@@ -12,44 +12,54 @@ function initializeClock() {
     function drawClock() {
         ctx.clearRect(0, 0, width, height);
 
-        // Dessiner le cadre
         ctx.fillRect(5, 5, width - 10, height - 10);
         ctx.strokeStyle = "black";
         ctx.lineWidth = 2;
         ctx.strokeRect(5, 5, width - 10, height - 10);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Marqueurs d'heures
         ctx.fillStyle = "gray";
-        ctx.font = "bold 120px 'NintendoDS', sans-serif"; // Police pixelisée
+        ctx.font = "bold 120px 'NintendoDS', sans-serif";
         ctx.textAlign = "center";
         ctx.textBaseline = "middle";
 		
 		
         const hourNumbers = ["12", "3", "6", "9"];
         const hourPositions = [
-            { x: centerX, y: centerY - radius - 0.5 }, // 12h
-            { x: centerX + radius + 3, y: centerY }, // 3h
-            { x: centerX, y: centerY + radius - 25 }, // 6h
-            { x: centerX - radius - 3, y: centerY }  // 9h
+            { x: centerX, y: centerY - radius + 2 }, // 12h
+            { x: centerX + radius - 25, y: centerY }, // 3h
+            { x: centerX, y: centerY + radius - 30 }, // 6h
+            { x: centerX - radius + 25, y: centerY }  // 9h
         ];
 
         for (let i = 0; i < hourNumbers.length; i++) {
             ctx.fillText(hourNumbers[i], hourPositions[i].x, hourPositions[i].y);
         }
 
-        // Dessiner les aiguilles
-        const now = new Date();
-        let hours = now.getHours() % 12;
-        let minutes = now.getMinutes();
-        let seconds = now.getSeconds();
+		ctx.fillStyle = "gray";
+		for (let i = 0; i < 12; i++) {
+		    if (i % 3 === 0) continue;
+			let angle = (i * 30) * (Math.PI / 180);
+			let dotX = centerX + (radius - 10) * Math.cos(angle);
+			let dotY = centerY + (radius - 10) * Math.sin(angle);
+			
+			ctx.fillRect(dotX - 7, dotY - 7, 14, 14);
+		}
 
-        drawHand(hours * 30 + minutes / 2, radius * 0.5, "5b7a91", 8);  // Heure
-        drawHand(minutes * 6, radius * 0.7, "black", 4);  // Minute
-        drawHand(seconds * 6, radius * 0.8, "red", 3);  // Seconde
 
-        requestAnimationFrame(drawClock);
-    }
+		const now = new Date();
+		let hours = now.getHours() % 12;
+		let minutes = now.getMinutes();
+		let seconds = now.getSeconds();
+
+		drawHand(hours * 30 + minutes / 2, radius * 0.8, "#5b7a91", 6);
+		drawHand(minutes * 6, radius * 0.8, "gray", 4);
+		drawHand(seconds * 6, radius * 0.4, "red", 5);
+		ctx.fillStyle = "#333333";
+		ctx.fillRect(centerX - 3, centerY - 6, 12, 12);
+		
+		requestAnimationFrame(drawClock);
+	}
 
     function drawHand(angle, length, color, lineWidth) {
         let radian = (angle - 90) * (Math.PI / 180);
@@ -64,11 +74,9 @@ function initializeClock() {
         ctx.stroke();
     }
 
-    // Lancer l'horloge
     drawClock();
 }
 
-// Attendre que la page soit complètement chargée avant d'exécuter `initializeClock`
 document.addEventListener("DOMContentLoaded", () => {
-    setTimeout(initializeClock, 100); // Petit délai pour s'assurer que le canvas est ajouté
+    setTimeout(initializeClock, 100);
 });
