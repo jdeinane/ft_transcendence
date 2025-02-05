@@ -1,6 +1,5 @@
 services:
   backend:
-    image: ft_transcendence_backend
     build:
       context: .
       dockerfile: ./dockers/django/Dockerfile
@@ -23,6 +22,7 @@ services:
       - database
 
   postgres:
+    image: ft_transcendence_postgres
     build:
       context: ./dockers/postgres
       dockerfile: Dockerfile
@@ -32,7 +32,7 @@ services:
       - ./dockers/.env.dev
     volumes:
       - postgres_data:/var/lib/postgresql/data
-      - ./dockers/postgres/conf/50-server.cnf:/etc/postgresql/postgresql.conf
+      - ./dockers/postgres/50-server.cnf:/etc/postgresql/postgresql.conf
     networks:
       - database
 
@@ -50,6 +50,7 @@ services:
       - database
 
   nginx:
+    image: ft_transcendence_nginx
     build:
       context: ./dockers/nginx
       dockerfile: Dockerfile
