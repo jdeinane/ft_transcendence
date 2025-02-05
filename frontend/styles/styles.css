@@ -226,7 +226,7 @@ input:focus {
 
 .lang-flag:hover, .lang-flag.active {
     transform: scale(1.1);
-    border: 2px solid #fbe66c; /* Contour doré au drapeau sélectionné */
+    border: 2px solid #618fc4; /* Contour doré au drapeau sélectionné */
 }
 
 button {
@@ -259,19 +259,19 @@ button:hover {
 /* 📌 Conteneur des widgets inférieurs */
 .bottom-widgets {
     display: flex;
-    justify-content: space-between; /* Assure un alignement horizontal */
+    justify-content: space-between; /* Alignement horizontal */
     align-items: center;
-    gap: 10px; /* Espace entre Live Chat et Dashboard */
-    width: 350px; /* Même largeur que Play Games */
+    gap: 10px; /* Réduit l'espace entre les widgets */
+    width: 350px; /* Aligné avec Play Games */
 }
 
 /* 📌 Style général des widgets */
-#game-widget, #chat-widget, #dashboard-widget {
+#game-widget, #chat-widget, #leaderboard-widget {
     display: flex;
     align-items: center;
     justify-content: flex-start;
     background-color: white;
-    border: 2px solid black;
+    border: 1px solid #444;
     box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
     cursor: pointer;
     padding: 5px;
@@ -280,26 +280,65 @@ button:hover {
 
 /* 📌 Taille spécifique des widgets */
 #game-widget {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    background: linear-gradient(to bottom, #f8f8f8, #e0e0e0); /* Effet métallique */
+    border: 1.5px solid black; /* Bordure plus fine */
+    box-shadow: 2px 2px 0px #888, -2px -2px 0px #fff; /* Ombrage léger */
+    cursor: pointer;
+    padding: 10px;
     width: 350px;
-    height: 80px;
+    height: 75px; /* Réduction de la hauteur */
+    border-radius: 5px; /* Coins légèrement arrondis */
+}
+
+
+.game-icon {
+    width: 60px; /* Taille de l'icône plus grande */
+    height: 60px;
+    border: none; /* Carré mieux défini */
+    margin-right: 12px; /* Ajustement de l’espacement */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Ajoute une légère ombre */
+    object-fit: contain; /* Évite l'étirement de l'image */
+}
+
+.game-info {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+}
+
+
+.game-title {
+    font-size: 1.2rem; /* Légèrement agrandi */
+    font-weight: none;
+    margin-bottom: 2px; /* Espacement réduit */
+}
+
+.game-subtitle {
+    font-size: 0.9rem;
+    color: gray;
 }
 
 /* 📌 Effet métallisé subtil pour les widgets du bas */
-#chat-widget, #dashboard-widget {
+#chat-widget, #leaderboard-widget {
     background: linear-gradient(to bottom, #e5e5e5 0%, #d0d0d0 50%, #e5e5e5 100%);
-    border: 2px solid black;
+    border: 1px solid black;
     box-shadow: 
         inset 1px 1px 2px rgba(255, 255, 255, 0.4), /* Lumière douce en haut à gauche */
         inset -1px -1px 2px rgba(0, 0, 0, 0.2), /* Ombre légère en bas à droite */
         2px 2px 0px #888, -2px -2px 0px #fff; /* Légère profondeur */
     padding: 5px;
     position: relative;
-    width: 200px;  /* Ajuste la largeur */
-    height: 100px;  /* Ajuste la hauteur */
+    width: 170px;  /* Ajuste la largeur */
+    height: 90px;  /* Ajuste la hauteur */
+    border-radius: 5px; /* Coins légèrement arrondis */
 }
 
 /* 📌 Effet de brillance plus léger en haut */
-#chat-widget::before, #dashboard-widget::before {
+#chat-widget::before, #leaderboard-widget::before {
     content: "";
     position: absolute;
     top: 0px;
@@ -310,7 +349,7 @@ button:hover {
 }
 
 /* 📌 Effet d'ombre très doux en bas */
-#chat-widget::after, #dashboard-widget::after {
+#chat-widget::after, #leaderboard-widget::after {
     content: "";
     position: absolute;
     bottom: 0px;
@@ -322,15 +361,19 @@ button:hover {
 
 
 /* 📌 Icônes des widgets */
-.game-icon, .chat-icon, .dashboard-icon {
-    width: 70px;
+.chat-icon, .leaderboard-icon {
+    width: 60px; /* Ajuste la taille des icônes */
     height: 60px;
-    border: 1px solid black;
-    margin-right: 10px;
+    border: none;
+    padding: 3px; /* Ajuste l'espacement interne */
+    object-fit: contain; /* Évite l'étirement de l'image */
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Ajoute une légère ombre */
+
 }
 
+
 /* 📌 Centrer le texte verticalement et horizontalement */
-.game-info, .chat-info, .dashboard-info {
+.chat-info, .leaderboard-info {
     display: flex;
     flex-direction: column;
     align-items: center; /* Centre horizontalement */
@@ -340,19 +383,19 @@ button:hover {
 }
 
 /* 📌 Titres */
-.game-title, .chat-title, .dashboard-title {
-    font-weight: bold;
+.chat-title, .leaderboard-title {
+    font-weight: none;
     font-size: 1rem;
 }
 
 /* 📌 Sous-titres */
-.game-subtitle, .chat-subtitle, .dashboard-subtitle {
+.chat-subtitle, .leaderboard-subtitle {
     font-size: 0.8rem;
     color: gray;
 }
 
 /* 📌 Effet hover */
-#game-widget:hover, #chat-widget:hover, #dashboard-widget:hover {
+#game-widget:hover, #chat-widget:hover, #leaderboard-widget:hover {
     background: #e0e0e0;
     box-shadow: inset 2px 2px 0px #666, inset -2px -2px 0px #fff;
 }

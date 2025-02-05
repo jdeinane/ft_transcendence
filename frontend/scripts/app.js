@@ -71,9 +71,9 @@ export function navigate(path, addToHistory = true) {
 			navigate("#/livechat");
 		});
 
-		const dashboardWidget = document.getElementById("dashboard-widget");
-		dashboardWidget.addEventListener("click", () => {
-			navigate("#/dashboard");
+		const leaderboardWidget = document.getElementById("leaderboard-widget");
+		leaderboardWidget.addEventListener("click", () => {
+			navigate("#/leaderboard");
 		});
 	}
 

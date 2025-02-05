@@ -20,11 +20,11 @@ export const routes = {
             </div>
         </div>
 
-            <div id="dashboard-widget">
-                <img src="assets/icons/dashboard.png" alt="Dashboard Icon" class="dashboard-icon">
-                <div class="dashboard-info">
-                    <p class="dashboard-title">Dashboard</p>
-                    <p class="dashboard-subtitle">View stats & matches</p>
+            <div id="leaderboard-widget">
+                <img src="assets/icons/leaderboard.png" alt="leaderboard Icon" class="leaderboard-icon">
+                <div class="leaderboard-info">
+                    <p class="leaderboard-title">Rank</p>
+                    <p class="leaderboard-subtitle">View stats & matches</p>
                 </div>
             </div>
         </div>
