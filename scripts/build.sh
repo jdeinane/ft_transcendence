@@ -1,14 +1,14 @@
 #!/bin/bash
 
 # load environment variables from dockers/.env.dev
-if [ -f dockers/.env.dev ];
+if [ -f ./dockers/.env.dev ];
 then
-	echo "Loading environment variables from dockers/.env.dev..."
+	echo "Loading environment variables from ./dockers/.env.dev..."
 	set -o allexport
-	source dockers/.env.dev
+	source ./dockers/.env.dev
 	set +o allexport
 else
-	echo "Warning: dockers/.env.dev not found!"
+	echo "Warning: ./dockers/.env.dev not found!"
 fi
 
 # check if Docker rootless is running

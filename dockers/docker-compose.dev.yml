@@ -23,7 +23,7 @@ services:
       - "8000:8000"
     volumes:
       - postgres_data_dev:/home/postgres/pgdata
-      - ./postgres/50-server.cnf:/etc/postgresql/postgresql.conf
+      - ./dockers/postgres/postgres.conf:/etc/postgresql/postgresql.conf
     networks:
       - database
 
@@ -34,7 +34,8 @@ services:
       dockerfile: ./nginx/Dockerfile
     ports:
       - "80:80"
-      - "443:443"
+    volumes:
+      - ./dockers/nginx/nginx.cnf:/etc/nginx/conf.d/default.conf
     networks:
       - frontend
 
