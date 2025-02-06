@@ -2,43 +2,44 @@
 
 export const routes = {
     "/": `
-    <div class="decorations">
-        <div class="clock-container">
-            <canvas id="clockCanvas" width="400" height="400"></canvas>
-        </div>
-        <div class="calendar-container">
-            <canvas id="calendarCanvas" width="300" height="400"></canvas>
-        </div>
-    </div>
+	<div class="home-container">
+		<div class="decorations">
+			<div class="clock-container">
+				<canvas id="clockCanvas" width="400" height="400"></canvas>
+			</div>
+			<div class="calendar-container">
+				<canvas id="calendarCanvas" width="300" height="400"></canvas>
+			</div>
+		</div>
 
-    <div class="widgets-container">
-        <div id="game-widget">
-            <img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
-        	<div class="game-info">
-          	<p class="game-title" data-translate="game-title">Play Games</p>
-        	<p class="game-subtitle" data-translate="game-subtitle">Pong & Tic-Tac-Toe</p>
-        </div>
-    </div>
+		<div class="widgets-container">
+			<div id="game-widget">
+				<img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
+				<div class="game-info">
+				<p class="game-title" data-translate="game-title">Play Games</p>
+				<p class="game-subtitle" data-translate="game-subtitle">Pong & Tic-Tac-Toe</p>
+			</div>
+		</div>
 
-    <div class="bottom-widgets">
-        <div id="chat-widget">
-            <img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">
-            <div class="chat-info">
-                <p class="chat-title" data-translate="chat-title">Live Chat</p>
-                <p class="chat-subtitle" data-translate="chat-subtitle">Join the conversation</p>
-            </div>
-        </div>
+		<div class="bottom-widgets">
+			<div id="chat-widget">
+				<img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">
+				<div class="chat-info">
+					<p class="chat-title" data-translate="chat-title">Live Chat</p>
+					<p class="chat-subtitle" data-translate="chat-subtitle">Join the conversation</p>
+				</div>
+			</div>
 
-            <div id="leaderboard-widget">
-                <img src="assets/icons/leaderboard.png" alt="leaderboard Icon" class="leaderboard-icon">
-                <div class="leaderboard-info">
-                    <p class="leaderboard-title" data-translate="leaderboard-title">Rank</p>
-                    <p class="leaderboard-subtitle" data-translate="leaderboard-subtitle">View stats & matches</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
+				<div id="leaderboard-widget">
+					<img src="assets/icons/leaderboard.png" alt="leaderboard Icon" class="leaderboard-icon">
+					<div class="leaderboard-info">
+						<p class="leaderboard-title" data-translate="leaderboard-title">Rank</p>
+						<p class="leaderboard-subtitle" data-translate="leaderboard-subtitle">View stats & matches</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
     `,
 	"/game": `
 	<h1 data-translate="game-selection">GAME SELECTION</h1>

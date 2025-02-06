@@ -1,32 +1,18 @@
-.decorations-container {
-	display:flex;
-	justify-content:center;
+.home-container {
+	display: flex;
+	flex-direction: column;
 	align-items: center;
-	gap: 3vw;
-	width: 100%;
-	flex-wrap:wrap;
-}
-
-.clock-container, .calendar-container {
-	flex: 1 1 45%;
-	max-width: 400px;
-	height: auto;
-	display:flex;
 	justify-content: center;
-	align-items: center;
-	background: white;
-	border: 3px black;
-	box-shadow: 3px 3px 0px #888, -3px -3px 0px #706969;
+	width: 90vw;
+	max-width: 900px;
+	margin: auto;
+	gap: 30px;
 }
 
 .clock-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    position: absolute;
-    top: 12%;
-    left: 25%;
-    transform: translate(-50%, 0);
     width: 300px;
     height: 300px;
     background: transparent;
@@ -36,17 +22,16 @@
     width: 400px;
     height: 300px;
     image-rendering: pixelated;
-    background: transparent;}
+    background: transparent;
+}
 
 .calendar-container {
-    position: absolute;
-    top: 12%;
-    left: 70%;
-    transform: translate(-50%, 0);
+    display: flex;
+    justify-content: center;
+    align-items: center;
     width: 300px;
     height: 300px;
     background: transparent;
-    text-align: center;
 }
 
 #calendarCanvas {
@@ -57,13 +42,9 @@
 
 .decorations {
     display: flex;
+	flex-wrap: wrap;
     justify-content: center;
     align-items: center;
-    gap: 40px;
-    position: absolute;
-    top: 12%;
-    left: 50%;
-    transform: translate(-50%, 0);
-    width: 700px;
-	
+    gap: 30px;
+    width: 700px;	
 }

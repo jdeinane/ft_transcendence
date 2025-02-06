@@ -2,20 +2,18 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1vw;
-    margin-top: 40px;
-	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-	width: 90%;
-	max-width: 700px;
-	margin-top: 350px;
+	width: 100%;
+	max-width: 600px;
+    gap: 10px;
+    margin-top: 15px;
 }
 
 .bottom-widgets {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1vw;
-    width: 100%;
+    gap: 10px;
+    width: 90%;
 }
 
 #chat-widget, #leaderboard-widget {
@@ -38,11 +36,9 @@
     box-shadow: 2px 2px 0px #888, -2px -2px 0px #fff;
     cursor: pointer;
     padding: 10px;
-    width: 475px;
+    width: 90%;
     height: 75px;
     border-radius: 5px;
-	grid-column: span 2;
-	width: 100%;
 }
 
 .game-icon {
@@ -84,7 +80,7 @@
         2px 2px 0px #888, -2px -2px 0px #fff; 
     padding: 5px;
     position: relative;
-    width: 500px; 
+    width: 100%; 
     height: 90px; 
     border-radius: 5px;
 }
