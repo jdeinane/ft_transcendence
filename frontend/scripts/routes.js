@@ -20,8 +20,6 @@ export const routes = {
         </div>
     </div>
 
-
-
     <div class="bottom-widgets">
         <div id="chat-widget">
             <img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">

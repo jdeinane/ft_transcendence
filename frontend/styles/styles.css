@@ -169,12 +169,14 @@ button:hover {
   transform: scale(1.1);
 }
 
-/* 🕹 Pong Game */
+/* Pong Game */
 canvas {
   background: black;
   border: 2px solid var(--primary-color);
   box-shadow: 0 0 20px var(--primary-color);
 }
+
+/* J'ai perdu le canvas pour le tic tac toe??????????????? */
 
 /* 🔘 Forms */
 form {
@@ -262,15 +264,14 @@ button:hover {
     justify-content: space-between; /* Alignement horizontal */
     align-items: center;
     gap: 10px; /* Réduit l'espace entre les widgets */
-    width: 350px; /* Aligné avec Play Games */
+    width: 475px; /* Aligné avec Play Games */
 }
 
 /* 📌 Style général des widgets */
-#game-widget, #chat-widget, #leaderboard-widget {
+#chat-widget, #leaderboard-widget {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background-color: white;
     border: 1px solid #444;
     box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
     cursor: pointer;
@@ -283,38 +284,40 @@ button:hover {
     display: flex;
     align-items: center;
     justify-content: flex-start;
-    background: linear-gradient(to bottom, #f8f8f8, #e0e0e0); /* Effet métallique */
-    border: 1.5px solid black; /* Bordure plus fine */
-    box-shadow: 2px 2px 0px #888, -2px -2px 0px #fff; /* Ombrage léger */
+    background: linear-gradient(to bottom, #f8f8f8, #e0e0e0);
+    border: 1.5px solid black;
+    box-shadow: 2px 2px 0px #888, -2px -2px 0px #fff;
     cursor: pointer;
     padding: 10px;
-    width: 350px;
-    height: 75px; /* Réduction de la hauteur */
-    border-radius: 5px; /* Coins légèrement arrondis */
+    width: 475px;
+    height: 75px;
+    border-radius: 5px;
 }
 
 
 .game-icon {
-    width: 60px; /* Taille de l'icône plus grande */
+    width: 60px;
     height: 60px;
-    border: none; /* Carré mieux défini */
-    margin-right: 12px; /* Ajustement de l’espacement */
-    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3); /* Ajoute une légère ombre */
-    object-fit: contain; /* Évite l'étirement de l'image */
+    border: none;
+    margin-right: 12px;
+    box-shadow: 1px 1px 3px rgba(0, 0, 0, 0.3);
+    object-fit: contain;
 }
 
 .game-info {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    text-align: left;
+    text-align: center;
+	width:100%;
+	height: 100%;
 }
 
 
-.game-title {
-    font-size: 1.2rem; /* Légèrement agrandi */
+.game-title, .chat-title, .leaderboard-title{
+    font-size: 1.5rem;
     font-weight: none;
-    margin-bottom: 2px; /* Espacement réduit */
+    margin-bottom: 2px; 
 }
 
 .game-subtitle {
@@ -327,14 +330,14 @@ button:hover {
     background: linear-gradient(to bottom, #e5e5e5 0%, #d0d0d0 50%, #e5e5e5 100%);
     border: 1px solid black;
     box-shadow: 
-        inset 1px 1px 2px rgba(255, 255, 255, 0.4), /* Lumière douce en haut à gauche */
-        inset -1px -1px 2px rgba(0, 0, 0, 0.2), /* Ombre légère en bas à droite */
-        2px 2px 0px #888, -2px -2px 0px #fff; /* Légère profondeur */
+        inset 1px 1px 2px rgba(255, 255, 255, 0.4),
+        inset -1px -1px 2px rgba(0, 0, 0, 0.2), 
+        2px 2px 0px #888, -2px -2px 0px #fff; 
     padding: 5px;
     position: relative;
-    width: 170px;  /* Ajuste la largeur */
-    height: 90px;  /* Ajuste la hauteur */
-    border-radius: 5px; /* Coins légèrement arrondis */
+    width: 500px; 
+    height: 90px; 
+    border-radius: 5px;
 }
 
 /* 📌 Effet de brillance plus léger en haut */
@@ -362,8 +365,8 @@ button:hover {
 
 /* 📌 Icônes des widgets */
 .chat-icon, .leaderboard-icon {
-    width: 60px; /* Ajuste la taille des icônes */
-    height: 60px;
+    width: 65px; /* Ajuste la taille des icônes */
+    height: 65px;
     border: none;
     padding: 3px; /* Ajuste l'espacement interne */
     object-fit: contain; /* Évite l'étirement de l'image */
@@ -376,16 +379,11 @@ button:hover {
 .chat-info, .leaderboard-info {
     display: flex;
     flex-direction: column;
-    align-items: center; /* Centre horizontalement */
-    justify-content: center; /* Centre verticalement */
-    height: 100%; /* Prend toute la hauteur du widget */
-    text-align: center; /* Centre le texte */
-}
-
-/* 📌 Titres */
-.chat-title, .leaderboard-title {
-    font-weight: none;
-    font-size: 1rem;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+	width: 100%;
+    text-align: center; 
 }
 
 /* 📌 Sous-titres */
