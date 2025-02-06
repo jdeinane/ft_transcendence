@@ -91,3 +91,15 @@ window.addEventListener("hashchange", () => {
         initializeCalendar();
     }
 });
+
+function resizeCanvas(canvas) {
+	let parent = canvas.parentElement;
+	canvas.width = parent.clientWidth * 0.9;
+	canvas.height = parent.clientWidth * 0.9;
+}
+
+window.addEventListener("resize", () => {
+	const calendarCanvas = document.getElementById("calendarCanvas");
+
+	if (calendarCanvas) resizeCanvas();
+});

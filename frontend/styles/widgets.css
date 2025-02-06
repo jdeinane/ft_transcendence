@@ -2,16 +2,20 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 10px;
+    gap: 1vw;
     margin-top: 40px;
+	grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+	width: 90%;
+	max-width: 700px;
+	margin-top: 350px;
 }
 
 .bottom-widgets {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 10px;
-    width: 475px;
+    gap: 1vw;
+    width: 100%;
 }
 
 #chat-widget, #leaderboard-widget {
@@ -37,6 +41,8 @@
     width: 475px;
     height: 75px;
     border-radius: 5px;
+	grid-column: span 2;
+	width: 100%;
 }
 
 .game-icon {

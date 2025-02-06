@@ -1,3 +1,24 @@
+.decorations-container {
+	display:flex;
+	justify-content:center;
+	align-items: center;
+	gap: 3vw;
+	width: 100%;
+	flex-wrap:wrap;
+}
+
+.clock-container, .calendar-container {
+	flex: 1 1 45%;
+	max-width: 400px;
+	height: auto;
+	display:flex;
+	justify-content: center;
+	align-items: center;
+	background: white;
+	border: 3px black;
+	box-shadow: 3px 3px 0px #888, -3px -3px 0px #706969;
+}
+
 .clock-container {
     display: flex;
     justify-content: center;
