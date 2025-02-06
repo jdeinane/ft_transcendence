@@ -16,11 +16,11 @@ export function initializeClock() {
         ctx.clearRect(0, 0, width, height);
 
         ctx.fillRect(5, 5, width - 10, height - 10);
-        ctx.strokeStyle = "black";
-        ctx.lineWidth = 2;
-        ctx.strokeRect(	5, 5, width - 10, height - 10);
 		ctx.clearRect(0, 0, canvas.width, canvas.height);
-
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = 4;
+		ctx.strokeRect(0, 0, width, height);
+	
         ctx.fillStyle = "gray";
         ctx.font = "bold 120px 'NintendoDS', sans-serif";
         ctx.textAlign = "center";

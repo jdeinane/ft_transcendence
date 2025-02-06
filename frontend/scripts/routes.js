@@ -2,10 +2,14 @@
 
 export const routes = {
     "/": `
-
-	<div class="clock-container">
-		<canvas id="clockCanvas" width="400" height="400"></canvas>
-	</div>
+    <div class="decorations">
+        <div class="clock-container">
+            <canvas id="clockCanvas" width="400" height="400"></canvas>
+        </div>
+        <div class="calendar-container">
+            <canvas id="calendarCanvas" width="300" height="400"></canvas>
+        </div>
+    </div>
 
     <div class="widgets-container">
         <div id="game-widget">
@@ -15,6 +19,8 @@ export const routes = {
         	<p class="game-subtitle">Pong & Tic-Tac-Toe</p>
         </div>
     </div>
+
+
 
     <div class="bottom-widgets">
         <div id="chat-widget">
