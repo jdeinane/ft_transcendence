@@ -15,8 +15,8 @@ export const routes = {
         <div id="game-widget">
             <img src="assets/icons/game.png" alt="Game Icon" class="game-icon">
         	<div class="game-info">
-          	<p class="game-title">Play Games</p>
-        	<p class="game-subtitle">Pong & Tic-Tac-Toe</p>
+          	<p class="game-title" data-translate="game-title">Play Games</p>
+        	<p class="game-subtitle" data-translate="game-subtitle">Pong & Tic-Tac-Toe</p>
         </div>
     </div>
 
@@ -24,16 +24,16 @@ export const routes = {
         <div id="chat-widget">
             <img src="assets/icons/chat.png" alt="Chat Icon" class="chat-icon">
             <div class="chat-info">
-                <p class="chat-title">Live Chat</p>
-                <p class="chat-subtitle">Join the conversation</p>
+                <p class="chat-title" data-translate="chat-title">Live Chat</p>
+                <p class="chat-subtitle" data-translate="chat-subtitle">Join the conversation</p>
             </div>
         </div>
 
             <div id="leaderboard-widget">
                 <img src="assets/icons/leaderboard.png" alt="leaderboard Icon" class="leaderboard-icon">
                 <div class="leaderboard-info">
-                    <p class="leaderboard-title">Rank</p>
-                    <p class="leaderboard-subtitle">View stats & matches</p>
+                    <p class="leaderboard-title" data-translate="leaderboard-title">Rank</p>
+                    <p class="leaderboard-subtitle" data-translate="leaderboard-subtitle">View stats & matches</p>
                 </div>
             </div>
         </div>

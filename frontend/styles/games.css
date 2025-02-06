@@ -1,9 +1,17 @@
-/* Pong Game */
+.mode-selection-container {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 15px;
+	padding: 2rem;
+    width: 100%;
+}
+  
 canvas {
 	background: black;
 	border: 2px solid var(--primary-color);
 	box-shadow: 0 0 20px var(--primary-color);
-  }
+}
 
   
 #tic-tac-toe-board {

@@ -37,7 +37,13 @@
 	  "last-seen": "Last seen",
 	  "not-found": "404 - Not Found",
 	  "page-not-found": "Page could not be found.",
-	  "logout": "logout"
+	  "logout": "logout",
+	  "game-title": "Play Games",
+	  "game-subtitle": "Pong & Tic-Tac-Toe",
+	  "chat-title": "Live Chat",
+	  "chat-subtitle": "Join the conversation",
+	  "leaderboard-title": "Rank",
+	  "leaderboard-subtitle": "View stats & matches"
 	},
 	"fr": {
 	  "home": "accueil",
@@ -77,7 +83,13 @@
 	  "about": "à propos de",
 	  "not-found": "404 - Page non trouvée",
 	  "page-not-found": "La page demandée est introuvable.",
-	  "logout": "se déconnecter"
+	  "logout": "se déconnecter",
+	  "game-title": "Jouer",
+	  "game-subtitle":"Pong & Morpion",
+	  "chat-title": "Messagerie",
+	  "chat-subtitle": "Lancer une discussion",
+	  "leaderboard-title": "Classement",
+	  "leaderboard-subtitle": "Voir les stats & matchs"
 	},
 	"es": {
 	  "home": "hogar",
@@ -117,7 +129,13 @@
 	  "about": "acerca de",
 	  "not-found": "404 - Página no encontrada",
 	  "page-not-found": "La página no pudo ser encontrada.",
-	  "logout": "cerrar sesión"
+	  "logout": "cerrar sesión",
+	  "game-title": "Jugar",
+	  "game-subtitle": "Pong & Tres en Raya",
+	  "chat-title": "Mensajería",
+	  "chat-subtitle": "Iniciar un chat",
+	  "leaderboard-title": "Clasificación",
+	  "leaderboard-subtitle": "Ver estadísticas & partidos"
 	}
   }
   
