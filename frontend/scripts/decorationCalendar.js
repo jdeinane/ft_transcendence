@@ -36,11 +36,18 @@ export function initializeCalendar() {
     ctx.font = "30px 'NintendoDS', sans-serif";
 
     for (let i = 0; i < 7; i++) {
+		let posX = i * cellSize;
+		let posY = titleHeight;
+
         ctx.fillStyle = (i === 0) ? "#f0768b" : (i === 6) ? "#5b7a91" : "#444";
-        ctx.fillRect(i * cellSize, titleHeight, cellSize, cellHeight);
-        ctx.fillStyle = "white";
-        ctx.fillText(days[i], i * cellSize + cellSize / 2, titleHeight + cellHeight / 2 + 5);
-    }
+    	ctx.fillRect(posX, posY, cellSize, cellHeight); 
+		ctx.strokeStyle = "black";
+		ctx.lineWidth = 2;
+		ctx.strokeRect(posX, posY, cellSize, cellHeight);
+
+	    ctx.fillStyle = "white";
+    	ctx.fillText(days[i], posX + cellSize / 2, posY + cellHeight / 2 + 5);
+		}
 
     let x = firstDay;
     let y = 1;
