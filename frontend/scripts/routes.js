@@ -42,6 +42,7 @@ export const routes = {
 		</div>
 	</div>
     `,
+
 	"/game": `
 	<h1 data-translate="game-selection">GAME SELECTION</h1>
 	<div class="mode-selection-container">
@@ -51,6 +52,7 @@ export const routes = {
 		</div>
 	</div>
     `,
+
 	"/pong": `
 	<h1>PONG!</h1>
 	<div class="mode-selection-container">
@@ -65,6 +67,7 @@ export const routes = {
     <button id="back-to-mode-selection" style="display: none;" data-translate="back-to-mode-selection">Back to Select Game Mode</button>
 	<button id="back-to-game-selection" data-translate="back-to-game-selection">Back to Game Selection</button>
 	`,
+
 	"/tic-tac-toe":`
 	<h1>TIC TAC TOE!</h1>
 	<div class="mode-selection-container">
@@ -79,6 +82,7 @@ export const routes = {
     <button id="back-to-mode-selection" style="display: none;" data-translate="back-to-mode-selection">Back to Select Game Mode</button>
 	<button id="back-to-game-selection" data-translate="back-to-game-selection">Back to Game Selection</button>
 	`,
+
 	"/tournament": `
 	<h1 data-translate="tournament-mode">Tournament Mode</h1>
 	<form id="tournament-form">
@@ -92,6 +96,7 @@ export const routes = {
 	<p id="current-match" data-translate="waiting-for-players">Waiting for players...</p>
 	<button id="play-match" style="display: none;" data-translate="play-match">Play Match</button>
 	`,
+
 	"/login": `
 	<h1 data-translate="login">login</h1>
 	<form id="login-form">
@@ -104,6 +109,7 @@ export const routes = {
 	<p><button id="go-to-signup" class="link-button" data-translate="sign-up">Sign Up</button></p>
 	</p>
 	`,
+
 	"/signup": `
 	<h1 data-translate="sign-up">sign up</h1>
 	<form id="signup-form">
@@ -115,16 +121,39 @@ export const routes = {
     	<p id="signup-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
 	</form>
 	`,
+
 	"/profile": `
-	<h1 data-translate="user-profile">user profile</h1>
-	<p data-translate="username">username : <strong>Nom</strong><p>
-	<p data-translate="number-of-games">number of games played : <strong>12</strong></p>
-	<p data-translate="last-seen"> last seen : <strong>2025-01-28</strong></p>
-	`,
+	<div class="profile-container">
+		<h1 data-translate="user-profile">User profile</h1>
+
+		<div class="profile-content">
+			<div class="profile-avatar">
+				<img id="avatar-img" src="assets/icons/avatar.png" alt="User Avatar">
+				<input type="file" id="avatar-upload" accept="image/*" style="display: none;">
+			</div>
+
+			<div class="profile-info">
+				<p><strong data-translate="username">username : </strong> <span id="profile-username">Loading...</strong></p>
+				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
+				<p><strong data-translate="number-of-games">Games played :</strong> <span id="profile-games">0</span></p>
+				<p data-translate="last-seen"> Last seen: </strong> <span id="profile-last-seen">N/A</span></p>
+			</div>
+		</div>
+
+		<button id="edit-profile-btn">Edit Profile</button>
+		<div id="edit-profile-form" style="display: none;">
+			<input type="text" id="new-username" placeholder="New username">
+			<button-id="save-profile-btn">Save</button>
+		</div>
+
+		
+		`,
+
 	"/about": `
 	<h1 data-translate="about">about</h1>
 	<p data-translate="not-found">not your problem</p>
 	`,
+
 	"*": `
 	<h1 data-translate="not-found">404 - Not Found</h1>
 	<p data-translate="page-not-found">Page could not be found.</p>
