@@ -1,5 +1,6 @@
 import { routes } from "./routes.js"
 import { loadLanguage, setupLanguageSelector } from "./language.js";
+import { translations } from "./language.js";
 import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
 import { setupPongGame } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
@@ -63,9 +64,11 @@ export function navigate(path, addToHistory = true) {
 	  }
 	  
 	if (cleanPath === "/") {
-		setTimeout(() => {
+		setTimeout(async () => {
+			await loadLanguage(localStorage.getItem("preferredLanguage") || "en");
 			initializeClock();
 			initializeCalendar();
+			updateWelcomeMessage();
 		}, 50);
 
 		const gameWidget = document.getElementById("game-widget");
@@ -192,3 +195,16 @@ document.addEventListener("DOMContentLoaded", () => {
 	setupLanguageSelector(); 
   });
   
+  export function updateWelcomeMessage() {
+    const user = getCurrentUser();
+    const welcomeMessage = document.getElementById("welcome-message");
+    const currentLang = localStorage.getItem("preferredLanguage") || "en";
+
+    if (!welcomeMessage) return;
+
+    if (user && translations[currentLang]["welcome-user"]) {
+        welcomeMessage.textContent = translations[currentLang]["welcome-user"].replace("{user}", user.username);
+    } else {
+        welcomeMessage.textContent = translations[currentLang]["welcome"] || "Welcome to ft_transcendence";
+    }
+}

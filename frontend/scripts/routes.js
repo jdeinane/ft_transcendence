@@ -3,6 +3,7 @@
 export const routes = {
     "/": `
 	<div class="home-container">
+		<h1 id ="welcome-message" data-translate="welcome">Welcome to ft_transcendence</h1>
 		<div class="decorations">
 			<div class="clock-container">
 				<canvas id="clockCanvas" width="400" height="400"></canvas>

@@ -9,6 +9,14 @@
 	gap: 30px;
 }
 
+#welcome-message {
+    font-size: 4rem;
+	font-weight: normal;
+    text-align: center;
+    margin-bottom: 35px;
+}
+
+
 .clock-container {
     display: flex;
     justify-content: center;

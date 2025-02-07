@@ -1,7 +1,11 @@
+import { updateWelcomeMessage } from "./app.js"
+
+export let translations = {};
+
 export async function loadLanguage(lang = "en") {
 	try {
 		const response = await fetch("./assets/lang.json");
-		const translations = await response.json();
+		translations = await response.json();
 	
 		if (!translations[lang]) {
 		console.error(`Language ${lang} not found`);
@@ -15,6 +19,8 @@ export async function loadLanguage(lang = "en") {
 		});
 
 		localStorage.setItem("preferredLanguage", lang);
+
+		updateWelcomeMessage();
 	} catch (error) {
 		console.error("Error loading translations:", error);
 	}

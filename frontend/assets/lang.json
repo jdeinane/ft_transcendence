@@ -4,7 +4,7 @@
 	  "play": "play!",
 	  "profile": "profile",
 	  "about": "about",
-	  "welcome": "welcome to ft_transcendence",
+	  "welcome": "Welcome to ft_transcendence",
 	  "play-now": "Play now",
 	  "game-selection": "GAME SELECTION",
 	  "pong": "Pong",
@@ -43,12 +43,13 @@
 	  "chat-title": "Live Chat",
 	  "chat-subtitle": "Join the conversation",
 	  "leaderboard-title": "Rank",
-	  "leaderboard-subtitle": "View stats & matches"
+	  "leaderboard-subtitle": "View stats & matches",
+	  "welcome-user": "Welcome back, {user}"
 	},
 	"fr": {
 	  "home": "accueil",
 	  "profile": "profil",
-	  "welcome": "bienvenue sur ft_transcendance",
+	  "welcome": "Bienvenue sur ft_transcendance",
 	  "play-now": "Jouer maintenant",
 	  "play": "jouer!",
 	  "game-selection": "SÉLECTION DE JEU",
@@ -89,12 +90,13 @@
 	  "chat-title": "Messagerie",
 	  "chat-subtitle": "Lancer une discussion",
 	  "leaderboard-title": "Classement",
-	  "leaderboard-subtitle": "Voir les stats & matchs"
+	  "leaderboard-subtitle": "Voir les stats & matchs",
+	  "welcome-user": "Bienvenue, {user}"
 	},
 	"es": {
 	  "home": "hogar",
 	  "profile": "perfil",  
-	  "welcome": "bienvenido a ft_transcendence",
+	  "welcome": "Bienvenido a ft_transcendence",
 	  "play-now": "Jugar ahora",
 	  "play": "¡jugar!",
 	  "game-selection": "SELECCIÓN DE JUEGO",
@@ -135,7 +137,8 @@
 	  "chat-title": "Mensajería",
 	  "chat-subtitle": "Iniciar un chat",
 	  "leaderboard-title": "Clasificación",
-	  "leaderboard-subtitle": "Ver estadísticas & partidos"
+	  "leaderboard-subtitle": "Ver estadísticas & partidos",
+	  "welcome-user": "Bienvenido de nuevo, {user}"
 	}
   }
   
