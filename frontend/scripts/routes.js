@@ -123,31 +123,27 @@ export const routes = {
 	`,
 
 	"/profile": `
-	<div class="profile-container">
-		<h1 data-translate="user-profile">User profile</h1>
-
-		<div class="profile-content">
-			<div class="profile-avatar">
-				<img id="avatar-img" src="assets/icons/avatar.png" alt="User Avatar">
-				<input type="file" id="avatar-upload" accept="image/*" style="display: none;">
-			</div>
-
+		<div class="profile-container">
+			<h1 data-translate="user-profile">User Profile</h1>
 			<div class="profile-info">
-				<p><strong data-translate="username">username : </strong> <span id="profile-username">Loading...</strong></p>
+				<img id="avatar-img" src="assets/avatars/avatar1.png" alt="User Avatar">
+				
+				<button id="change-avatar-btn" data-translate="change-avatar">Change Avatar</button>
+				<div id="avatar-selection" class="hidden">
+					<img class="avatar-option" src="assets/avatars/avatar1.png" alt="Avatar 1">
+					<img class="avatar-option" src="assets/avatars/avatar2.png" alt="Avatar 2">
+					<img class="avatar-option" src="assets/avatars/avatar3.png" alt="Avatar 3">
+					<img class="avatar-option" src="assets/avatars/avatar4.png" alt="Avatar 4">
+				</div>
+
+				<p><strong data-translate="username">Username:</strong> <span id="profile-username">Loading...</span></p>
 				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
-				<p><strong data-translate="number-of-games">Games played :</strong> <span id="profile-games">0</span></p>
-				<p data-translate="last-seen"> Last seen: </strong> <span id="profile-last-seen">N/A</span></p>
+				<p><strong data-translate="number-of-games">Games Played:</strong> <span id="profile-games">0</span></p>
+				<p><strong data-translate="last-seen">Last Seen:</strong> <span id="profile-last-seen">N/A</span></p>
 			</div>
 		</div>
-
-		<button id="edit-profile-btn">Edit Profile</button>
-		<div id="edit-profile-form" style="display: none;">
-			<input type="text" id="new-username" placeholder="New username">
-			<button-id="save-profile-btn">Save</button>
-		</div>
-
 		
-		`,
+	`,
 
 	"/about": `
 	<h1 data-translate="about">about</h1>

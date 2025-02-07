@@ -208,3 +208,31 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeMessage.textContent = translations[currentLang]["welcome"] || "Welcome to ft_transcendence";
     }
 }
+
+document.addEventListener("DOMContentLoaded", () => {
+    const avatarImg = document.getElementById("avatar-img");
+    const changeAvatarBtn = document.getElementById("change-avatar-btn");
+    const avatarSelection = document.getElementById("avatar-selection");
+    const avatarOptions = document.querySelectorAll(".avatar-option");
+
+    // Afficher/Masquer la sélection d'avatars
+    changeAvatarBtn.addEventListener("click", () => {
+        avatarSelection.classList.toggle("hidden");
+    });
+
+    // Changer l'avatar lorsqu'on clique sur une option
+    avatarOptions.forEach(avatar => {
+        avatar.addEventListener("click", () => {
+            const newAvatar = avatar.src;
+            avatarImg.src = newAvatar;
+            localStorage.setItem("selectedAvatar", newAvatar); // Sauvegarde l'avatar
+            avatarSelection.classList.add("hidden"); // Cacher la sélection après choix
+        });
+    });
+
+    // Charger l'avatar sauvegardé
+    const savedAvatar = localStorage.getItem("selectedAvatar");
+    if (savedAvatar) {
+        avatarImg.src = savedAvatar;
+    }
+});

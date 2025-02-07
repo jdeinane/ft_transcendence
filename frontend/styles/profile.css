@@ -1,0 +1,79 @@
+.profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 400px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #f8f8f8;
+    border: 2px solid black;
+    box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
+    border-radius: 8px;
+    text-align: center;
+	font-size: 2rem;
+}
+
+.profile-info {
+    margin: 10px 0;
+}
+
+#avatar-img {
+    width: 120px;
+    height: 120px;
+    border: 2px solid black;
+    border-radius: 50%;
+    object-fit: cover;
+    cursor: pointer;
+}
+
+#edit-profile-form {
+    margin-top: 10px;
+}
+
+button {
+    padding: 10px 15px;
+    border: 2px solid black;
+    background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #b0b0b0;
+}
+
+input {
+    padding: 8px;
+    font-size: 1rem;
+    border: 2px solid black;
+}
+
+#edit-profile-form {
+    margin-top: 15px;
+}
+
+.hidden {
+    display: none;
+}
+
+#avatar-selection {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.avatar-option {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease-in-out;
+}
+
+.avatar-option:hover {
+    transform: scale(1.1);
+    border-color: #000;
+}
