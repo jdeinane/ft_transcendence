@@ -127,23 +127,34 @@ export const routes = {
 			<h1 data-translate="user-profile">User Profile</h1>
 			<div class="profile-info">
 				<img id="avatar-img" src="assets/avatars/avatar1.png" alt="User Avatar">
-				
-				<button id="change-avatar-btn" data-translate="change-avatar">Change Avatar</button>
-				<div id="avatar-selection" class="hidden">
-					<img class="avatar-option" src="assets/avatars/avatar1.png" alt="Avatar 1">
-					<img class="avatar-option" src="assets/avatars/avatar2.png" alt="Avatar 2">
-					<img class="avatar-option" src="assets/avatars/avatar3.png" alt="Avatar 3">
-					<img class="avatar-option" src="assets/avatars/avatar4.png" alt="Avatar 4">
-				</div>
-
 				<p><strong data-translate="username">Username:</strong> <span id="profile-username">Loading...</span></p>
 				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
 				<p><strong data-translate="number-of-games">Games Played:</strong> <span id="profile-games">0</span></p>
 				<p><strong data-translate="last-seen">Last Seen:</strong> <span id="profile-last-seen">N/A</span></p>
+				</div>
+			<div class="profile-buttons">
+				<button id="edit-profile-btn" data-translate="edit-profile">Edit Profile</button>
+				<button id="logout-btn" data-translate="logout">Logout</button>
 			</div>
 		</div>
-		
 	`,
+
+	"/edit-profile": `
+		<div class="edit-profile-container">
+			<h1 data-translate="edit-profile">Edit Profile</h1>
+			<img id="avatar-img" src="assets/avatars/avatar1.png" alt="User Avatar">
+			<p data-translate="select-avatar">Select an avatar:</p>
+			<div id="avatar-selection">
+				<img class="avatar-option" src="assets/avatars/avatargirl1.png" alt="Avatar 1">
+				<img class="avatar-option" src="assets/avatars/avatarboy1.png" alt="Avatar 2">
+				<img class="avatar-option" src="assets/avatars/avatargirl2.png" alt="Avatar 3">
+				<img class="avatar-option" src="assets/avatars/avatarboy2.png" alt="Avatar 4">
+				<img class="avatar-option" src="assets/avatars/avataralien.png" alt="Avatar 5">
+			</div>
+			<button id="save-avatar-btn" data-translate="save-avatar">Save Avatar</button>
+			<button id="cancel-edit-btn" data-translate="cancel">Cancel</button>
+		</div>
+		`,
 
 	"/about": `
 	<h1 data-translate="about">about</h1>

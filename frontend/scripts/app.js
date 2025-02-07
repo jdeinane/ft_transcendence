@@ -50,19 +50,76 @@ export function navigate(path, addToHistory = true) {
 		});
 	  }
 
-	if (cleanPath === "/profile") {
-		const user = getCurrentUser();
-		if (!user) {
-			alert("you have to log in !");
-			navigate("#/login");
-		} else {
-			document.getElementById("app").innerHTML += `
-			<button id="logout" data-translate="logout">logout</button>
-			`;
-			document.getElementById("logout").addEventListener("click", logoutUser);
-		}
-	  }
+if (cleanPath === "/profile") {
+	const user = getCurrentUser();
+	if (!user) {
+		alert("You have to log in!");
+		navigate("#/login");
+	} else {
+		// Utilisation d'un setTimeout pour s'assurer que les éléments existent avant d'ajouter les événements
+		setTimeout(() => {
+			// Met à jour l'avatar
+			const avatarImg = document.getElementById("avatar-img");
+			const savedAvatar = localStorage.getItem("selectedAvatar");
+			if (savedAvatar) {
+				avatarImg.src = savedAvatar;
+			}
+
+			// Ajoute l'événement au bouton "Edit Profile"
+			const editProfileBtn = document.getElementById("edit-profile-btn");
+			if (editProfileBtn) {
+				editProfileBtn.addEventListener("click", () => {
+					navigate("#/edit-profile");
+				});
+			}
+
+			// Ajoute l'événement au bouton "Logout"
+			const logoutBtn = document.getElementById("logout-btn");
+			if (logoutBtn) {
+				logoutBtn.addEventListener("click", () => {
+					logoutUser();
+					navigate("#/login");
+				});
+			}
+		}, 50); // Petit délai pour s'assurer que le DOM est mis à jour
+	}
+}
+
 	  
+	if (cleanPath === "/edit-profile") {
+		const avatarImg = document.getElementById("avatar-img");
+		const avatarOptions = document.querySelectorAll(".avatar-option");
+		const saveAvatarBtn = document.getElementById("save-avatar-btn");
+		const cancelEditBtn = document.getElementById("cancel-edit-btn");
+	
+		// Charger l'avatar actuel
+		const savedAvatar = localStorage.getItem("selectedAvatar");
+		if (savedAvatar) {
+			avatarImg.src = savedAvatar;
+		}
+	
+		// Sélectionner un avatar
+		avatarOptions.forEach(avatar => {
+			avatar.addEventListener("click", () => {
+				avatarOptions.forEach(a => a.classList.remove("selected"));
+				avatar.classList.add("selected");
+				avatarImg.src = avatar.src;
+			});
+		});
+	
+		// Sauvegarder l'avatar
+		saveAvatarBtn.addEventListener("click", () => {
+			const selectedAvatar = avatarImg.src;
+			localStorage.setItem("selectedAvatar", selectedAvatar);
+			navigate("#/profile"); // Retour au profil après sauvegarde
+		});
+	
+		// Annuler et retourner au profil
+		cancelEditBtn.addEventListener("click", () => {
+			navigate("#/profile");
+		});
+	}
+		
 	if (cleanPath === "/") {
 		setTimeout(async () => {
 			await loadLanguage(localStorage.getItem("preferredLanguage") || "en");
@@ -208,31 +265,3 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeMessage.textContent = translations[currentLang]["welcome"] || "Welcome to ft_transcendence";
     }
 }
-
-document.addEventListener("DOMContentLoaded", () => {
-    const avatarImg = document.getElementById("avatar-img");
-    const changeAvatarBtn = document.getElementById("change-avatar-btn");
-    const avatarSelection = document.getElementById("avatar-selection");
-    const avatarOptions = document.querySelectorAll(".avatar-option");
-
-    // Afficher/Masquer la sélection d'avatars
-    changeAvatarBtn.addEventListener("click", () => {
-        avatarSelection.classList.toggle("hidden");
-    });
-
-    // Changer l'avatar lorsqu'on clique sur une option
-    avatarOptions.forEach(avatar => {
-        avatar.addEventListener("click", () => {
-            const newAvatar = avatar.src;
-            avatarImg.src = newAvatar;
-            localStorage.setItem("selectedAvatar", newAvatar); // Sauvegarde l'avatar
-            avatarSelection.classList.add("hidden"); // Cacher la sélection après choix
-        });
-    });
-
-    // Charger l'avatar sauvegardé
-    const savedAvatar = localStorage.getItem("selectedAvatar");
-    if (savedAvatar) {
-        avatarImg.src = savedAvatar;
-    }
-});

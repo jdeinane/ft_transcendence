@@ -3,15 +3,15 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    max-width: 400px;
+    max-width: 500px;
     margin: 30px auto;
-    padding: 20px;
+    padding: 35px;
     background: #f8f8f8;
     border: 2px solid black;
     box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
     border-radius: 8px;
     text-align: center;
-	font-size: 2rem;
+	font-size: 2.2rem;
 }
 
 .profile-info {
@@ -61,8 +61,10 @@ input {
 
 #avatar-selection {
     display: flex;
-    gap: 10px;
+    gap: 15px;
     margin-top: 10px;
+	justify-content: center;
+	flex-wrap: wrap;
 }
 
 .avatar-option {
@@ -76,4 +78,111 @@ input {
 .avatar-option:hover {
     transform: scale(1.1);
     border-color: #000;
+}
+
+#change-avatar-btn {
+    margin-bottom: 15px;
+}
+
+.avatar-option.selected {
+    border: 3px solid #000;
+    transform: scale(1.2);
+}
+
+.profile-buttons {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+
+/* Edit profile */
+
+.edit-profile-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 500px;
+    margin: 30px auto;
+    padding: 35px;
+    background: #f8f8f8;
+    border: 2px solid black;
+    box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 2rem;
+}
+
+#avatar-selection {
+    display: flex;
+    gap: 15px;
+    margin-top: 10px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.avatar-option {
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: transform 0.2s ease-in-out;
+}
+
+.avatar-option:hover {
+    transform: scale(1.1);
+    border-color: #000;
+}
+
+.avatar-option.selected {
+    border: 3px solid #000;
+    transform: scale(1.2);
+}
+
+button {
+    padding: 10px 15px;
+    border: 2px solid black;
+    background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.2rem;
+    margin-top: 10px;
+}
+
+button:hover {
+    background: #b0b0b0;
+}
+
+/* Style spécifique au bouton Cancel */
+#cancel-edit-btn {
+    background: #ffcccc;
+    border: 2px solid #ff5555;
+    color: #800000;
+}
+
+#cancel-edit-btn:hover {
+    background: #ff9999;
+    border-color: #cc0000;
+}
+
+#logout-btn {
+    background: #ffcccc;
+    border: 2px solid #ff5555;
+    color: #800000;
+    font-size: 1rem; /* Réduit la taille du texte */
+    margin-top: 10px;
+    padding: 5px 12px; /* Réduit l'espace interne */
+    width: auto; /* Ajuste la taille au texte */
+    min-width: 100px; /* Définit une largeur minimale */
+    max-width: 150px; /* Réduit la largeur max */
+    border-radius: 5px;
+    text-align: center;
+}
+
+#logout-btn:hover {
+    background: #ff9999;
+    border-color: #cc0000;
 }
