@@ -31,6 +31,8 @@ export function navigate(path, addToHistory = true) {
 			const username = form.username.value;
 			const password = form.password.value;
 			loginUser(username, password);
+			updateHeaderAvatar();
+			navigate("#/profile");
 		});	
 
 		const goToSignup = document.getElementById("go-to-signup");
@@ -56,16 +58,13 @@ if (cleanPath === "/profile") {
 		alert("You have to log in!");
 		navigate("#/login");
 	} else {
-		// Utilisation d'un setTimeout pour s'assurer que les éléments existent avant d'ajouter les événements
 		setTimeout(() => {
-			// Met à jour l'avatar
 			const avatarImg = document.getElementById("avatar-img");
 			const savedAvatar = localStorage.getItem("selectedAvatar");
 			if (savedAvatar) {
 				avatarImg.src = savedAvatar;
 			}
 
-			// Ajoute l'événement au bouton "Edit Profile"
 			const editProfileBtn = document.getElementById("edit-profile-btn");
 			if (editProfileBtn) {
 				editProfileBtn.addEventListener("click", () => {
@@ -73,15 +72,15 @@ if (cleanPath === "/profile") {
 				});
 			}
 
-			// Ajoute l'événement au bouton "Logout"
 			const logoutBtn = document.getElementById("logout-btn");
 			if (logoutBtn) {
 				logoutBtn.addEventListener("click", () => {
 					logoutUser();
-					navigate("#/login");
+					updateHeaderAvatar();
+					navigate("#/");
 				});
 			}
-		}, 50); // Petit délai pour s'assurer que le DOM est mis à jour
+		}, 50); 
 	}
 }
 
@@ -92,13 +91,11 @@ if (cleanPath === "/profile") {
 		const saveAvatarBtn = document.getElementById("save-avatar-btn");
 		const cancelEditBtn = document.getElementById("cancel-edit-btn");
 	
-		// Charger l'avatar actuel
 		const savedAvatar = localStorage.getItem("selectedAvatar");
 		if (savedAvatar) {
 			avatarImg.src = savedAvatar;
 		}
 	
-		// Sélectionner un avatar
 		avatarOptions.forEach(avatar => {
 			avatar.addEventListener("click", () => {
 				avatarOptions.forEach(a => a.classList.remove("selected"));
@@ -107,14 +104,15 @@ if (cleanPath === "/profile") {
 			});
 		});
 	
-		// Sauvegarder l'avatar
 		saveAvatarBtn.addEventListener("click", () => {
 			const selectedAvatar = avatarImg.src;
 			localStorage.setItem("selectedAvatar", selectedAvatar);
+			
+			updateHeaderAvatar(); // Met à jour l'avatar dans le header
 			navigate("#/profile"); // Retour au profil après sauvegarde
 		});
+		
 	
-		// Annuler et retourner au profil
 		cancelEditBtn.addEventListener("click", () => {
 			navigate("#/profile");
 		});
@@ -265,3 +263,22 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeMessage.textContent = translations[currentLang]["welcome"] || "Welcome to ft_transcendence";
     }
 }
+
+export function updateHeaderAvatar() {
+    const headerAvatar = document.getElementById("header-avatar");
+    const avatarContainer = document.getElementById("avatar-container");
+    const savedAvatar = localStorage.getItem("selectedAvatar");
+    const user = getCurrentUser(); // Vérifier si l'utilisateur est connecté
+
+    if (user && savedAvatar) {
+        headerAvatar.src = savedAvatar;
+        avatarContainer.classList.remove("hidden"); // Affiche l'avatar
+    } else {
+        avatarContainer.classList.add("hidden"); // Cache l'avatar
+    }
+}
+
+
+document.addEventListener("DOMContentLoaded", () => {
+    updateHeaderAvatar(); // Charge l'avatar au démarrage
+});
