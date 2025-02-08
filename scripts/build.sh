@@ -4,6 +4,25 @@
 echo "Detecting OS..."
 OS=$(uname -s)
 
+# ensure ./dockers/.env.dev exists
+if [ ! -f "../dockers/.env.dev" ];
+then
+    echo "Loading environment variables from ./dockers/.env.dev..."
+    set -o allexport
+    source ./dockers/.env.dev
+    set +o allexport
+else
+    echo "No ./dockers/.env.dev file found. Please create one."
+    exit 1    
+fi
+
+# ensure docker is installed
+if ! command -v docker &> /dev/null
+then
+    echo "Docker could not be found. Please install Docker."
+    exit 1
+fi
+
 # start docker only if running on linux
 if [[ "$OS" == "Linux" ]];
 then
@@ -34,6 +53,6 @@ echo "Starting production environment..."
 docker-compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
 # wait for all background processes to complete
-wait
+wait # they don't love you like I love you xD titkok brainrot
 
 echo "Development and Production environments are running!"
