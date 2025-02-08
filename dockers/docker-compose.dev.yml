@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   backend:
+    image: ft_transcendence_backend
     build:
       context: ..
       dockerfile: dockers/django/Dockerfile

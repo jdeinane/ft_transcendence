@@ -46,11 +46,11 @@ echo "Rebuilding Docker containers..."
 
 # start dev environment
 echo "Starting development environment..."
-docker-compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>&1 &
+docker compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>&1 &
 
 # start prod environment
 echo "Starting production environment..."
-docker-compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
+docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
 # wait for all background processes to complete
 wait # they don't love you like I love you xD titkok brainrot
