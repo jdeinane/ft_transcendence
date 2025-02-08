@@ -66,9 +66,12 @@ export const routes = {
 	<h1>PONG!</h1>
 	<div class="mode-selection-container">
 		<div class="mode-selection">
-			<button class="mode-button" data-mode="solo" data-translate="solo">Solo Player</button>
-			<button class="mode-button" data-mode="multiplayer" data-translate="multiplayer">Multiplayer</button>
-			<button class="mode-button" data-mode="tournament" data-translate="tournament">Tournament</button>
+			<button class="mode-button" data-translate="solo" data-mode="solo">
+			</button>
+			<button class="mode-button" data-translate="multiplayer" data-mode="multiplayer">
+			</button>
+			<button class="mode-button" data-translate="tournament" data-mode="tournament">
+			</button>
 		</div>
 		<button id="start-game" data-translate="start-game">Game start!</button>
 	</div>
@@ -82,9 +85,12 @@ export const routes = {
 	<h1>TIC TAC TOE!</h1>
 	<div class="mode-selection-container">
 		<div class="mode-selection">
-			<button class="mode-button" data-mode="solo" data-translate="solo">Solo Player</button>
-			<button class="mode-button" data-mode="multiplayer" data-translate="multiplayer">Multiplayer</button>
-			<button class="mode-button" data-mode="tournament" data-translate="tournament">Tournament</button>
+			<button class="mode-button" data-translate="solo" data-mode="solo">
+			</button>
+			<button class="mode-button" data-translate="multiplayer" data-mode="multiplayer">
+			</button>
+			<button class="mode-button" data-translate="tournament" data-mode="tournament">
+			</button>
 		</div>
 		<button id="start-ttt-game" data-translate="start-ttt-game">Game start!</button>
 	</div>

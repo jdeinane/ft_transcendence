@@ -10,7 +10,7 @@ import { routes } from "./routes.js"
 import { loadLanguage, setupLanguageSelector } from "./language.js";
 import { translations } from "./language.js";
 import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
-import { setupPongGame } from "./pongGame.js";
+import { setupPongGame, handleModeSelection } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
@@ -168,11 +168,13 @@ export function navigate(path, addToHistory = true) {
 
 	if (cleanPath === "/pong") {
 		setupPongGame();
+		handleModeSelection();
 	}
 
 
 	if (cleanPath === "/tic-tac-toe") {
 		setupTicTacToeGame();
+		handleModeSelection();
 	}
 
 	if (cleanPath === "/tournament") {
@@ -339,17 +341,29 @@ export function updateHeaderAvatar() {
     const headerAvatar = document.getElementById("header-avatar");
     const avatarContainer = document.getElementById("avatar-container");
     const savedAvatar = localStorage.getItem("selectedAvatar");
-    const user = getCurrentUser(); // Vérifier si l'utilisateur est connecté
+    const user = getCurrentUser();
 
     if (user && savedAvatar) {
         headerAvatar.src = savedAvatar;
-        avatarContainer.classList.remove("hidden"); // Affiche l'avatar
+        avatarContainer.classList.remove("hidden");
     } else {
-        avatarContainer.classList.add("hidden"); // Cache l'avatar
+        avatarContainer.classList.add("hidden");
     }
 }
 
 
 document.addEventListener("DOMContentLoaded", () => {
-    updateHeaderAvatar(); // Charge l'avatar au démarrage
+    updateHeaderAvatar();
+});
+
+document.addEventListener("DOMContentLoaded", () => {
+    const modeButtons = document.querySelectorAll(".mode-button");
+
+    modeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            modeButtons.forEach(btn => btn.classList.remove("active"));
+
+            button.classList.add("active");
+        });
+    });
 });

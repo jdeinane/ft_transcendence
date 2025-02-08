@@ -185,7 +185,31 @@ function startPongGame(canvas, isSinglePlayer) {
 	  }
 	});
   
-	// Lancer le jeu
 	gameLoop();
   }
-  
+
+// UTILS POUR L'EFFET "BOUTTON APPUYE"
+
+  export function handleModeSelection() {
+    setTimeout(() => { 
+        const modeButtons = document.querySelectorAll(".mode-button");
+
+        const savedMode = localStorage.getItem("selectedMode");
+        if (savedMode) {
+            modeButtons.forEach(btn => {
+                if (btn.dataset.mode === savedMode) {
+                    btn.classList.add("active");
+                }
+            });
+        }
+
+        modeButtons.forEach(button => {
+            button.addEventListener("click", () => {
+                modeButtons.forEach(btn => btn.classList.remove("active"));
+                button.classList.add("active");
+                
+                localStorage.setItem("selectedMode", button.dataset.mode);
+            });
+        });
+    }, 50);
+}
