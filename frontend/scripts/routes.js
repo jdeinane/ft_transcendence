@@ -44,13 +44,22 @@ export const routes = {
     `,
 
 	"/game": `
-	<h1 data-translate="game-selection">GAME SELECTION</h1>
+	<h1 data-translate="game-selection">Choose your battle!</h1>
+	<p class="game-description" data-translate="game-description">Select a game to begin your adventure.</p>
 	<div class="mode-selection-container">
 		<div class="mode-selection">
-			<button class="mode-button" data-game="pong" data-translate="pong">Pong</button>
-			<button class="mode-button" data-game="tic-tac-toe" data-translate="tic-tac-toe">Tic Tac Toe</button>
+		<button class="mode-button" data-game="pong">
+			<img src="assets/icons/pong.png" alt="Pong Icon">
+			Pong
+		</button>
+
+		<button class="mode-button" data-game="tic-tac-toe">
+			<img src="assets/icons/tic-tac-toe.png" alt="Tic Tac Toe Icon">
+			Tic Tac Toe
+		</button>		
 		</div>
 	</div>
+	
     `,
 
 	"/pong": `
@@ -63,6 +72,7 @@ export const routes = {
 		</div>
 		<button id="start-game" data-translate="start-game">Game start!</button>
 	</div>
+
     <canvas id="pong" width="800" height="400" style="border:1px solid #000; display: none;"></canvas>
     <button id="back-to-mode-selection" style="display: none;" data-translate="back-to-mode-selection">Back to Select Game Mode</button>
 	<button id="back-to-game-selection" data-translate="back-to-game-selection">Back to Game Selection</button>

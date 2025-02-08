@@ -6,7 +6,7 @@
 	  "about": "about",
 	  "welcome": "Welcome to ft_transcendence",
 	  "play-now": "Play now",
-	  "game-selection": "GAME SELECTION",
+	  "game-selection": "Choose your battle!",
 	  "pong": "Pong",
 	  "tic-tac-toe": "Tic Tac Toe",
 	  "pong-title": "PONG!",
@@ -44,7 +44,8 @@
 	  "chat-subtitle": "Join the conversation",
 	  "leaderboard-title": "Rank",
 	  "leaderboard-subtitle": "View stats & matches",
-	  "welcome-user": "Welcome back, {user}"
+	  "welcome-user": "Welcome back, {user}",
+	  "game-description": "Select a game to begin your adventure."
 	},
 	"fr": {
 	  "home": "accueil",
@@ -52,7 +53,7 @@
 	  "welcome": "Bienvenue sur ft_transcendance",
 	  "play-now": "Jouer maintenant",
 	  "play": "jouer!",
-	  "game-selection": "SÉLECTION DE JEU",
+	  "game-selection": "Choisis un jeu!",
 	  "pong": "Pong",
 	  "tic-tac-toe": "Morpion",
 	  "pong-title": "PONG!",
@@ -91,7 +92,9 @@
 	  "chat-subtitle": "Lancer une discussion",
 	  "leaderboard-title": "Classement",
 	  "leaderboard-subtitle": "Voir les stats & matchs",
-	  "welcome-user": "Bienvenue, {user}"
+	  "welcome-user": "Bienvenue, {user}",
+	  "game-description": "Choisir un jeu pour démarrer l'aventure."
+
 	},
 	"es": {
 	  "home": "hogar",
@@ -99,7 +102,7 @@
 	  "welcome": "Bienvenido a ft_transcendence",
 	  "play-now": "Jugar ahora",
 	  "play": "¡jugar!",
-	  "game-selection": "SELECCIÓN DE JUEGO",
+	  "game-selection": "Elige tu batalla!",
 	  "pong": "Pong",
 	  "tic-tac-toe": "Tres en Raya",
 	  "pong-title": "PONG!",
@@ -138,7 +141,9 @@
 	  "chat-subtitle": "Iniciar un chat",
 	  "leaderboard-title": "Clasificación",
 	  "leaderboard-subtitle": "Ver estadísticas & partidos",
-	  "welcome-user": "Bienvenido de nuevo, {user}"
+	  "welcome-user": "Bienvenido de nuevo, {user}",
+	  "game-description": "Selectar Shakira blablabla."
+
 	}
   }
   
