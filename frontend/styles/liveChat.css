@@ -1,0 +1,85 @@
+.livechat-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.chat-layout {
+    display: flex;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.user-list {
+    width: 200px;
+    background: #f4f4f4;
+    border: 2px solid black;
+    padding: 10px;
+    border-radius: 10px;
+    box-shadow: 3px 3px 0px #888;
+}
+
+.user-list h3 {
+    text-align: center;
+    font-size: 1.5rem;
+    margin-bottom: 10px;
+}
+
+.user-list ul {
+    list-style: none;
+    padding: 0;
+}
+
+.user-list li {
+    display: flex;
+    align-items: center;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.user-list li img {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.user-list li:hover {
+    background: #ddd;
+}
+
+.chat-box {
+    width: 400px;
+    height: 450px;
+    background: white;
+    border: 3px solid black;
+    box-shadow: 5px 5px 0px #888;
+    border-radius: 10px;
+    overflow-y: auto;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+
+.chat-message {
+    padding: 12px;
+    border-radius: 8px;
+    margin: 5px;
+    max-width: 70%;
+    font-size: 1.2rem;
+}
+
+.chat-message.user {
+    align-self: flex-end;
+    background: #add8e6;
+    border-radius: 10px 10px 0 10px;
+}
+
+.chat-message.bot {
+    align-self: flex-start;
+    background: #eeeeee;
+    border-radius: 10px 10px 10px 0;
+}

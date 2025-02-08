@@ -167,8 +167,31 @@ export const routes = {
 		`,
 
 	"/about": `
-	<h1 data-translate="about">about</h1>
-	<p data-translate="not-found">not your problem</p>
+		<h1 data-translate="about">about</h1>
+		<p data-translate="not-found">not your problem</p>
+	`,
+
+	"/livechat": `
+		<div class="livechat-container">
+			<h1 data-translate="chat-title">Live Chat</h1>
+			
+			<div class="chat-layout">
+				<!-- Liste des utilisateurs -->
+				<div class="user-list">
+					<h3>Users</h3>
+					<ul id="user-list"></ul>
+				</div>
+
+				<!-- Fenêtre de chat -->
+				<div class="chat-box">
+					<div id="chat-messages"></div>
+					<div class="chat-input">
+						<input type="text" id="message-input" placeholder="Type a message..." />
+						<button id="send-message-btn" data-translate="send">Send</button>
+					</div>
+				</div>
+			</div>
+		</div>
 	`,
 
 	"*": `

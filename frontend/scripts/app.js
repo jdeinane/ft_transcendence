@@ -1,3 +1,11 @@
+let users = [
+    { username: "Alice", avatar: "assets/avatars/avatargirl1.png", blocked: false },
+    { username: "Bob", avatar: "assets/avatars/avatarboy1.png", blocked: false },
+    { username: "Charlie", avatar: "assets/avatars/avatargirl2.png", blocked: false }
+];
+
+let conversations = {}; //
+
 import { routes } from "./routes.js"
 import { loadLanguage, setupLanguageSelector } from "./language.js";
 import { translations } from "./language.js";
@@ -52,18 +60,17 @@ export function navigate(path, addToHistory = true) {
 		});
 	  }
 
-if (cleanPath === "/profile") {
-	const user = getCurrentUser();
-	if (!user) {
-		alert("You have to log in!");
-		navigate("#/login");
-	} else {
-		setTimeout(() => {
-			const avatarImg = document.getElementById("avatar-img");
-			const savedAvatar = localStorage.getItem("selectedAvatar");
-			if (savedAvatar) {
-				avatarImg.src = savedAvatar;
-			}
+	if (cleanPath === "/profile") {
+		const user = getCurrentUser();
+		if (!user)
+				navigate("#/login");
+		else {
+			setTimeout(() => {
+				const avatarImg = document.getElementById("avatar-img");
+				const savedAvatar = localStorage.getItem("selectedAvatar");
+				if (savedAvatar) {
+					avatarImg.src = savedAvatar;
+				}
 
 			const editProfileBtn = document.getElementById("edit-profile-btn");
 			if (editProfileBtn) {
@@ -83,7 +90,6 @@ if (cleanPath === "/profile") {
 		}, 50); 
 	}
 }
-
 	  
 	if (cleanPath === "/edit-profile") {
 		const avatarImg = document.getElementById("avatar-img");
@@ -172,6 +178,71 @@ if (cleanPath === "/profile") {
 	if (cleanPath === "/tournament") {
 		setupTournament();
 	}
+
+	if (cleanPath === "/livechat") {
+		const chatMessages = document.getElementById("chat-messages");
+		const messageInput = document.getElementById("message-input");
+		const sendMessageBtn = document.getElementById("send-message-btn");
+		const userList = document.getElementById("user-list");
+	
+		let selectedUser = null;
+	
+		function renderUserList() {
+			userList.innerHTML = "";
+			users.forEach(user => {
+				if (!user.blocked) {
+					const li = document.createElement("li");
+					li.innerHTML = `<img src="${user.avatar}" /> ${user.username}`;
+					li.addEventListener("click", () => openChat(user.username));
+					userList.appendChild(li);
+				}
+			});
+		}
+	
+		function openChat(username) {
+			selectedUser = username;
+			chatMessages.innerHTML = "";
+			if (conversations[username]) {
+				conversations[username].forEach(msg => {
+					addMessage(msg.text, msg.sender);
+				});
+			}
+		}
+	
+		function addMessage(text, sender) {
+			const messageElement = document.createElement("div");
+			messageElement.classList.add("chat-message", sender);
+			messageElement.textContent = text;
+			chatMessages.appendChild(messageElement);
+			chatMessages.scrollTop = chatMessages.scrollHeight;
+	
+			if (!conversations[selectedUser]) {
+				conversations[selectedUser] = [];
+			}
+			conversations[selectedUser].push({ text, sender });
+		}
+	
+		sendMessageBtn.addEventListener("click", () => {
+			const message = messageInput.value.trim();
+			if (message !== "" && selectedUser) {
+				addMessage(message, "user");
+				messageInput.value = "";
+	
+				setTimeout(() => {
+					addMessage("This is a simulated response.", "bot");
+				}, 1000);
+			}
+		});
+	
+		messageInput.addEventListener("keypress", (e) => {
+			if (e.key === "Enter")
+				sendMessageBtn.click();
+		});
+	
+		renderUserList();
+	}
+	
+
 	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 	loadLanguage(savedLanguage);
 	updateActiveLink(cleanPath);
