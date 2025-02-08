@@ -6,6 +6,7 @@
 	max-width: 600px;
     gap: 10px;
     margin-top: 15px;
+	animation: fadeIn 0.5s ease-out;
 }
 
 .bottom-widgets {
@@ -25,6 +26,7 @@
     cursor: pointer;
     padding: 5px;
     position: relative;
+	transition: transform 0.2s, box-shadow 0.2s;
 }
 
 #game-widget {
@@ -39,6 +41,7 @@
     width: 90%;
     height: 75px;
     border-radius: 5px;
+    transition: transform 0.2s, box-shadow 0.2s;
 }
 
 .game-icon {
@@ -133,5 +136,6 @@
 
 #game-widget:hover, #chat-widget:hover, #leaderboard-widget:hover {
     background: #e0e0e0;
+	transform: scale(1.1);
     box-shadow: inset 2px 2px 0px #666, inset -2px -2px 0px #fff;
 }

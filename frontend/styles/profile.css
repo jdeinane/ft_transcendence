@@ -12,6 +12,7 @@
     border-radius: 8px;
     text-align: center;
 	font-size: 2.2rem;
+	animation: fadeIn 0.5s ease-out;
 }
 
 .profile-info {
@@ -49,10 +50,6 @@ input {
     padding: 8px;
     font-size: 1rem;
     border: 2px solid black;
-}
-
-#edit-profile-form {
-    margin-top: 15px;
 }
 
 .hidden {
@@ -96,7 +93,6 @@ input {
     gap: 10px;
     margin-top: 15px;
 }
-
 
 /* Edit profile */
 
