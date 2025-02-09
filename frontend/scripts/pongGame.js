@@ -1,20 +1,34 @@
 import { navigate } from "./app.js"
 
 export function setupPongGame() {
-    let selectedMode = "solo";
-    const canvas = document.getElementById("pong");
-    const startButton = document.getElementById("start-game");
-    const backButton = document.getElementById("back-to-mode-selection");
-    const gameSelectionButton = document.getElementById("back-to-game-selection");
-    const modeSelectionContainer = document.querySelector(".mode-selection-container");
+	let selectedMode = "solo";
+	let playerCount = 2;
+	const canvas = document.getElementById("pong");
+	const startButton = document.getElementById("start-game");
+	const backButton = document.getElementById("back-to-mode-selection");
+	const gameSelectionButton = document.getElementById("back-to-game-selection");
+	const modeSelectionContainer = document.querySelector(".mode-selection-container");
+	const multiplayerButton = document.getElementById("multiplayer-btn");
+	const playerSelection = document.getElementById("player-selection");
 
     document.querySelectorAll(".mode-button").forEach(button => {
         button.addEventListener("click", () => {
             document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
             button.classList.add("active-mode");
             selectedMode = button.dataset.mode;
+
+			if (selectedMode == "multiplayer")
+				playerSelection.classList.remove("hidden");
+			else
+				playerSelection.classList.add("hidden");
         });
     });
+
+	document.querySelectorAll(".player-count-button").forEach(button => {
+		button.addEventListener("click", () => {
+			playerCount = parseInt(button.dataset.players);
+		});
+	});
 
     startButton.addEventListener("click", () => {
         if (selectedMode === "tournament") {
@@ -27,7 +41,7 @@ export function setupPongGame() {
         backButton.style.display = "block";
 
         const isSinglePlayer = selectedMode === "solo";
-        startPongGame(canvas, isSinglePlayer);
+        startPongGame(canvas, isSinglePlayer, playerCount);
     });
 
     backButton.addEventListener("click", () => {
@@ -45,7 +59,6 @@ export function setupPongGame() {
 function startPongGame(canvas, isSinglePlayer) {
 	const ctx = canvas.getContext("2d");
   
-	// Variables du jeu
 	let ballX = canvas.width / 2;
 	let ballY = canvas.height / 2;
 	let ballSpeedX = 3;
@@ -54,18 +67,14 @@ function startPongGame(canvas, isSinglePlayer) {
 	const paddleHeight = 100;
 	const paddleWidth = 10;
   
-	// Positions des paddles
 	let paddle1Y = canvas.height / 2 - paddleHeight / 2;
 	let paddle2Y = canvas.height / 2 - paddleHeight / 2;
   
-	// Scores
 	let player1Score = 0;
 	let player2Score = 0;
   
-	// IA
 	const aiSpeed = 2;
   
-	// Contrôles des joueurs
 	const keys = {
 	  w: false, // Joueur 1 haut
 	  s: false, // Joueur 1 bas
