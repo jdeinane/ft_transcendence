@@ -15,9 +15,14 @@ function showError(elementId, message) {
 	}
   }
 
-export function createUser(username, password, email) {
-	if (!username || !password || !email) {
-		showError("signup-error", "all fields are required !");
+  export function createUser(username, password, email, confirmPassword) {
+	if (!username || !password || !email || !confirmPassword) {
+		showError("signup-error", "All fields are required!");
+		return;
+	}
+
+	if (password !== confirmPassword) {
+		showError("signup-error", "Passwords do not match!");
 		return;
 	}
 
@@ -25,7 +30,7 @@ export function createUser(username, password, email) {
 	const userExists = existingUsers.some(user => user.username == username);
 
 	if (userExists) {
-		showError("signup-error", "username already taken");
+		showError("signup-error", "Username already taken!");
 		return;
 	}
 
@@ -33,7 +38,7 @@ export function createUser(username, password, email) {
 	existingUsers.push(newUser);
 	localStorage.setItem("users", JSON.stringify(existingUsers));
 
-	alert("account succesfully created!");
+	alert("Account succesfully created!");
 	navigate("#/login");
 }
 

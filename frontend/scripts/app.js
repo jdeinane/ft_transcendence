@@ -63,7 +63,8 @@ export function navigate(path, addToHistory = true) {
 			const username = form.username.value;
 			const password = form.password.value;
 			const email = form.email.value;
-			createUser(username, password, email);
+			const confirmPassword = form["confirm-password"].value;
+			createUser(username, password, email, confirmPassword);
 		});
 	  }
 

@@ -102,12 +102,6 @@ input:focus {
   border-color: var(--button-hover);
 }
 
-.error-message {
-  color: #ff4c4c;
-  font-size: 0.9rem;
-  animation: fadeIn 0.3s ease-in-out;
-}
-
 .lang-flag {
     width: 32px; /* Taille uniforme */
     height: auto; /* Garde les proportions correctes */

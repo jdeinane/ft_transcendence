@@ -130,16 +130,19 @@ export const routes = {
 	`,
 
 	"/signup": `
-	<h1 data-translate="sign-up">sign up</h1>
-	<form id="signup-form">
-		<input type="text" name="username" placeholder="username" required data-translate="username"/>
-		<input type="email" name="email" placeholder="email" required data-translate="email"/>
-		<input type="password" name="password" placeholder="password" required data-translate="password"/>
-		<input type="password" name="confirm-password" placeholder="confirm password" required data-translate="confirm-password"/>
-		<button type="submit" data-translate="sign-up">sign up!</button>
-		<p id="signup-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
-    	<p id="signup-error" class="error-message"></p> <!-- Zone d'affichage des erreurs -->
-	</form>
+		<div class="signup-container">
+			<div class="signup-box">
+				<h1 class="signup-title" data-translate="sign-up">Sign up</h1>
+				<form class="signup-form" id="signup-form">
+					<input type="text" name="username" placeholder="Username" required data-translate="username"/>
+					<input type="email" name="email" placeholder="Email" required data-translate="email"/>
+					<input type="password" name="password" placeholder="Password" required data-translate="password"/>
+					<input type="password" name="confirm-password" placeholder="Confirm Password" required data-translate="confirm-password"/>
+					<button type="submit" class="signup-button" data-translate="sign-up">Sign up!</button>
+					<p id="signup-error" class="error-message"></p>
+				</form>
+			</div>
+		</div>
 	`,
 
 	"/profile": `
