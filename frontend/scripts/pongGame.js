@@ -146,7 +146,14 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		if (playerCount === 4)
 			ctx.fillRect(paddle4X, paddle4Y, paddleHeight, paddleWidth);
 		}
-
+	
+	function awardPoints(loser) {
+		if (loser !== 1) player1Score++;  
+		if (loser !== 2) player2Score++;
+		if (playerCount >= 3 && loser !== 3) player3Score++;
+		if (playerCount === 4 && loser !== 4) player4Score++;
+	}
+	
 	function update() {
 		ballX += ballSpeedX;
 		ballY += ballSpeedY;
@@ -180,11 +187,11 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		}
 			
 		if (playerCount >= 3 && ballY <= 0) {
-			player3Score++;
+			awardPoints(3);
 			resetBall();
 		}
 		if (playerCount === 4 && ballY >= canvas.height) {
-			player4Score++;
+			awardPoints(4);
 			resetBall();
 		}
 			
@@ -203,19 +210,19 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		}
 
 
-			if (keys.w) paddle1Y -= 5;
-			if (keys.s) paddle1Y += 5;
-		
-			if (!isSinglePlayer) {
-				if (keys.i) paddle2Y -= 5;
-				if (keys.k) paddle2Y += 5;
+		if (keys.w) paddle1Y -= 5;
+		if (keys.s) paddle1Y += 5;
+	
+		if (!isSinglePlayer) {
+			if (keys.i) paddle2Y -= 5;
+			if (keys.k) paddle2Y += 5;
+		} else {
+			if (ballY < paddle2Y + paddleHeight / 2) {
+			paddle2Y -= aiSpeed;
 			} else {
-				if (ballY < paddle2Y + paddleHeight / 2) {
-				paddle2Y -= aiSpeed;
-				} else {
-				paddle2Y += aiSpeed;
-				}
+			paddle2Y += aiSpeed;
 			}
+		}
 		
 		if (playerCount >= 3) {
 			if (keys.r)
