@@ -34,13 +34,20 @@ export function navigate(path, addToHistory = true) {
 		}
 	  
 		const form = document.getElementById("login-form");
+		const errorMessage = document.getElementById("login-error");
+
 		form.addEventListener("submit", (e) => {
 			e.preventDefault();
 			const username = form.username.value;
 			const password = form.password.value;
-			loginUser(username, password);
-			updateHeaderAvatar();
-			navigate("#/profile");
+			const loginSuccess = loginUser(username, password);
+
+			if (loginSuccess) {
+				updateHeaderAvatar();
+				navigate("#/profile");
+			} else {
+				errorMessage.textContent = "Invalid username or password.";
+			}
 		});	
 
 		const goToSignup = document.getElementById("go-to-signup");

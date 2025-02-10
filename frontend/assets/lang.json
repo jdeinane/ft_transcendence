@@ -93,10 +93,9 @@
 	  "chat-subtitle": "Lancer une discussion",
 	  "leaderboard-title": "Classement",
 	  "leaderboard-subtitle": "Voir les stats & matchs",
-	  "welcome-user": "Bienvenue, {user}",
+	  "welcome-user": "Content de te revoir, {user}",
 	  "game-description": "Choisir un jeu pour démarrer l'aventure.",
 	  "select-number": "Selectionnez le nombre de joueurs:"
-
 
 	},
 	"es": {
