@@ -8,7 +8,7 @@
     padding: 35px;
     background: #f8f8f8;
     border: 2px solid black;
-    box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
+    box-shadow: 5px 5px 0px black;
     border-radius: 8px;
     text-align: center;
 	font-size: 2.2rem;
@@ -106,7 +106,7 @@ input {
     padding: 35px;
     background: #f8f8f8;
     border: 2px solid black;
-    box-shadow: 3px 3px 0px #888, -3px -3px 0px #fff;
+    box-shadow: 5px 5px 0px black;
     border-radius: 8px;
     text-align: center;
     font-size: 2rem;

@@ -3,14 +3,35 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 40vh;
+    height: 80vh;
 }
 
-.login-title {
-    font-size: 100px;
-    font-family: "NintendoDS", sans-serif;
-    margin-bottom: 20px;
+.login-box {
+    padding: 25px;
+    background: white;
+    border: 2px solid black;
+    border-radius: 10px;
+    box-shadow: 5px 5px 0px black;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+	margin-bottom: 15px;
+}
+
+.no-account-text {
+    font-size: 20px;
     color: black;
+    text-align: center;
+    margin-bottom: 5px; 
+}
+
+
+.login-title {
+    font-size: 40px;
+    font-family: "NintendoDS", sans-serif;
+    color: black;
+    margin-bottom: 10px;
 }
 
 .login-form {
@@ -18,20 +39,16 @@
     flex-direction: column;
     align-items: center;
     gap: 15px;
-    padding: 20px;
-    background: white;
-    border: 2px solid black;
-    border-radius: 10px;
 }
 
 .login-form input {
     width: 250px;
     padding: 10px;
-    font-size: 18px;
+    font-size: 20px;
     border: 2px solid black;
 }
 
-.login-form button {
+.login-button {
     width: 270px;
     padding: 12px;
     font-size: 18px;
@@ -41,6 +58,23 @@
     cursor: pointer;
 }
 
-.login-form button:hover {
+.login-button:hover {
     background: linear-gradient(to bottom, #fff, #ddd);
+}
+
+.error-message {
+	color: #ff4c4c;
+	font-size: 1.5rem;
+	animation: fadeIn 0.3s ease-in-out;
+}
+
+.shake {
+    animation: shake 0.2s ease-in-out 2;
+}
+
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    50% { transform: translateX(5px); }
+    75% { transform: translateX(-5px); }
 }

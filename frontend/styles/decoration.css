@@ -17,14 +17,14 @@
 	color: rgb(77, 86, 126);
 }
 
-
 .clock-container {
     display: flex;
     justify-content: center;
     align-items: center;
     width: 300px;
     height: 300px;
-    background: transparent;
+    background: rgb(228, 225, 225);
+	box-shadow: 5px 5px 0px black;
 }
 
 #clockCanvas {
@@ -41,6 +41,12 @@
     width: 300px;
     height: 300px;
     background: transparent;
+	box-shadow: 5px 5px 0px black;
+}
+
+.clock-container, .calendar-container {
+    border-radius: 10px;
+    overflow: hidden; 
 }
 
 #calendarCanvas {
@@ -55,5 +61,5 @@
     justify-content: center;
     align-items: center;
     gap: 30px;
-    width: 700px;	
+    width: 700px;
 }

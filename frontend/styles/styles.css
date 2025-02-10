@@ -103,19 +103,19 @@ input:focus {
 }
 
 .lang-flag {
-    width: 32px; /* Taille uniforme */
-    height: auto; /* Garde les proportions correctes */
-    aspect-ratio: 1 / 1; /* Assure une forme parfaitement ronde */
+    width: 32px;
+    height: auto;
+    aspect-ratio: 1 / 1;
     cursor: pointer;
-    border-radius: 50%; /* Rend le drapeau circulaire */
+    border-radius: 50%;
     border: 2px solid transparent;
     transition: transform 0.2s ease-in-out, border 0.2s;
-    object-fit: cover; /* Ajuste bien l’image dans un rond */
+    object-fit: cover;
 }
 
 .lang-flag:hover, .lang-flag.active {
     transform: scale(1.1);
-    border: 2px solid #618fc4; /* Contour doré au drapeau sélectionné */
+    border: 2px solid #618fc4;
 }
 
 button {

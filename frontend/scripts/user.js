@@ -5,24 +5,25 @@
 // 2. taper la commande ` JSON.parse(localStorage.getItem("users")) `
 
 import { navigate, updateNavigation } from "./app.js"
+import { translate } from "./language.js";
 
 function showError(elementId, message) {
 	const errorElement = document.getElementById(elementId);
 	if (errorElement) {
-	  errorElement.textContent = message;
-	  errorElement.classList.add("shake"); // effet secousse
-	  setTimeout(() => errorElement.classList.remove("shake"), 500); // enleve l'effet apres 0.5s
+		errorElement.textContent = message;
+		errorElement.classList.add("shake"); // effet secousse
+		setTimeout(() => errorElement.classList.remove("shake"), 500); // enleve l'effet apres 0.5s
 	}
   }
 
   export function createUser(username, password, email, confirmPassword) {
 	if (!username || !password || !email || !confirmPassword) {
-		showError("signup-error", "All fields are required!");
+		showError("signup-error", translate("all-fields-required"));
 		return;
 	}
 
 	if (password !== confirmPassword) {
-		showError("signup-error", "Passwords do not match!");
+		showError("signup-error", translate("passwords-no-match"));
 		return;
 	}
 
@@ -30,7 +31,7 @@ function showError(elementId, message) {
 	const userExists = existingUsers.some(user => user.username == username);
 
 	if (userExists) {
-		showError("signup-error", "Username already taken!");
+		showError("signup-error", translate("username-taken"));
 		return;
 	}
 

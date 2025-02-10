@@ -46,7 +46,11 @@
 	  "leaderboard-subtitle": "View stats & matches",
 	  "welcome-user": "Welcome back, {user}",
 	  "game-description": "Select a game to begin your adventure.",
-	  "select-number": "Select number of players:"
+	  "select-number": "Select number of players:",
+	  "all-fields-required": "All fields are required!",
+	  "passwords-no-match": "Passwords do not match!",
+	  "username-taken": "Username already taken!"
+
 	},
 	"fr": {
 	  "home": "accueil",
@@ -95,7 +99,10 @@
 	  "leaderboard-subtitle": "Voir les stats & matchs",
 	  "welcome-user": "Content de te revoir, {user}",
 	  "game-description": "Choisir un jeu pour démarrer l'aventure.",
-	  "select-number": "Selectionnez le nombre de joueurs:"
+	  "select-number": "Selectionnez le nombre de joueurs:",
+	  "all-fields-required": "Tous les champs sont requis !",
+	  "passwords-no-match": "Les mots de passe ne correspondent pas !",
+	  "username-taken": "Nom d'utilisateur déjà pris !"
 
 	},
 	"es": {
@@ -145,7 +152,10 @@
 	  "leaderboard-subtitle": "Ver estadísticas & partidos",
 	  "welcome-user": "Bienvenido de nuevo, {user}",
 	  "game-description": "Selectar Shakira blablabla.",
-	  "select-number": "Seleccione el número de jugadores:"
+	  "select-number": "Seleccione el número de jugadores:",
+	  "all-fields-required": "¡Todos los campos son obligatorios!",
+	  "passwords-no-match": "¡Las contraseñas no coinciden!",
+	  "username-taken": "¡Nombre de usuario ya utilizado!"
 
 	}
   }

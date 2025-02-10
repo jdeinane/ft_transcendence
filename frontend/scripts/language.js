@@ -51,3 +51,9 @@ export function setupLanguageSelector() {
         activeFlag.classList.add("active");
     }
 }
+
+
+export function translate(key) {
+	const lang = localStorage.getItem("preferredLanguage") || "en";
+	return translations[lang][key] || key;
+}

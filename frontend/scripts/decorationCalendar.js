@@ -19,6 +19,10 @@ export function initializeCalendar() {
     const cellHeight = (height - titleHeight) / (totalRows + 1);
 
     ctx.fillStyle = "white";
+    ctx.beginPath();
+    ctx.roundRect(0, 0, width, height, 15);
+    ctx.clip();
+
     ctx.fillRect(0, 0, width, height);
     ctx.strokeStyle = "black";
     ctx.lineWidth = 3;

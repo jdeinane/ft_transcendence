@@ -117,16 +117,18 @@ export const routes = {
 
 	"/login": `
 	<div class="login-container">
-		<h1 class="login-title" data-translate="login">Login</h1>
-			<form id="login-form" class="login-form"> <!-- Ajout de id ici -->
-				<input type="text" name="username" placeholder="Username" required data-translate="username">
-				<input type="password" name="password" placeholder="Password" required data-translate="password">
-				<button type="submit" data-translate="login">Login</button>
-				<p id="login-error" class="error-message"></p>
-		</form>
-	</div>
-	<p data-translate="no-account">No account?</p>
+		<div class="login-box">
+			<h1 class="login-title" data-translate="login">Login</h1>
+				<form id="login-form" class="login-form"> <!-- Ajout de id ici -->
+					<input type="text" name="username" placeholder="Username" required data-translate="username">
+					<input type="password" name="password" placeholder="Password" required data-translate="password">
+					<button type="submit" data-translate="login">Login</button>
+					<p id="login-error" class="error-message"></p>
+			</form>
+		</div>
+	<p class="no-account-text" data-translate="no-account">No account?</p>
 	<p><button id="go-to-signup" class="link-button" data-translate="sign-up">Sign Up</button></p>
+	</div>
 	`,
 
 	"/signup": `

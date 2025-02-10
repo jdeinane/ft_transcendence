@@ -13,14 +13,21 @@ export function initializeClock() {
 
 	
     function drawClock() {
-        ctx.clearRect(0, 0, width, height);
 
-        ctx.fillRect(5, 5, width - 10, height - 10);
-		ctx.clearRect(0, 0, canvas.width, canvas.height);
+		ctx.clearRect(0, 0, width, height);
+
+		ctx.beginPath();
+		ctx.roundRect(0, 0, width, height, 15);
+		
+		ctx.fillStyle = "white"; 
+		ctx.fill();
+		
+		ctx.clip();
+		
 		ctx.strokeStyle = "black";
 		ctx.lineWidth = 4;
-		ctx.strokeRect(0, 0, width, height);
-	
+		ctx.stroke();
+				
         ctx.fillStyle = "gray";
         ctx.font = "bold 120px 'NintendoDS', sans-serif";
         ctx.textAlign = "center";
