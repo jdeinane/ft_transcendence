@@ -27,38 +27,41 @@ export function setupPongGame() {
 	document.querySelectorAll(".player-count-button").forEach(button => {
 		button.addEventListener("click", () => {
 			playerCount = parseInt(button.dataset.players);
+
+			document.querySelectorAll(".player-count-button").forEach(btn => btn.classList.remove("active"));
+			button.classList.add("active");
 		});
 	});
 
-    startButton.addEventListener("click", () => {
-        if (selectedMode === "tournament") {
-            navigate("#/tournament");
-            return;
-        }
+	startButton.addEventListener("click", () => {
+		if (selectedMode === "tournament") {
+			navigate("#/tournament");
+			return;
+		}
 
-        modeSelectionContainer.style.display = "none";
-        canvas.style.display = "block";
-        backButton.style.display = "block";
+		modeSelectionContainer.style.display = "none";
+		canvas.style.display = "block";
+		backButton.style.display = "block";
 
-        const isSinglePlayer = selectedMode === "solo";
-        startPongGame(canvas, isSinglePlayer, playerCount);
-    });
+		const isSinglePlayer = selectedMode === "solo";
+		startPongGame(canvas, isSinglePlayer, playerCount);
+	});
 
-    backButton.addEventListener("click", () => {
-        canvas.style.display = "none";
-        backButton.style.display = "none";
-        modeSelectionContainer.style.display = "block";
-    });
+	backButton.addEventListener("click", () => {
+		canvas.style.display = "none";
+		backButton.style.display = "none";
+		modeSelectionContainer.style.display = "block";
+	});
 
-    gameSelectionButton.addEventListener("click", () => {
-        navigate("#/game");
-    });
+	gameSelectionButton.addEventListener("click", () => {
+		navigate("#/game");
+	});
 }
 
 
-function startPongGame(canvas, isSinglePlayer) {
+function startPongGame(canvas, isSinglePlayer, playerCount) {
 	const ctx = canvas.getContext("2d");
-  
+
 	let ballX = canvas.width / 2;
 	let ballY = canvas.height / 2;
 	let ballSpeedX = 3;
@@ -66,122 +69,178 @@ function startPongGame(canvas, isSinglePlayer) {
   
 	const paddleHeight = 100;
 	const paddleWidth = 10;
-  
+
 	let paddle1Y = canvas.height / 2 - paddleHeight / 2;
 	let paddle2Y = canvas.height / 2 - paddleHeight / 2;
-  
+
+	let paddle3X = canvas.width / 2 - paddleHeight / 2;
+	let paddle4X = canvas.width / 2 - paddleHeight / 2;
+	let paddle3Y = 0;
+	let paddle4Y = canvas.height - paddleWidth;
+	
+
 	let player1Score = 0;
 	let player2Score = 0;
+	let player3Score = 0;
+	let player4Score = 0;
   
 	const aiSpeed = 2;
   
 	const keys = {
-	  w: false, // Joueur 1 haut
-	  s: false, // Joueur 1 bas
-	  i: false, // Joueur 2 haut
-	  k: false, // Joueur 2 bas
+	  w: false,
+	  s: false,
+
+	  i: false,
+	  k: false,
+
+	  r: false,
+	  t: false,
+
+	  n: false,
+	  m: false,
 	};
   
 	function draw() {
-	  // Effacer le canvas
-	  ctx.clearRect(0, 0, canvas.width, canvas.height);
-  
-	  // Dessiner le terrain
-	  ctx.fillStyle = "lightgray";
-	  ctx.fillRect(0, 0, canvas.width, canvas.height);
-  
-	  // Dessiner la balle
-	  ctx.beginPath();
-	  ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
-	  ctx.fillStyle = "black";
-	  ctx.fill();
-	  ctx.closePath();
-  
-	  // Dessiner les paddles
-	  ctx.fillStyle = "black";
-	  ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight); // Paddle joueur 1
-	  ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
-  
-	  // Dessiner les scores
-	  ctx.font = "20px Arial";
-	  ctx.fillStyle = "black";
-	  ctx.fillText(player1Score, canvas.width / 4, 20); // Score joueur 1
-	  ctx.fillText(player2Score, (canvas.width * 3) / 4, 20); // Score joueur 2
-	}
-  
-	function update() {
-	  // Déplacer la balle
-	  ballX += ballSpeedX;
-	  ballY += ballSpeedY;
-  
-	  // Collision avec les murs (haut/bas)
-	  if (ballY <= 0 || ballY >= canvas.height) {
-		ballSpeedY = -ballSpeedY;
-	  }
-  
-	  // Collision avec les paddles
-	  if (
-		ballX <= paddleWidth &&
-		ballY >= paddle1Y &&
-		ballY <= paddle1Y + paddleHeight
-	  ) {
-		ballSpeedX = -ballSpeedX;
-	  }
-  
-	  if (
-		ballX >= canvas.width - paddleWidth &&
-		ballY >= paddle2Y &&
-		ballY <= paddle2Y + paddleHeight
-	  ) {
-		ballSpeedX = -ballSpeedX;
-	  }
-  
-	  // Balles sorties (scores)
-	  if (ballX <= 0) {
-		player2Score++;
-		resetBall();
-	  } else if (ballX >= canvas.width) {
-		player1Score++;
-		resetBall();
-	  }
-  
-	  // Déplacer le paddle 1
-	  if (keys.w) paddle1Y -= 5;
-	  if (keys.s) paddle1Y += 5;
-  
-	  if (!isSinglePlayer) {
-		// Mode 2 joueurs : Déplacer le paddle 2 avec I et K
-		if (keys.i) paddle2Y -= 5;
-		if (keys.k) paddle2Y += 5;
-	  } else {
-		// Mode 1 joueur : IA pour le paddle 2
-		if (ballY < paddle2Y + paddleHeight / 2) {
-		  paddle2Y -= aiSpeed;
-		} else {
-		  paddle2Y += aiSpeed;
+		ctx.clearRect(0, 0, canvas.width, canvas.height);
+	
+		ctx.fillStyle = "lightgray";
+		ctx.fillRect(0, 0, canvas.width, canvas.height);
+	
+		ctx.beginPath();
+		ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
+		ctx.fillStyle = "black";
+		ctx.fill();
+		ctx.closePath();
+	
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
+		ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
+	
+		ctx.font = "20px Arial";
+		ctx.fillStyle = "black";
+		ctx.fillText(player1Score, canvas.width / 4, 20);
+		ctx.fillText(player2Score, (canvas.width * 3) / 4, 20);
+		
+		if (playerCount >= 3) {
+			ctx.fillText(player3Score, canvas.width / 2 - 40, 40); // Score joueur 3 (haut)
 		}
-	  }
-  
-	  // Limiter les paddles aux bords
-	  paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
-	  paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
+		if (playerCount === 4) {
+			ctx.fillText(player4Score, canvas.width / 2 - 40, canvas.height - 20); // Score joueur 4 (bas)
+		}
+		
+		if (playerCount >= 3)
+			ctx.fillRect(paddle3X, paddle3Y, paddleHeight, paddleWidth);
+		if (playerCount === 4)
+			ctx.fillRect(paddle4X, paddle4Y, paddleHeight, paddleWidth);
+		}
+
+	function update() {
+		ballX += ballSpeedX;
+		ballY += ballSpeedY;
+	
+		if (ballY <= 0 || ballY >= canvas.height) {
+			ballSpeedY = -ballSpeedY;
+		}
+	
+		if (
+			ballX <= paddleWidth &&
+			ballY >= paddle1Y &&
+			ballY <= paddle1Y + paddleHeight
+		) {
+			ballSpeedX = -ballSpeedX;
+		}
+	
+		if (
+			ballX >= canvas.width - paddleWidth &&
+			ballY >= paddle2Y &&
+			ballY <= paddle2Y + paddleHeight
+		) {
+			ballSpeedX = -ballSpeedX;
+		}
+	
+		if (ballX <= 0) {
+			player2Score++;
+			resetBall();
+		} else if (ballX >= canvas.width) {
+			player1Score++;
+			resetBall();
+		}
+			
+		if (playerCount >= 3 && ballY <= 0) {
+			player3Score++;
+			resetBall();
+		}
+		if (playerCount === 4 && ballY >= canvas.height) {
+			player4Score++;
+			resetBall();
+		}
+			
+		if (playerCount >= 3 && 
+			ballY <= paddleWidth && 
+			ballX >= paddle3X && 
+			ballX <= paddle3X + paddleHeight) {
+			ballSpeedY = Math.abs(ballSpeedY);
+		}
+
+		if (playerCount === 4 && 
+			ballY >= canvas.height - paddleWidth && 
+			ballX >= paddle4X && 
+			ballX <= paddle4X + paddleHeight) {
+			ballSpeedY = -Math.abs(ballSpeedY);
+		}
+
+
+			if (keys.w) paddle1Y -= 5;
+			if (keys.s) paddle1Y += 5;
+		
+			if (!isSinglePlayer) {
+				if (keys.i) paddle2Y -= 5;
+				if (keys.k) paddle2Y += 5;
+			} else {
+				if (ballY < paddle2Y + paddleHeight / 2) {
+				paddle2Y -= aiSpeed;
+				} else {
+				paddle2Y += aiSpeed;
+				}
+			}
+		
+		if (playerCount >= 3) {
+			if (keys.r)
+				paddle3X -= 5;
+			if (keys.t)
+				paddle3X += 5;
+		}
+		if (playerCount === 4) {
+			if (keys.n)
+				paddle4X -= 5;
+			if (keys.m) 
+				paddle4X += 5;
+		}
+		
+		paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
+		paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
+		if (playerCount >= 3) {
+			paddle3X = Math.max(0, Math.min(canvas.width - paddleHeight, paddle3X));
+		}
+		if (playerCount === 4) {
+			paddle4X = Math.max(0, Math.min(canvas.width - paddleHeight, paddle4X));
+		}
 	}
-  
+	
 	function resetBall() {
-	  ballX = canvas.width / 2;
-	  ballY = canvas.height / 2;
-	  ballSpeedX = -ballSpeedX;
-	}
+		ballX = canvas.width / 2;
+		ballY = canvas.height / 2;
+		ballSpeedX = -ballSpeedX;
+		}
   
 	function gameLoop() {
-	  draw();
-	  update();
-	  requestAnimationFrame(gameLoop);
-	}
+		draw();
+		update();
+		requestAnimationFrame(gameLoop);
+		}
   
-	// Gérer les entrées clavier
 	window.addEventListener("keydown", (e) => {
-	  const key = e.key.toLowerCase(); // Normaliser en minuscule
+	  const key = e.key.toLowerCase(); // normaliser en minuscule
 	  if (key in keys) {
 		keys[key] = true;
 	  }
@@ -195,7 +254,7 @@ function startPongGame(canvas, isSinglePlayer) {
 	});
   
 	gameLoop();
-  }
+}
 
 // UTILS POUR L'EFFET "BOUTTON APPUYE"
 
