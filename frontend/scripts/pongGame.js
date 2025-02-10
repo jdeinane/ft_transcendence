@@ -300,9 +300,27 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
             button.addEventListener("click", () => {
                 modeButtons.forEach(btn => btn.classList.remove("active"));
                 button.classList.add("active");
-                
                 localStorage.setItem("selectedMode", button.dataset.mode);
             });
         });
+
+		const playerButtons = document.querySelectorAll(".player-count-button");
+
+		const savedPlayers = localStorage.getItem("selectedPlayers");
+		if (savedPlayers) {
+			playerButtons.forEach(btn => {
+				if (btn.dataset.players === savedPlayers)
+					btn.classList.add("active");
+			});
+		}
+
+		playerButtons.forEach(button => {
+			button.addEventListener("click", () => {
+				playerButtons.forEach(btn => btn.classList.remove("active"));
+				button.classList.add("active");
+
+				localStorage.setItem("selectedPlayers", button.dataset.players);
+			});
+		});
     }, 50);
 }

@@ -72,10 +72,10 @@ export const routes = {
 		</div>
 
 		<div id="player-selection" class="hidden">
-			<p>Select number of players:</p>
-			<button class="player-count-button" data-players="2"> 2 Players</button>
-			<button class="player-count-button" data-players="3"> 3 Players</button>
-			<button class="player-count-button" data-players="4"> 4 Players</button>
+			<p class="select-number" data-translate="select-number">Select number of players:</p>
+			<button class="player-count-button" data-players="2"> 2 </button>
+			<button class="player-count-button" data-players="3"> 3 </button>
+			<button class="player-count-button" data-players="4"> 4 </button>
 		</div>
 
 		<button id="start-game" data-translate="start-game">Game start!</button>

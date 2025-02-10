@@ -45,7 +45,8 @@
 	  "leaderboard-title": "Rank",
 	  "leaderboard-subtitle": "View stats & matches",
 	  "welcome-user": "Welcome back, {user}",
-	  "game-description": "Select a game to begin your adventure."
+	  "game-description": "Select a game to begin your adventure.",
+	  "select-number": "Select number of players:"
 	},
 	"fr": {
 	  "home": "accueil",
@@ -93,7 +94,9 @@
 	  "leaderboard-title": "Classement",
 	  "leaderboard-subtitle": "Voir les stats & matchs",
 	  "welcome-user": "Bienvenue, {user}",
-	  "game-description": "Choisir un jeu pour démarrer l'aventure."
+	  "game-description": "Choisir un jeu pour démarrer l'aventure.",
+	  "select-number": "Selectionnez le nombre de joueurs:"
+
 
 	},
 	"es": {
@@ -142,7 +145,8 @@
 	  "leaderboard-title": "Clasificación",
 	  "leaderboard-subtitle": "Ver estadísticas & partidos",
 	  "welcome-user": "Bienvenido de nuevo, {user}",
-	  "game-description": "Selectar Shakira blablabla."
+	  "game-description": "Selectar Shakira blablabla.",
+	  "select-number": "Seleccione el número de jugadores:"
 
 	}
   }
