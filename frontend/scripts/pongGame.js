@@ -116,18 +116,31 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
 		ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
 	
-		ctx.font = "20px Arial";
-		ctx.fillStyle = "black";
-		ctx.fillText(player1Score, canvas.width / 4, 20);
-		ctx.fillText(player2Score, (canvas.width * 3) / 4, 20);
-		
+		ctx.font = "bold 30px NintendoDS";
+		ctx.lineWidth = 4;
+
+		// score joueur 1
+		ctx.fillStyle = "red";
+		ctx.fillText(player1Score, 20, canvas.height - 20);
+
+		// score joueur 2
+		ctx.fillStyle = "blue";
+		ctx.textAlign = "right";
+		ctx.fillText(player2Score, canvas.width - 20, 30);
+
+		// score joueur 3 et 4
 		if (playerCount >= 3) {
-			ctx.fillText(player3Score, canvas.width / 2 - 40, 40); // Score joueur 3 (haut)
+			ctx.fillStyle = "green";
+			ctx.textAlign = "left";
+			ctx.fillText(player3Score, 20, 30);
 		}
 		if (playerCount === 4) {
-			ctx.fillText(player4Score, canvas.width / 2 - 40, canvas.height - 20); // Score joueur 4 (bas)
+			ctx.fillStyle = "yellow";
+			ctx.textAlign = "right";
+			ctx.fillText(player4Score, canvas.width - 20, canvas.height - 20);
 		}
 		
+
 		if (playerCount >= 3)
 			ctx.fillRect(paddle3X, paddle3Y, paddleHeight, paddleWidth);
 		if (playerCount === 4)
