@@ -22,7 +22,7 @@ ENV PYTHONUNBUFFERED=1 \
 	DJANGO_SETTINGS_MODULE=backend.settings \
 	PATH="/app/venv/bin:$PATH"
 
-EXPOSE 3456
+EXPOSE 3457
 
 # launch django with gunicorn in production
-CMD ["/app/venv/bin/gunicorn", "--bind", "0.0.0.0:3456", "config.wsgi:application"]
+CMD ["/app/venv/bin/gunicorn", "--bind", "0.0.0.0:3457", "config.wsgi:application"]

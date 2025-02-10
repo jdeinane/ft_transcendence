@@ -13,7 +13,7 @@ services:
     depends_on:
       - postgres
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "4000:${BACKEND_PORT}"
     networks:
       - ft_transcendence_network
 
