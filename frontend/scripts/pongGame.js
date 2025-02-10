@@ -8,7 +8,6 @@ export function setupPongGame() {
 	const backButton = document.getElementById("back-to-mode-selection");
 	const gameSelectionButton = document.getElementById("back-to-game-selection");
 	const modeSelectionContainer = document.querySelector(".mode-selection-container");
-	const multiplayerButton = document.getElementById("multiplayer-btn");
 	const playerSelection = document.getElementById("player-selection");
 
     document.querySelectorAll(".mode-button").forEach(button => {
@@ -19,8 +18,10 @@ export function setupPongGame() {
 
 			if (selectedMode == "multiplayer")
 				playerSelection.classList.remove("hidden");
-			else
+			else {
 				playerSelection.classList.add("hidden");
+				playerCount = 2;
+			}
         });
     });
 
@@ -70,6 +71,9 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 	const paddleHeight = 100;
 	const paddleWidth = 10;
 
+	const paddleHorizontalWidth = 150;
+	const paddleHorizontalHeight = 10;
+
 	let paddle1Y = canvas.height / 2 - paddleHeight / 2;
 	let paddle2Y = canvas.height / 2 - paddleHeight / 2;
 
@@ -111,11 +115,7 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		ctx.fillStyle = "black";
 		ctx.fill();
 		ctx.closePath();
-	
-		ctx.fillStyle = "black";
-		ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
-		ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
-	
+		
 		ctx.font = "bold 30px NintendoDS";
 		ctx.lineWidth = 4;
 
@@ -140,13 +140,18 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 			ctx.fillText(player4Score, canvas.width - 20, canvas.height - 20);
 		}
 		
+		ctx.fillStyle = "black";
+		ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
+		ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight); // Paddle joueur 2
+
 
 		if (playerCount >= 3)
-			ctx.fillRect(paddle3X, paddle3Y, paddleHeight, paddleWidth);
+			ctx.fillRect(paddle3X, paddle3Y, paddleHorizontalWidth, paddleHorizontalHeight);
 		if (playerCount === 4)
-			ctx.fillRect(paddle4X, paddle4Y, paddleHeight, paddleWidth);
+			ctx.fillRect(paddle4X, paddle4Y, paddleHorizontalWidth, paddleHorizontalHeight);
 		}
-	
+		
+
 	function awardPoints(loser) {
 		if (loser !== 1) player1Score++;  
 		if (loser !== 2) player2Score++;
@@ -240,10 +245,10 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 		paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
 		paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
 		if (playerCount >= 3) {
-			paddle3X = Math.max(0, Math.min(canvas.width - paddleHeight, paddle3X));
+			paddle3X = Math.max(0, Math.min(canvas.width - paddleHorizontalWidth, paddle3X));
 		}
 		if (playerCount === 4) {
-			paddle4X = Math.max(0, Math.min(canvas.width - paddleHeight, paddle4X));
+			paddle4X = Math.max(0, Math.min(canvas.width - paddleHorizontalWidth, paddle4X));
 		}
 	}
 	
