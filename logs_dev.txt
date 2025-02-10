@@ -1,0 +1,95 @@
+time="2025-02-10T18:13:05+01:00" level=warning msg="/home/jubaldo/ft_transcendence/dockers/docker-compose.dev.yml: the attribute `version` is obsolete, it will be ignored, please remove it to avoid potential confusion"
+#0 building with "default" instance using docker driver
+
+#1 [postgres internal] load build definition from Dockerfile
+#1 transferring dockerfile: 175B 0.0s done
+#1 DONE 0.1s
+
+#2 [postgres internal] load .dockerignore
+#2 transferring context: 2B done
+#2 DONE 0.0s
+
+#3 [postgres internal] load metadata for docker.io/library/postgres:15
+#3 DONE 0.4s
+
+#4 [postgres 1/2] FROM docker.io/library/postgres:15@sha256:d609c3005478af92bddad773423df829b7402ea0b356d5b72edd2fd54d1ad3ea
+#4 DONE 0.0s
+
+#5 [postgres internal] load build context
+#5 transferring context: 364B done
+#5 DONE 0.2s
+
+#6 [postgres] exporting to image
+#6 exporting layers done
+#6 writing image sha256:7dad2b5e85166bb0835211af89bd89f29ad61d99ba6ad1a69787c3c128f52bf1 0.1s done
+#6 naming to docker.io/library/ft_transcendence_postgres done
+#6 DONE 0.1s
+
+#7 [backend internal] load build definition from Dockerfile
+#7 transferring dockerfile: 751B done
+#7 DONE 0.0s
+
+#8 [backend internal] load .dockerignore
+#8 transferring context: 2B done
+#8 DONE 0.1s
+
+#9 [backend internal] load metadata for docker.io/library/python:3.11-slim
+#9 DONE 0.4s
+
+#10 [backend 1/6] FROM docker.io/library/python:3.11-slim@sha256:42420f737ba91d509fc60d5ed65ed0492678a90c561e1fa08786ae8ba8b52eda
+#10 DONE 0.0s
+
+#11 [backend internal] load build context
+#11 transferring context: 621B 0.0s done
+#11 DONE 0.2s
+
+#6 [backend] exporting to image
+#6 exporting layers done
+#6 writing image sha256:277795a929130cd0300c34c8ebed7bee813443683c75d414c44c7803e3533946
+#6 writing image sha256:277795a929130cd0300c34c8ebed7bee813443683c75d414c44c7803e3533946 0.0s done
+#6 naming to docker.io/library/ft_transcendence_backend 0.0s done
+#6 DONE 0.3s
+
+#12 [nginx internal] load build definition from Dockerfile
+#12 transferring dockerfile: 279B done
+#12 DONE 0.0s
+
+#13 [nginx internal] load .dockerignore
+#13 transferring context: 2B done
+#13 DONE 0.0s
+
+#14 [nginx internal] load metadata for docker.io/library/nginx:1.27
+#14 DONE 0.2s
+
+#15 [nginx 1/3] FROM docker.io/library/nginx:1.27@sha256:91734281c0ebfc6f1aea979cffeed5079cfe786228a71cc6f1f46a228cde6e34
+#15 DONE 0.0s
+
+#16 [nginx internal] load build context
+#16 transferring context: 431B 0.0s done
+#16 DONE 0.1s
+
+#17 [nginx 2/3] RUN rm -rf /etc/nginx/conf.d/default.conf
+#17 CACHED
+
+#18 [nginx 3/3] COPY dockers/nginx/conf/nginx.conf /etc/nginx/conf.d/default.conf
+#18 CACHED
+
+#6 [nginx] exporting to image
+#6 exporting layers done
+#6 writing image sha256:94e7caadaf724caf0a44e8cc93c4f48c6d02d0f7f01a7b4448652b9d8476d6fb
+#6 writing image sha256:94e7caadaf724caf0a44e8cc93c4f48c6d02d0f7f01a7b4448652b9d8476d6fb 0.0s done
+#6 naming to docker.io/library/ft_transcendence_nginx done
+#6 DONE 0.5s
+ backend  Built
+ nginx  Built
+ postgres  Built
+ Container dockers-postgres-1  Running
+ Container dockers-nginx-1  Stopping
+ Container dockers-nginx-1  Stopped
+ Container dockers-backend-1  Recreate
+ Container dockers-backend-1  Recreated
+ Container dockers-nginx-1  Created
+ Container dockers-backend-1  Starting
+ Container dockers-backend-1  Started
+ Container dockers-nginx-1  Starting
+ Container dockers-nginx-1  Started
