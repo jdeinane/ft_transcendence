@@ -3,7 +3,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    height: 20vh;
+    height: 25vh;
     gap: 25px;
     animation: fadeIn 0.5s ease-out;
 }
