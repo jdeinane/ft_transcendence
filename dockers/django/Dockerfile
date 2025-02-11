@@ -25,4 +25,4 @@ ENV PYTHONUNBUFFERED=1 \
 EXPOSE 3456
 
 # launch django with gunicorn in production
-CMD ["/app/venv/bin/gunicorn", "--bind", "0.0.0.0:3456", "config.wsgi:application"]
+CMD ["/app/venv/bin/gunicorn", "--bind", "0.0.0.0:3456", "backend.config.wsgi:application"]
