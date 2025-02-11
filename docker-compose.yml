@@ -1,5 +1,3 @@
-version: '3.3'
-
 services:
   backend:
     image: ft_transcendence_backend
@@ -10,7 +8,7 @@ services:
     env_file:
       - ./dockers/.env.dev
     volumes:
-      - "${PROJECT_PATH}/backend:/app/backend"
+      - "${PROJECT_PATH}/backend:/app"
     ports:
       - "${BACKEND_PORT}:${BACKEND_PORT}"
     depends_on:
