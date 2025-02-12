@@ -1,8 +1,8 @@
-Django>=4.2,<5.0
+django>=4.2,<5.0
 djangorestframework>=3.14,<4.0
-psycopg2-binary>=2.9  # for postgres
-django-cors-headers>=4.0  # to handle cross-origin queries
 gunicorn>=21.2  # wsgi server for production
+django-cors-headers>=4.0  # to handle cross-origin queries
+psycopg2-binary>=2.9  # for postgres
 whitenoise>=6.5  # static files management in production
 
 # live chat
