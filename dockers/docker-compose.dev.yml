@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   backend:
@@ -9,11 +9,11 @@ services:
     env_file:
       - .env.dev
     volumes:
-      - "${PROJECT_PATH}/backend:/app/venv"
+      - "../backend:/app"
     depends_on:
       - postgres
     ports:
-      - "4000:${BACKEND_PORT}"
+      - "4000:8000"
     networks:
       - ft_transcendence_network
 

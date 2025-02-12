@@ -13,10 +13,10 @@ WORKDIR /app
 RUN useradd -m -s /bin/bash django_user && \
     echo "django_user ALL=(ALL) NOPASSWD:ALL" > /etc/sudoers.d/django_user
 
-# donner la permission à l'utilisateur sur /app
-RUN mkdir -p /app/venv && chown -R django_user:django_user /app
+# donner les permissions à l'utilisateur sur /app
+RUN chown -R django_user:django_user /app
 
-# Ccpier seulement le fichier de dépendances pour l'installation
+# copier seulement `requirements.txt` pour optimiser le cache Docker
 COPY --chown=django_user:django_user backend/requirements.txt /app/
 
 # passer en utilisateur non-root
@@ -29,11 +29,10 @@ RUN python3 -m venv /app/venv && \
     /app/venv/bin/pip install --no-cache-dir -r /app/requirements.txt && \
     /app/venv/bin/pip install --no-cache-dir gunicorn
 
-
-# copier le reste du code backend sans écraser /venv
+# copier le reste du code backend après l’installation des dépendances
 COPY --chown=django_user:django_user backend/ /app/
 
-# si 'manage.py' n'existe pas, créer un projet Django
+# vérifier si 'manage.py' existe, sinon créer un projet Django
 RUN if [ ! -f "/app/manage.py" ]; then \
         /app/venv/bin/django-admin startproject config /app/; \
     fi
@@ -43,8 +42,7 @@ ENV PYTHONUNBUFFERED=1 \
     DJANGO_SETTINGS_MODULE=config.settings \
     PATH="/app/venv/bin:$PATH"
 
-# exposition du port de Django
 EXPOSE 8000
 
-# lancer Gunicorn
-CMD ["bash", "-c", "/app/venv/bin/gunicorn --bind 0.0.0.0:8000 config.wsgi:application"]
+# lancer Gunicorn avec 'exec'
+CMD ["bash", "-c", "ls -la /app/ && gunicorn --bind 0.0.0.0:8000 config.wsgi:application"]

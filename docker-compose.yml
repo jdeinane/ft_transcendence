@@ -1,4 +1,4 @@
-version: '3.8'
+version: '3.3'
 
 services:
   backend:
@@ -10,9 +10,9 @@ services:
     env_file:
       - ./dockers/.env.dev
     volumes:
-      - "${PROJECT_PATH}/backend:/app"
+      - "./backend:/app"
     ports:
-      - "${BACKEND_PORT}:${BACKEND_PORT}"
+      - "4000:8000"
     depends_on:
       - postgres
     networks:
