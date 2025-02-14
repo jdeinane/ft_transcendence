@@ -10,7 +10,7 @@ services:
     env_file:
       - ./dockers/.env.dev
     volumes:
-      - "./backend:/app"
+      - "./backend:/app/src"
     ports:
       - "4000:8000"
     depends_on:

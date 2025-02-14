@@ -52,12 +52,6 @@ docker compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>
 echo "Starting production environment..."
 docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
-docker exec -it ft_transcendence-backend-1 bash -c "
-if [ ! -f '/app/manage.py' ]; then
-    echo 'Création automatique du projet Django...'
-    /app/venv/bin/django-admin startproject config /app/
-fi"
-
 # wait for all background processes to complete
 wait # they don't love you like I love you xD titkok brainrot
 

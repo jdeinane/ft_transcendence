@@ -9,11 +9,11 @@ services:
     env_file:
       - .env.dev
     volumes:
-      - "../backend:/app"
+      - "../backend:/app/src"
     depends_on:
       - postgres
     ports:
-      - "4000:8000"
+      - "5000:8000"
     networks:
       - ft_transcendence_network
 
