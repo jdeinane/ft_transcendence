@@ -21,7 +21,11 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+	'config',
 ]
+
+AUTH_USER_MODEL = "config.User"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Middleware Django
 MIDDLEWARE = [
@@ -65,7 +69,7 @@ DATABASES = {
         'USER': os.getenv('POSTGRES_USER', 'Nimda'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'nimdAmAI42'),
         'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
-        'PORT': os.getenv('POSTGRES_PORT', '5432'),
+        'PORT': int(os.getenv('POSTGRES_PORT', '5432')),
     }
 }
 

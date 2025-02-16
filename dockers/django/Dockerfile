@@ -3,7 +3,7 @@ FROM python:3.11-slim
 
 # installation des dépendances système
 RUN apt-get update -y && \
-    apt-get install -y bash sudo passwd python3-venv python3-pip && \
+    apt-get install -y bash sudo passwd python3-venv python3-pip postgresql-client && \
     rm -rf /var/lib/apt/lists/*
 
 # définir le répertoire de travail

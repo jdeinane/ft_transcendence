@@ -52,6 +52,15 @@ docker compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>
 echo "Starting production environment..."
 docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
+wait
+
+echo "Running Django migrations..."
+docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations --noinput
+docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate --noinput
+
+echo "Loading initals data for Django..."
+docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json
+
 # wait for all background processes to complete
 wait # they don't love you like I love you xD titkok brainrot
 
