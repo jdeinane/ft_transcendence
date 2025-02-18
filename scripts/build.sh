@@ -55,8 +55,8 @@ docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 wait
 
 echo "Running Django migrations..."
-docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations --noinput
-docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate --noinput
+docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations config
+docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate
 
 echo "Loading initals data for Django..."
 docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json

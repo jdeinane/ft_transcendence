@@ -1,5 +1,5 @@
-from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.db import models
+from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
 
 class UserManager(BaseUserManager):
 	def create_user(self, username, email, password=None):
@@ -27,6 +27,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_online = models.BooleanField(default=False)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	is_staff = models.BooleanField(default=False)
+	is_superuser = models.BooleanField(default=False)
 
 	groups = models.ManyToManyField(
 		"auth.Group",
