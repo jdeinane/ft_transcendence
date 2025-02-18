@@ -11,6 +11,7 @@ services:
       - ./dockers/.env.dev
     volumes:
       - "./backend:/app/src"
+      - "locale_volume:/app/src/locale"
     ports:
       - "4000:8000"
     depends_on:
@@ -47,8 +48,15 @@ services:
     networks:
       - ft_transcendence_network
 
+  redis:
+    image: redis:alpine
+    restart: unless-stopped
+    networks:
+      - ft_transcendence_network
+
 volumes:
   postgres_data:
+  locale_volume:
 
 networks:
   ft_transcendence_network:

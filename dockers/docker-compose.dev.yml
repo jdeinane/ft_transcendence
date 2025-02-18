@@ -10,6 +10,7 @@ services:
       - .env.dev
     volumes:
       - "../backend:/app/src"
+      - "../backend/locale:/app/src/locale"
     depends_on:
       - postgres
     ports:
@@ -50,6 +51,7 @@ services:
 
 volumes:
   postgres_data_dev:
+  locale_volume:
 
 networks:
   ft_transcendence_network:

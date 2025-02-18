@@ -1,5 +1,9 @@
 from django.db import models
+from config.models import User
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth import get_user_model
+
+User = get_user_model()
 
 class UserManager(BaseUserManager):
 	def create_user(self, username, email, password=None):
@@ -112,3 +116,16 @@ class BlockedUser(models.Model):
 
 	class Meta:
 		unique_together = (("user", "blocked_user"),)
+
+class Tournament(models.Model):
+	name = models.CharField(max_length=100)
+	participants = models.ManyToManyField(User, related_name="tournaments")
+	created_at = models.DateTimeField(auto_now_add=True)
+
+class MatchmakingQueue(models.Model):
+	user = models.ForeignKey(User, on_delete=models.CASCADE)
+	game_type = models.CharField(max_length=20, choices=[("pong", "Pong"), ("tictactoe", "TicTacToe")])
+	joined_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"{self.user.username} - {self.game_type}"

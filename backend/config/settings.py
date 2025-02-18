@@ -1,33 +1,42 @@
 import os
 from pathlib import Path
 
-# Définition de BASE_DIR pour correspondre à /app/src dans Docker
+# --------------------
+# Base settings
+# --------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
-
-# Définir le SECRET_KEY (à remplacer en prod par une variable d'environnement)
-SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'your-secret-key')
-
-# Activer le mode debug en dev
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'change_me')
 DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
 
-# Définir les hôtes autorisés (mettre '*' en dev, restreindre en prod)
-ALLOWED_HOSTS = os.getenv('DJANGO_ALLOWED_HOSTS', '*').split(',')
+ALLOWED_HOSTS = [
+    "localhost", "127.0.0.1",
+    "backend", "nginx",
+    "ft_transcendence.42.fr"
+]
 
-# Applications installées
+CSRF_TRUSTED_ORIGINS = [
+    "https://ft_transcendence.42.fr"
+]
+
+# --------------------
+# Installed apps
+# --------------------
 INSTALLED_APPS = [
+	'daphne',  # WebSockets avec Django Channels
+    'channels',  # gestion des WebSockets
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-	'config',
+    'rest_framework',  # API REST Django
+    'config',  # application principale
 ]
 
-AUTH_USER_MODEL = "config.User"
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Middleware Django
+# --------------------
+# Middleware
+# --------------------
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -38,10 +47,42 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-# URL de la configuration principale
+# --------------------
+# Root URLs & WSGI / ASGI
+# --------------------
 ROOT_URLCONF = 'config.urls'
+WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'  # pour Django Channels
 
-# Configuration des templates Django
+# --------------------
+# Database (PostgreSQL)
+# --------------------
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('POSTGRES_DB', 'ft_transcendence'),
+        'USER': os.getenv('POSTGRES_USER', 'admin'),
+        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'ChangeMe42!'),
+        'HOST': os.getenv('POSTGRES_HOST', 'ft_transcendence-postgres-1'),
+        'PORT': int(os.getenv('POSTGRES_PORT', 5432)),
+    }
+}
+
+# --------------------
+# Channels & WebSockets
+# --------------------
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("redis", 6379)],
+        },
+    },
+}
+
+# --------------------
+# Templates & Static Files
+# --------------------
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -58,21 +99,36 @@ TEMPLATES = [
     },
 ]
 
-# Configuration WSGI
-WSGI_APPLICATION = 'config.wsgi.application'
-
-# Base de données (PostgreSQL)
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': os.getenv('POSTGRES_DB', 'ft_transcendence'),
-        'USER': os.getenv('POSTGRES_USER', 'Nimda'),
-        'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'nimdAmAI42'),
-        'HOST': os.getenv('POSTGRES_HOST', 'postgres'),
-        'PORT': int(os.getenv('POSTGRES_PORT', '5432')),
-    }
-}
-
-# Configuration des fichiers statiques
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'staticfiles'
+
+# --------------------
+# Authentication
+# --------------------
+AUTH_USER_MODEL = "config.User"
+
+# --------------------
+# Default Auto Field
+# --------------------
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --------------------
+# Languages
+# --------------------
+LANGUAGES = [
+    ('en', 'English'),
+    ('fr', 'Français'),
+    ('es', 'Español'),
+]
+
+# default language
+LANGUAGE_CODE = 'en'
+
+# enable traduction
+USE_I18N = True
+USE_L10N = True
+
+# define directory for traduction
+LOCALE_PATHS = [
+    BASE_DIR / 'locale'
+]
