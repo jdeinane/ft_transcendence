@@ -331,7 +331,7 @@ document.addEventListener("DOMContentLoaded", () => {
 	setupLanguageSelector(); 
   });
   
-  export function updateWelcomeMessage() {
+export function updateWelcomeMessage() {
     const user = getCurrentUser();
     const welcomeMessage = document.getElementById("welcome-message");
     const currentLang = localStorage.getItem("preferredLanguage") || "en";

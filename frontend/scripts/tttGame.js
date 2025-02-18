@@ -16,7 +16,7 @@ export function setupTicTacToeGame() {
     });
 
     startButton.addEventListener("click", () => {
-        board.style.display = "grid"; // Affichage correct en grille
+        board.style.display = "grid"; 
         document.querySelector(".mode-selection-container").style.display = "none";
         startTicTacToeGame(board, selectedMode);
     });
@@ -32,74 +32,145 @@ export function setupTicTacToeGame() {
     });
 }
 
-
 function startTicTacToeGame(boardElement, mode) {
-	let board = ["", "", "", "", "", "", "", "", ""];
-	let currentPlayer = "X";
-	let gameActive = true;
+    let board = ["", "", "", "", "", "", "", "", ""];
+    let currentPlayer = "X";
+    let gameActive = true;
 
-	const backButton = document.getElementById("back-to-mode-selection");
-	backButton.style.display = "block"; // Affiche le bouton lorsqu'on commence le jeu
-	backButton.addEventListener("click", () => {
-		boardElement.style.display = "none";
-		backButton.style.display = "none";
-		document.querySelector(".mode-selection-container").style.display = "block";
-	});
+    const backButton = document.getElementById("back-to-mode-selection");
+    backButton.style.display = "block"; 
+    backButton.addEventListener("click", () => {
+        boardElement.style.display = "none";
+        backButton.style.display = "none";
+        document.querySelector(".mode-selection-container").style.display = "block";
+    });
 
-	function renderBoard() {
-		boardElement.innerHTML = "";
-		board.forEach((cell, index) => {
-			const cellElement = document.createElement("div");
-			cellElement.classList.add("ttt-cell");
-			cellElement.textContent = cell;
-			cellElement.dataset.index = index;
-			cellElement.addEventListener("click", handleCellClick);
-			boardElement.appendChild(cellElement);
-		});
-	}
+    function renderBoard() {
+        boardElement.innerHTML = "";
+        board.forEach((cell, index) => {
+            const cellElement = document.createElement("div");
+            cellElement.classList.add("ttt-cell");
+            cellElement.textContent = cell;
+            cellElement.dataset.index = index;
+            cellElement.addEventListener("click", handleCellClick);
+            boardElement.appendChild(cellElement);
+        });
+    }
 
-	function handleCellClick(event) {
-		const index = event.target.dataset.index;
-		if (board[index] !== "" || !gameActive)
-			return;
-		board[index] = currentPlayer;
-		renderBoard();
-		checkWinner();
+    function handleCellClick(event) {
+        const index = event.target.dataset.index;
+        if (board[index] !== "" || !gameActive) return;
 
-		currentPlayer = currentPlayer === "X" ? "O" : "X";
-		if (mode === "solo" && currentPlayer === "O" && gameActive) {
-			setTimeout(aiMove, 500);
-		}
-	}
+        board[index] = currentPlayer;
+        renderBoard();
+        if (checkWinner()) return;
 
-	function aiMove() {
-		const emptyCells = board.map((val, idx) => (val === "" ? idx : null)).filter(v => v !== null);
-		const randomMove = emptyCells[Math.floor(Math.random() * emptyCells.length)];
-		board[randomMove] = "O";
-		renderBoard();
-		checkWinner();
-		currentPlayer = "X";
-	}
+        currentPlayer = currentPlayer === "X" ? "O" : "X";
 
-	function checkWinner() {
-		const winningCombos = [
+        if (mode === "solo" && currentPlayer === "O" && gameActive) {
+            setTimeout(aiMove, 500);
+        }
+    }
+
+    function aiMove() {
+        let bestMove = getBestMove();
+        board[bestMove] = "O";
+        renderBoard();
+        checkWinner();
+        currentPlayer = "X";
+    }
+
+    function getBestMove() {
+        let bestScore = -Infinity;
+        let move = null;
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === "") {
+                board[i] = "O";
+                let score = minimax(board, 0, false);
+                board[i] = "";
+                if (score > bestScore) {
+                    bestScore = score;
+                    move = i;
+                }
+            }
+        }
+        return move;
+    }
+
+    function minimax(board, depth, isMaximizing) {
+        const winner = getWinner(board);
+        if (winner === "X") return -10 + depth;
+        if (winner === "O") return 10 - depth;
+        if (!board.includes("")) return 0;
+
+        if (isMaximizing) {
+            let bestScore = -Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === "") {
+                    board[i] = "O";
+                    let score = minimax(board, depth + 1, false);
+                    board[i] = "";
+                    bestScore = Math.max(score, bestScore);
+                }
+            }
+            return bestScore;
+        } else {
+            let bestScore = Infinity;
+            for (let i = 0; i < board.length; i++) {
+                if (board[i] === "") {
+                    board[i] = "X";
+                    let score = minimax(board, depth + 1, true);
+                    board[i] = "";
+                    bestScore = Math.min(score, bestScore);
+                }
+            }
+            return bestScore;
+        }
+    }
+
+    function getWinner(board) {
+        const winningCombos = [
             [0,1,2], [3,4,5], [6,7,8],
             [0,3,6], [1,4,7], [2,5,8],
             [0,4,8], [2,4,6]	
-		];
+        ];
+        for (const combo of winningCombos) {
+            const [a, b, c] = combo;
+            if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+                return board[a];
+            }
+        }
+        return null;
+    }
 
-		for (const combo of winningCombos) {
-			const [a, b, c] = combo;
-			if (board[a] && board[a] === board[b] && board[a] == board[c]) {
-				gameActive = false;
-                alert(`${board[a]} wins!`);
-				return;
-			}
-		}
-		if (!board.includes("")) {
-			gameActive = false;
-			alert("It's a draw...");
-		}
-	}
-	renderBoard();
+    function checkWinner() {
+        let winner = getWinner(board);
+        if (winner) {
+            gameActive = false;
+            displayWinner(`${winner} wins!`);
+            return true;
+        }
+        if (!board.includes("")) {
+            gameActive = false;
+            displayWinner("It's a draw...");
+            return true;
+        }
+        return false;
+    }
+
+    function displayWinner(message) {
+        const resultContainer = document.createElement("div");
+        resultContainer.classList.add("result-popup");
+        resultContainer.innerHTML = `
+            <p>${message}</p>
+            <button id="restart-game">Restart</button>
+        `;
+        document.body.appendChild(resultContainer);
+        document.getElementById("restart-game").addEventListener("click", () => {
+            document.body.removeChild(resultContainer);
+            startTicTacToeGame(boardElement, mode);
+        });
+    }
+
+    renderBoard();
 }
