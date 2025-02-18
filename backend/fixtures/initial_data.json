@@ -1,0 +1,52 @@
+[
+	{
+		"model": "config.user",
+		"pk": 1,
+		"fields": {
+			"username": "admin",
+			"email": "admin@example.com",
+			"password": "pbkdf2_sha256$260000$examplehash",  
+			"is_superuser": true,
+			"is_staff": true,
+			"is_online": false,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.user",
+		"pk": 2,
+		"fields": {
+			"username": "player1",
+			"email": "player1@example.com",
+			"password": "pbkdf2_sha256$260000$examplehash",  
+			"is_superuser": false,
+			"is_staff": false,
+			"is_online": true,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.chatroom",
+		"pk": 1,
+		"fields": {
+			"name": "General Chat",
+			"is_private": false,
+			"owner": 1,
+			"created_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 1,
+		"fields": {
+			"user": 2,
+			"games_played": 10,
+			"games_won": 5,
+			"games_lost": 5,
+			"points": 50,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	}	
+]
