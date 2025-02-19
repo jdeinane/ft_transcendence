@@ -1,146 +1,127 @@
-export function startPongTournament(canvas, player1Name, player2Name, onMatchEnd) {
-	const ctx = canvas.getContext("2d");
+import { startTournamentPongGame } from "./pongGame.js";
 
-	// Variables du jeu
-	let ballX = canvas.width / 2;
-	let ballY = canvas.height / 2;
-	let ballSpeedX = 3;
-	let ballSpeedY = 3;
+let tournamentPlayers = [];
+let tournamentMatches = [];
+let currentMatchIndex = 0;
+let losers = []; // Liste des perdants pour le match de classement
+let finalRanking = [];
 
-	const paddleHeight = 100;
-	const paddleWidth = 10;
+export function setupTournament() {
+    const joinButton = document.getElementById("join-tournament");
+    const playerNameInput = document.getElementById("tournament-player-name");
+    const bracketContainer = document.getElementById("bracket-container");
+    const bracketDiv = document.getElementById("bracket");
+    const startMatchButton = document.getElementById("start-next-match");
+    const playersList = document.getElementById("players-list");
 
-	// Positions des paddles
-	let paddle1Y = canvas.height / 2 - paddleHeight / 2;
-	let paddle2Y = canvas.height / 2 - paddleHeight / 2;
+    joinButton.addEventListener("click", () => {
+        const playerName = playerNameInput.value.trim();
+        if (!playerName) {
+            alert("Veuillez entrer un alias !");
+            return;
+        }
 
-	// Scores
-	let player1Score = 0;
-	let player2Score = 0;
-	const winningScore = 3; // Nombre de points pour gagner le match
+        if (!tournamentPlayers.includes(playerName)) {
+            tournamentPlayers.push(playerName);
+            updatePlayersList();
+            updateBracket();
+        }
 
-	// Contrôles des joueurs
-	const keys = {
-	  w: false, // Joueur 1 haut
-	  s: false, // Joueur 1 bas
-	  i: false, // Joueur 2 haut
-	  k: false, // Joueur 2 bas
-	};
+        playerNameInput.value = "";
+    });
 
-	function draw() {
-	  // Effacer le canvas
-	  ctx.clearRect(0, 0, canvas.width, canvas.height);
+    function updatePlayersList() {
+        playersList.innerHTML = ""; 
+        tournamentPlayers.forEach(player => {
+            const listItem = document.createElement("li");
+            listItem.textContent = player;
+            playersList.appendChild(listItem);
+        });
+    }
 
-	  // Dessiner le terrain
-	  ctx.fillStyle = "lightgray";
-	  ctx.fillRect(0, 0, canvas.width, canvas.height);
+    function updateBracket() {
+        if (tournamentPlayers.length < 2) return;
+        
+        bracketContainer.classList.remove("hidden");
+        bracketDiv.innerHTML = "";
+        tournamentMatches = generateMatches(tournamentPlayers);
+        tournamentMatches.forEach((match, index) => {
+            const matchElement = document.createElement("div");
+            matchElement.classList.add("match");
+            matchElement.textContent = `Match ${index + 1}: ${match.player1} vs ${match.player2}`;
+            bracketDiv.appendChild(matchElement);
+        });
 
-	  // Dessiner la balle
-	  ctx.beginPath();
-	  ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
-	  ctx.fillStyle = "black";
-	  ctx.fill();
-	  ctx.closePath();
+        startMatchButton.classList.remove("hidden");
+        startMatchButton.addEventListener("click", startNextMatch);
+    }
 
-	  // Dessiner les paddles
-	  ctx.fillStyle = "black";
-	  ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
-	  ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
+    function generateMatches(players) {
+        let matches = [];
+        let shuffledPlayers = [...players].sort(() => Math.random() - 0.5);
 
-	  // Afficher les noms des joueurs et scores
-	  ctx.font = "20px Arial";
-	  ctx.fillStyle = "black";
-	  ctx.fillText(`${player1Name}: ${player1Score}`, canvas.width / 4, 20);
-	  ctx.fillText(`${player2Name}: ${player2Score}`, (canvas.width * 3) / 4, 20);
-	}
+        for (let i = 0; i < shuffledPlayers.length; i += 2) {
+            if (i + 1 < shuffledPlayers.length) {
+                matches.push({ player1: shuffledPlayers[i], player2: shuffledPlayers[i + 1] });
+            }
+        }
+        return matches;
+    }
 
-	function update() {
-	  // Déplacer la balle
-	  ballX += ballSpeedX;
-	  ballY += ballSpeedY;
+    function startNextMatch() {
+        if (currentMatchIndex < tournamentMatches.length) {
+            const { player1, player2 } = tournamentMatches[currentMatchIndex];
 
-	  // Collision avec les murs (haut/bas)
-	  if (ballY <= 0 || ballY >= canvas.height) {
-		ballSpeedY = -ballSpeedY;
-	  }
+            startTournamentPongGame(player1, player2, winner => {
+                let loser = player1 === winner ? player2 : player1;
+                finalRanking.unshift(winner); // On place le gagnant en haut du classement
+                losers.push(loser);
 
-	  // Collision avec les paddles
-	  if (
-		ballX <= paddleWidth &&
-		ballY >= paddle1Y &&
-		ballY <= paddle1Y + paddleHeight
-	  ) {
-		ballSpeedX = -ballSpeedX;
-	  }
+                currentMatchIndex++;
+                if (currentMatchIndex === tournamentMatches.length) {
+                    // Si c'était la finale, lancer le match pour la 3ème place
+                    if (losers.length === 2) {
+                        startMatchForThirdPlace();
+                    } else {
+                        declareWinner(finalRanking[0]);
+                    }
+                } else {
+                    startNextMatch();
+                }
+            });
+        }
+    }
 
-	  if (
-		ballX >= canvas.width - paddleWidth &&
-		ballY >= paddle2Y &&
-		ballY <= paddle2Y + paddleHeight
-	  ) {
-		ballSpeedX = -ballSpeedX;
-	  }
+    function startMatchForThirdPlace() {
+        const [player1, player2] = losers;
+        alert(`🎖 Match pour la 3ème place : ${player1} vs ${player2}`);
 
-	  // Balles sorties (scores)
-	  if (ballX <= 0) {
-		player2Score++;
-		resetBall();
-	  } else if (ballX >= canvas.width) {
-		player1Score++;
-		resetBall();
-	  }
+        startTournamentPongGame(player1, player2, winner => {
+            let loser = player1 === winner ? player2 : player1;
+            finalRanking.unshift(winner);
+            finalRanking.unshift(loser);
+            declareWinner(finalRanking[0]);
+        });
+    }
 
-	  // Vérifier si un joueur a gagné
-	  if (player1Score >= winningScore || player2Score >= winningScore) {
-		endMatch();
-	  }
+    function declareWinner(winner) {
+        alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
 
-	  // Déplacer le paddle 1
-	  if (keys.w) paddle1Y -= 5;
-	  if (keys.s) paddle1Y += 5;
+        let rankingMessage = `🏆 Classement final :\n`;
+        finalRanking.forEach((player, index) => {
+            rankingMessage += `${index + 1}. ${player}\n`;
+        });
 
-	  // Déplacer le paddle 2
-	  if (keys.i) paddle2Y -= 5;
-	  if (keys.k) paddle2Y += 5;
+        alert(rankingMessage);
 
-	  // Limiter les paddles aux bords
-	  paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
-	  paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
-	}
-
-	function resetBall() {
-	  ballX = canvas.width / 2;
-	  ballY = canvas.height / 2;
-	  ballSpeedX = -ballSpeedX;
-	}
-
-	function endMatch() {
-	  let winner = player1Score > player2Score ? player1Name : player2Name;
-	  alert(`${winner} wins the match!`);
-	  onMatchEnd(winner); // Callback pour retourner au tournoi
-	}
-
-	function gameLoop() {
-	  draw();
-	  update();
-	  requestAnimationFrame(gameLoop);
-	}
-
-	// Gérer les entrées clavier
-	window.addEventListener("keydown", (e) => {
-	  const key = e.key.toLowerCase();
-	  if (key in keys) {
-		keys[key] = true;
-	  }
-	});
-
-	window.addEventListener("keyup", (e) => {
-	  const key = e.key.toLowerCase();
-	  if (key in keys) {
-		keys[key] = false;
-	  }
-	});
-
-	// Lancer le jeu
-	gameLoop();
+        // Reset du tournoi
+        tournamentPlayers = [];
+        tournamentMatches = [];
+        losers = [];
+        finalRanking = [];
+        currentMatchIndex = 0;
+        bracketDiv.innerHTML = "";
+        bracketContainer.classList.add("hidden");
+        updatePlayersList();
+    }
 }

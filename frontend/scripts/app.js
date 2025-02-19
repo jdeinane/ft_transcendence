@@ -14,7 +14,7 @@ import { setupPongGame, handleModeSelection } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
-
+import { setupTournament } from "./tournament.js";
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {

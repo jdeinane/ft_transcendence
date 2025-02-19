@@ -60,7 +60,7 @@ export function setupPongGame() {
 }
 
 
-function startPongGame(canvas, isSinglePlayer, playerCount) {
+export function startPongGame(canvas, isSinglePlayer, playerCount) {
 	const ctx = canvas.getContext("2d");
 
 	let ballX = canvas.width / 2;
@@ -323,4 +323,158 @@ function startPongGame(canvas, isSinglePlayer, playerCount) {
 			});
 		});
     }, 50);
+}
+
+/////////// TOURNAMENT VERSION
+export function startTournamentPongGame(player1, player2, onGameEnd) {
+    console.log(`🎾 Début du match de tournoi : ${player1} VS ${player2}`);
+
+    const gameContainer = document.getElementById("pong-container");
+    gameContainer.innerHTML = `
+        <h2>🏆 Match de tournoi : ${player1} 🆚 ${player2}</h2>
+        <canvas id="pong" width="800" height="400"></canvas>
+        <button id="end-match">Fin du Match</button>
+    `;
+
+    gameContainer.classList.remove("hidden");
+
+    startTournamentGameLogic(player1, player2, onGameEnd);
+
+    document.getElementById("end-match").addEventListener("click", () => {
+        const winner = Math.random() < 0.5 ? player1 : player2; // ⚠️ Remplacer par la vraie détection du gagnant plus tard
+        alert(`🏆 ${winner} a gagné ce match !`);
+        gameContainer.classList.add("hidden");
+        onGameEnd(winner);
+    });
+}
+
+function startTournamentGameLogic(player1, player2, onGameEnd) {
+    const canvas = document.getElementById("pong");
+    const ctx = canvas.getContext("2d");
+
+    let ballX = canvas.width / 2;
+    let ballY = canvas.height / 2;
+    let ballSpeedX = 4.5;
+    let ballSpeedY = 4.5;
+
+    const paddleHeight = 100;
+    const paddleWidth = 10;
+    const paddleSpeed = 7;
+
+    let paddle1Y = canvas.height / 2 - paddleHeight / 2;
+    let paddle2Y = canvas.height / 2 - paddleHeight / 2;
+
+    let player1Score = 0;
+    let player2Score = 0;
+    const winningScore = 2;
+
+	let keysPressed = {
+		w: false,
+		s: false,
+		i: false,
+		k: false
+	};
+
+	window.addEventListener("keydown", (event) => {
+        if (event.key in keysPressed) {
+            keysPressed[event.key] = true;
+        }
+    });
+
+    window.addEventListener("keyup", (event) => {
+        if (event.key in keysPressed) {
+            keysPressed[event.key] = false;
+        }
+    });
+
+    function draw() {
+        ctx.fillStyle = "#222";
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.fillStyle = "white";
+        ctx.fillRect(0, paddle1Y, paddleWidth, paddleHeight);
+        ctx.fillRect(canvas.width - paddleWidth, paddle2Y, paddleWidth, paddleHeight);
+
+        ctx.beginPath();
+        ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
+        ctx.fillStyle = "red";
+        ctx.fill();
+        ctx.closePath();
+
+        ctx.font = "30px Arial";
+        ctx.fillStyle = "white";
+        ctx.fillText(`${player1}: ${player1Score}`, 50, 50);
+        ctx.fillText(`${player2}: ${player2Score}`, canvas.width - 200, 50);
+    }
+
+    function update() {
+        ballX += ballSpeedX;
+        ballY += ballSpeedY;
+
+		if (keysPressed.w)
+			paddle1Y -= paddleSpeed;
+		if (keysPressed.s)
+			paddle1Y += paddleSpeed;
+		if (keysPressed.i)
+			paddle2Y -= paddleSpeed;
+		if (keysPressed.k)
+			paddle2Y += paddleSpeed;
+
+        paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
+        paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
+
+        if (ballY <= 0 || ballY >= canvas.height) {
+            ballSpeedY = -ballSpeedY;
+        }
+
+        if (
+            ballX <= paddleWidth &&
+            ballY >= paddle1Y &&
+            ballY <= paddle1Y + paddleHeight
+        ) {
+            ballSpeedX = -ballSpeedX;
+        }
+
+        if (
+            ballX >= canvas.width - paddleWidth &&
+            ballY >= paddle2Y &&
+            ballY <= paddle2Y + paddleHeight
+        ) {
+            ballSpeedX = -ballSpeedX;
+        }
+
+        if (ballX <= 0) {
+            player2Score++;
+            resetBall();
+        } else if (ballX >= canvas.width) {
+            player1Score++;
+            resetBall();
+        }
+
+        if (player1Score >= winningScore) {
+            announceWinner(player1);
+        } else if (player2Score >= winningScore) {
+            announceWinner(player2);
+        }
+    }
+
+    function resetBall() {
+        ballX = canvas.width / 2;
+        ballY = canvas.height / 2;
+        ballSpeedX = Math.sign(ballSpeedX) * 5;
+        ballSpeedY = Math.sign(ballSpeedY) * 5;
+    }
+
+    function gameLoop() {
+        draw();
+        update();
+        requestAnimationFrame(gameLoop);
+    }
+
+    function announceWinner(winner) {
+        alert(`🏆 ${winner} remporte la manche !`);
+        onGameEnd(winner);
+    }
+
+    gameLoop();
 }

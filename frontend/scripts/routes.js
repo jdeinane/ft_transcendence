@@ -102,17 +102,26 @@ export const routes = {
 	`,
 
 	"/tournament": `
-	<h1 data-translate="tournament-mode">Tournament Mode</h1>
-	<form id="tournament-form">
-		<input type="text" name="player" placeholder="Enter your alias" required data-translate="enter-alias"/>
-		<button type="submit" data-translate="join-tournament">Join Tournament</button>
-	</form>
-	<h2 data-translate="players">Players</h2>
-	<ul id="player-list"></ul>
-	<button id="start-tournament" disabled data-translate="start-tournament">Start Tournament</button>
-	<h2 data-translate="matchmaking">Matchmaking</h2>
-	<p id="current-match" data-translate="waiting-for-players">Waiting for players...</p>
-	<button id="play-match" style="display: none;" data-translate="play-match">Play Match</button>
+		<h1 data-translate="tournament">🏆 Tournoi Pong</h1>
+		<div id="tournament-container">
+			<div id="tournament-setup">
+				<input type="text" id="tournament-player-name" placeholder="Enter alias">
+				<button id="join-tournament">Join</button>
+			</div>
+
+			<div id="players-list-container">
+				<h2> Players: </h2>
+				<ul id="players-list"></ul>
+			</div>
+
+			<div id="bracket-container" class="hidden">
+				<h2>Bracket</h2>
+				<div id="bracket"></div>
+				<button id="start-next-match" class="hidden">Start next match!</button>
+			</div>
+
+			<div id="pong-container" class="hidden"></div>
+		</div>
 	`,
 
 	"/login": `
