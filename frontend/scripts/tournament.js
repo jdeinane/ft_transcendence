@@ -68,42 +68,53 @@ export function setupTournament() {
         return matches;
     }
 
-    function startNextMatch() {
-        if (currentMatchIndex < tournamentMatches.length) {
-            const { player1, player2 } = tournamentMatches[currentMatchIndex];
+    startMatchButton.removeEventListener("click", startNextMatch);
+    startMatchButton.addEventListener("click", startNextMatch);
 
-            startTournamentPongGame(player1, player2, winner => {
-                let loser = player1 === winner ? player2 : player1;
-                finalRanking.unshift(winner); // On place le gagnant en haut du classement
-                losers.push(loser);
-
-                currentMatchIndex++;
-                if (currentMatchIndex === tournamentMatches.length) {
-                    // Si c'était la finale, lancer le match pour la 3ème place
-                    if (losers.length === 2) {
-                        startMatchForThirdPlace();
-                    } else {
-                        declareWinner(finalRanking[0]);
-                    }
-                } else {
-                    startNextMatch();
-                }
-            });
-        }
-    }
-
-    function startMatchForThirdPlace() {
-        const [player1, player2] = losers;
-        alert(`🎖 Match pour la 3ème place : ${player1} vs ${player2}`);
-
-        startTournamentPongGame(player1, player2, winner => {
-            let loser = player1 === winner ? player2 : player1;
-            finalRanking.unshift(winner);
-            finalRanking.unshift(loser);
-            declareWinner(finalRanking[0]);
-        });
-    }
-
+	function startNextMatch() {
+		if (currentMatchIndex < tournamentMatches.length) {
+			const { player1, player2 } = tournamentMatches[currentMatchIndex];
+	
+			setTimeout(() => {
+				startTournamentPongGame(player1, player2, winner => {
+					let loser = player1 === winner ? player2 : player1;
+					finalRanking.unshift(winner);
+					losers.push(loser);
+	
+					currentMatchIndex++;
+	
+					if (currentMatchIndex === tournamentMatches.length) {
+						if (losers.length === 2) {
+							startMatchForThirdPlace();
+						} else {
+							declareWinner(finalRanking[0]);
+						}
+					} else {
+						setTimeout(startNextMatch, 1000); // Pause pour éviter le gel de l'écran
+					}
+				});
+			}, 500);
+		}
+	}
+	
+	
+	function startMatchForThirdPlace() {
+		if (losers.length < 2) {
+			console.error("Pas assez de perdants pour jouer la 3ème place !");
+			return;
+		}
+	
+		const [player3, player4] = losers;
+		alert(`🎖 Match pour la 3ème place : ${player3} vs ${player4}`);
+	
+		startTournamentPongGame(player3, player4, winner => {
+			let loser = player3 === winner ? player4 : player3;
+			finalRanking.unshift(winner);
+			finalRanking.unshift(loser);
+			declareWinner(finalRanking[0]);
+		});
+	}
+	
     function declareWinner(winner) {
         alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
 

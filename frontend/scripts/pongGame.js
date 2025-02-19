@@ -326,8 +326,12 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 }
 
 /////////// TOURNAMENT VERSION
+let gameOver = false;
+
 export function startTournamentPongGame(player1, player2, onGameEnd) {
     console.log(`🎾 Début du match de tournoi : ${player1} VS ${player2}`);
+
+	resetGame();
 
     const gameContainer = document.getElementById("pong-container");
     gameContainer.innerHTML = `
@@ -341,11 +345,17 @@ export function startTournamentPongGame(player1, player2, onGameEnd) {
     startTournamentGameLogic(player1, player2, onGameEnd);
 
     document.getElementById("end-match").addEventListener("click", () => {
-        const winner = Math.random() < 0.5 ? player1 : player2; // ⚠️ Remplacer par la vraie détection du gagnant plus tard
+        const winner = Math.random() < 0.5 ? player1 : player2;
         alert(`🏆 ${winner} a gagné ce match !`);
         gameContainer.classList.add("hidden");
         onGameEnd(winner);
     });
+}
+
+function resetGame() {
+    gameOver = false;
+	const gameContainer = document.getElementById("pong-container");
+	gameContainer.innerHTML = "";
 }
 
 function startTournamentGameLogic(player1, player2, onGameEnd) {
@@ -368,23 +378,14 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
     let player2Score = 0;
     const winningScore = 2;
 
-	let keysPressed = {
-		w: false,
-		s: false,
-		i: false,
-		k: false
-	};
+    let keysPressed = { w: false, s: false, i: false, k: false };
 
-	window.addEventListener("keydown", (event) => {
-        if (event.key in keysPressed) {
-            keysPressed[event.key] = true;
-        }
+    window.addEventListener("keydown", (event) => {
+        if (event.key in keysPressed) keysPressed[event.key] = true;
     });
 
     window.addEventListener("keyup", (event) => {
-        if (event.key in keysPressed) {
-            keysPressed[event.key] = false;
-        }
+        if (event.key in keysPressed) keysPressed[event.key] = false;
     });
 
     function draw() {
@@ -398,7 +399,7 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
         ctx.beginPath();
         ctx.arc(ballX, ballY, 10, 0, Math.PI * 2);
         ctx.fillStyle = "red";
-        ctx.fill();
+		ctx.fill();
         ctx.closePath();
 
         ctx.font = "30px Arial";
@@ -408,17 +409,15 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
     }
 
     function update() {
+        if (gameOver) return;
+
         ballX += ballSpeedX;
         ballY += ballSpeedY;
 
-		if (keysPressed.w)
-			paddle1Y -= paddleSpeed;
-		if (keysPressed.s)
-			paddle1Y += paddleSpeed;
-		if (keysPressed.i)
-			paddle2Y -= paddleSpeed;
-		if (keysPressed.k)
-			paddle2Y += paddleSpeed;
+        if (keysPressed.w) paddle1Y -= paddleSpeed;
+        if (keysPressed.s) paddle1Y += paddleSpeed;
+        if (keysPressed.i) paddle2Y -= paddleSpeed;
+        if (keysPressed.k) paddle2Y += paddleSpeed;
 
         paddle1Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle1Y));
         paddle2Y = Math.max(0, Math.min(canvas.height - paddleHeight, paddle2Y));
@@ -468,13 +467,20 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
     function gameLoop() {
         draw();
         update();
-        requestAnimationFrame(gameLoop);
+        if (!gameOver) requestAnimationFrame(gameLoop);
     }
 
-    function announceWinner(winner) {
-        alert(`🏆 ${winner} remporte la manche !`);
-        onGameEnd(winner);
-    }
-
+	function announceWinner(winner) {
+		if (gameOver) return;
+		gameOver = true;
+	
+		alert(`🏆 ${winner} remporte la manche !`);
+	
+		setTimeout(() => {
+			document.getElementById("pong-container").classList.add("hidden");
+			onGameEnd(winner);  // Passe au prochain match
+		}, 500);  // Ajoute une petite pause pour éviter les conflits d'affichage
+	}
+	
     gameLoop();
 }
