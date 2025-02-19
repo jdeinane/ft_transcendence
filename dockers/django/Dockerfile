@@ -33,11 +33,11 @@ COPY --chown=django_user:django_user backend/ /app/
 
 # vérifier si app/src existe et créer un projet Django
 RUN mkdir -p /app/src && \
+    chmod -R 777 /app/src && \
     if [ ! -d "/app/src/config" ]; then \
         /app/venv/bin/django-admin startproject config /app/src/ && \
         mv /app/src/manage.py /app/manage.py; \
     fi
-
 
 # variables d'environnement
 ENV PYTHONUNBUFFERED=1 \
@@ -49,3 +49,4 @@ EXPOSE 8000
 
 # lancer Gunicorn
 CMD ["/app/venv/bin/gunicorn", "-w", "4", "-b", "0.0.0.0:8000", "config.wsgi:application"]
+USER 1000

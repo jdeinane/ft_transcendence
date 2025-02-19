@@ -62,7 +62,6 @@ echo "Loading initals data for Django..."
 docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json
 
 echo "Generating translation messages..."
-docker compose exec backend chmod -R 777 /app/src/locale/
 docker exec -it ft_transcendence-backend-1 django-admin makemessages -l fr -l es > make_message.txt 2>&1 &
 docker exec -it ft_transcendence-backend-1 django-admin compilemessages > compile_message.txt 2>&1 &
 

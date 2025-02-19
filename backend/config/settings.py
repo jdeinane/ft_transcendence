@@ -63,7 +63,7 @@ DATABASES = {
         'NAME': os.getenv('POSTGRES_DB', 'ft_transcendence'),
         'USER': os.getenv('POSTGRES_USER', 'admin'),
         'PASSWORD': os.getenv('POSTGRES_PASSWORD', 'ChangeMe42!'),
-        'HOST': os.getenv('POSTGRES_HOST', 'ft_transcendence-postgres-1'),
+        'HOST': os.getenv('POSTGRES_HOST', 'ft_transcendence_postgres'),
         'PORT': int(os.getenv('POSTGRES_PORT', 5432)),
     }
 }

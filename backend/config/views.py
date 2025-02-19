@@ -7,12 +7,13 @@ from config.models import Tournament
 from config.serializers import UserSerializer
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
+from rest_framework.generics import RetrieveAPIView
 from config.ai import PongAI
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
 from django.contrib.auth import get_user_model
 from config.models import MatchmakingQueue
-from django.db import connection
+from django.db import connections
 
 User = get_user_model()
 
@@ -21,13 +22,14 @@ def wait_for_db():
 	retries = 5
 	while retries > 0:
 		try:
-			connection.ensure_connection()
+			connection['default'].cursor()
 			print("Database is ready.")
 			return
 		except Exception:
 			print("Database not ready, retrying in 5 seconds...")
 			time.sleep(5)
 			retries -= 1
+	raise Exception("Database connection failed after retries.")
 
 wait_for_db()
 
