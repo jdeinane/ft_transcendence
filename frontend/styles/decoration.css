@@ -11,6 +11,7 @@
 }
 
 #welcome-message {
+	padding-top: 55px;
     font-size: 4rem;
 	font-weight: normal;
     text-align: center;

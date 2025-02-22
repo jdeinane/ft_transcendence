@@ -3,7 +3,8 @@ import { startTournamentPongGame } from "./pongGame.js";
 let tournamentPlayers = [];
 let tournamentMatches = [];
 let currentMatchIndex = 0;
-let losers = []; // Liste des perdants pour le match de classement
+let losers = [];
+let winners = [];
 let finalRanking = [];
 
 export function setupTournament() {
@@ -79,19 +80,21 @@ export function setupTournament() {
 				startTournamentPongGame(player1, player2, winner => {
 					let loser = player1 === winner ? player2 : player1;
 					finalRanking.unshift(winner);
+					winners.push(winner);
 					losers.push(loser);
 	
 					currentMatchIndex++;
 	
 					if (currentMatchIndex === tournamentMatches.length) {
-						if (losers.length === 2) {
+						if (losers.length === 2)
 							startMatchForThirdPlace();
-						} else {
+						if (winners.length == 2)
+							startFinalMatch();
+						else 
 							declareWinner(finalRanking[0]);
-						}
-					} else {
-						setTimeout(startNextMatch, 1000); // Pause pour éviter le gel de l'écran
 					}
+					else
+						setTimeout(startNextMatch, 1000);
 				});
 			}, 500);
 		}
@@ -113,6 +116,42 @@ export function setupTournament() {
 			finalRanking.unshift(loser);
 			declareWinner(finalRanking[0]);
 		});
+	}
+
+	function startFinalMatch() {
+		if (winners.length < 2)
+			return;
+		const [finalist1, finalist2] = winners;
+		alert(`Finale: ${finalist1} vs ${finalist2}`);
+
+		startTournamentPongGame(finalist1, finalist2, winner => {
+			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
+			finalRanking.unshift(winner);
+			finalRanking.splice(1, 0, runnerUp);
+			declareWinner(winner);
+		});
+	}
+
+	function declareWinner(winner) {
+		alert(`The tournament has finished! The big winner is: ${winner} !`);
+
+		let rankingMessage = `Final ranking:\n`;
+		finalRanking.forEach((player, index) => {
+			rankingMessage += `{index + 1}. ${player}\n`;
+		});
+		alert(rankingMessage);
+
+		// reset tournament
+		tournamentPlayers = [];
+		tournamentMatches = [];
+		losers = [];
+		winners = [];
+		finalRanking = [];
+		currentMatchIndex = 0;
+
+		bracketDiv.innerHTML = "";
+		bracketContainer.classList.add("hidden");
+		updatePlayersList();
 	}
 	
     function declareWinner(winner) {
