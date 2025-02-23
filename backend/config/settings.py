@@ -22,16 +22,16 @@ CSRF_TRUSTED_ORIGINS = [
 # Installed apps
 # --------------------
 INSTALLED_APPS = [
-	'daphne',  # WebSockets avec Django Channels
-    'channels',  # gestion des WebSockets
-    'django.contrib.admin',
-    'django.contrib.auth',
-    'django.contrib.contenttypes',
-    'django.contrib.sessions',
-    'django.contrib.messages',
-    'django.contrib.staticfiles',
-    'rest_framework',  # API REST Django
-    'config',  # application principale
+    "daphne",  # WebSockets avec Django Channels
+    "channels",  # gestion des WebSockets
+    "django.contrib.admin",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+    "rest_framework",  # API REST Django
+    "config",  # application principale
 ]
 
 # --------------------

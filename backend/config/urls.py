@@ -16,5 +16,5 @@ urlpatterns = [
 urlpatterns += [
 	path('api/matchmaking/join/', join_matchmaking, name="join_matchmaking"),
 	path('api/matchmaking/leave/', leave_matchmaking, name="leave_matchmaking"),
-    path('api/set-language/', set_language, name="set_language"),
+	path('api/set-language/', set_language, name="set_language"),
 ]
