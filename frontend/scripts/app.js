@@ -15,6 +15,8 @@ import { setupTicTacToeGame } from "./tttGame.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
 import { setupTournament } from "./tournament.js";
+import { setupLeaderboard } from "./leaderboard.js";
+
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {
@@ -205,6 +207,10 @@ export function navigate(path, addToHistory = true) {
 		backButton.addEventListener("click", () => {
 			navigate("/");
 		});
+	}
+
+	if (cleanPath === "/leaderboard") {
+		setupLeaderboard();
 	}
 
 	if (cleanPath === "/livechat") {

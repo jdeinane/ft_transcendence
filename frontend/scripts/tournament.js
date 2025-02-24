@@ -178,13 +178,25 @@ export function setupTournament() {
 		});
 	}
 	
+	function updatePlayerWins(winner) {
+		let leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || {};
+	
+		if (!leaderboard[winner]) {
+			leaderboard[winner] = 0;
+		}
+		leaderboard[winner] += 1;
+	
+		localStorage.setItem("leaderboard", JSON.stringify(leaderboard));
+	}	
+
     function declareWinner(winner) {
 		if (finalRanking[0] !== winner) {
 			finalRanking = finalRanking.filter(player => player !== winner);
 			finalRanking.unshift(winner);
 		}
 
-        alert(`🏆 The tournament is over! The big winner is ${winner} !`);
+		alert(`🏆 The tournament is over! The big winner is ${winner} !`);
+		updatePlayerWins(winner);
 
 		localStorage.setItem("finalRanking", JSON.stringify(finalRanking));
 

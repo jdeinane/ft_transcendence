@@ -203,6 +203,23 @@ export const routes = {
 		<p data-translate="not-found">not your problem</p>
 	`,
 
+	"/leaderboard": `
+	    <div class="leaderboard-container">
+        <h1 data-translate="leaderboard-title">🏆 Player Leaderboard</h1>
+        <table class="leaderboard-table">
+            <thead>
+                <tr>
+                    <th data-translate="rank">Rank</th>
+                    <th data-translate="player-name">Player</th>
+                    <th data-translate="wins">Wins</th>
+                </tr>
+            </thead>
+            <tbody id="leaderboard-list"></tbody>
+        </table>
+        <button id="back-to-home" data-translate="back-home-button">Back to Home</button>
+    </div>
+	`,
+	
 	"/livechat": `
 		<div class="livechat-container">
 			<h1 data-translate="chat-title">Live Chat</h1>

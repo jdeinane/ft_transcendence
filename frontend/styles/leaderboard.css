@@ -1,0 +1,65 @@
+/* Styles pour le leaderboard */
+.leaderboard-container {
+    text-align: center;
+    padding: 20px;
+    max-width: 600px;
+    margin: 50px auto;
+    background-color: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.2);
+    font-family: 'NintendoDS';
+	animation: fadeIn 0.5s ease-out;
+	border: 2px solid black;
+    box-shadow: 5px 5px 0px black;
+	font-size: 2.2rem;
+}
+
+.leaderboard-container h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.leaderboard-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+}
+
+.leaderboard-table th,
+.leaderboard-table td {
+    border: 2px solid black;
+    padding: 10px;
+    text-align: center;
+    font-size: 20px;
+}
+
+.leaderboard-table th {
+    background-color: #986ebd;
+    color: white;
+}
+
+.leaderboard-table tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.leaderboard-table tr:hover {
+    background-color: #ddd;
+}
+
+#back-to-home {
+    display: block;
+    margin: 20px auto;
+    padding: 10px 15px;
+    font-size: 14px;
+    background-color: #986ebd;
+    color: rgb(123, 122, 122);
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+	color: black;
+}
+
+#back-to-home:hover {
+    background-color: #986ebd;
+}
