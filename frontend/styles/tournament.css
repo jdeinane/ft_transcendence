@@ -1,11 +1,9 @@
-/* 🎨 Style du conteneur principal */
 #tournament-container {
     text-align: center;
     margin-top: 20px;
     font-family: "Audiowide", sans-serif;
 }
 
-/* 🏆 Section des joueurs */
 #players-list-container {
     margin-top: 20px;
     text-align: center;
@@ -29,7 +27,6 @@
     text-align: center;
 }
 
-/* 📋 Style du bracket */
 #bracket-container {
     margin-top: 20px;
     text-align: center;
@@ -52,7 +49,6 @@
     font-weight: bold;
 }
 
-/* 🎮 Style du match en cours */
 #pong-container {
     display: flex;
     justify-content: center;
@@ -68,7 +64,7 @@
 }
 
 #pong-container h2 {
-    color: #f1c40f; /* Couleur dorée pour l'effet tournoi */
+    color: #f1c40f;
     font-size: 1.5rem;
     margin-bottom: 10px;
 }
@@ -91,4 +87,75 @@
 
 #end-match:hover {
     background: darkred;
+}
+
+/* RESULTS */
+
+#tournament-ranking {
+    background: #222;
+    border: 3px solid white;
+    padding: 20px;
+    width: 50%;
+    text-align: center;
+    box-shadow: 5px 5px 0px #000;
+    border-radius: 8px;
+}
+
+#tournament-ranking h1 {
+    font-size: 22px;
+    color: white;
+    margin-bottom: 15px;
+}
+
+#ranking-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+#ranking-list li {
+    font-size: 18px;
+    color: white;
+    background: #333;
+    padding: 10px;
+    margin: 5px 0;
+    border-radius: 5px;
+    text-align: left;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+#ranking-list li:first-child::before {
+    content: "🏆 ";
+    color: gold;
+    font-size: 22px;
+}
+
+#ranking-list li:nth-child(2)::before {
+    content: "🥈 ";
+    color: silver;
+    font-size: 22px;
+}
+
+#ranking-list li:nth-child(3)::before {
+    content: "🥉 ";
+    color: #cd7f32;
+    font-size: 22px;
+}
+
+#back-home {
+    background: #fff;
+    border: 2px solid black;
+    font-size: 14px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin-top: 15px;
+    box-shadow: 3px 3px 0px #000;
+    transition: all 0.2s ease-in-out;
+}
+
+#back-home:hover {
+    background: #ddd;
+    transform: scale(1.05);
 }

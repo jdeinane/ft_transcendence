@@ -124,6 +124,14 @@ export const routes = {
 		</div>
 	`,
 
+	"/results": `
+		<div class="results-container">
+			<h1> Tournament Final Ranking</h1>
+			<ol id="ranking-list"></ol>
+			<button id="back-to-home"> Back to Home</button>
+		</div>
+	`,
+	
 	"/login": `
 	<div class="login-container">
 		<div class="login-box">

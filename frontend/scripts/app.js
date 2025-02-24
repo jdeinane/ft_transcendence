@@ -189,6 +189,23 @@ export function navigate(path, addToHistory = true) {
 		setupTournament();
 	}
 
+	if (cleanPath === "/results") {
+		const rankingList = document.getElementById("ranking-list");
+		const backButton = document.getElementById("back-to-home");
+	
+		const finalRanking = JSON.parse(localStorage.getItem("finalRanking")) || [];
+	
+		rankingList.innerHTML = "";
+		finalRanking.forEach((player, index) => {
+			const listItem = document.createElement("li");
+			listItem.textContent = `${index + 1}. ${player}`;
+			rankingList.appendChild(listItem);
+		});
+	
+		backButton.addEventListener("click", () => {
+			navigate("/");
+		});
+	}
 	if (cleanPath === "/livechat") {
 		const chatMessages = document.getElementById("chat-messages");
 		const messageInput = document.getElementById("message-input");

@@ -1,4 +1,5 @@
 import { startTournamentPongGame } from "./pongGame.js";
+import { navigate } from "./app.js";
 
 let tournamentPlayers = [];
 let tournamentMatches = [];
@@ -181,21 +182,18 @@ export function setupTournament() {
     function declareWinner(winner) {
         alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
 
-        let rankingMessage = `🏆 Classement final :\n`;
-        finalRanking.forEach((player, index) => {
-            rankingMessage += `${index + 1}. ${player}\n`;
-        });
+		localStorage.setItem("finalRanking", JSON.stringify(finalRanking));
 
-        alert(rankingMessage);
+		navigate("/results");
 
-        // Reset du tournoi
-        tournamentPlayers = [];
-        tournamentMatches = [];
-        losers = [];
-        finalRanking = [];
-        currentMatchIndex = 0;
-        bracketDiv.innerHTML = "";
-        bracketContainer.classList.add("hidden");
-        updatePlayersList();
+        // // Reset du tournoi
+        // tournamentPlayers = [];
+        // tournamentMatches = [];
+        // losers = [];
+        // finalRanking = [];
+        // currentMatchIndex = 0;
+        // bracketDiv.innerHTML = "";
+        // bracketContainer.classList.add("hidden");
+        // updatePlayersList();
     }
 }
