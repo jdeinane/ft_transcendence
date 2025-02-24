@@ -57,7 +57,9 @@
 	  "bracket-title": "Bracket",
 	  "start-match-button": "Start next match!",
 	  "results-title": "🏆 Tournament Final Ranking",
-	  "back-home-button": "Back to Home"
+	  "back-home-button": "Back to Home",
+	  "rank": "Rank",
+	  "player-name": "Player"
 
 	},
 	"fr": {
@@ -118,7 +120,9 @@
 	  "bracket-title": "Tableau",
 	  "start-match-button": "Démarrer le prochain match !",
 	  "results-title": "🏆 Classement Final du Tournoi",
-	  "back-home-button": "Retour à l'Accueil"
+	  "back-home-button": "Retour à l'Accueil",
+	  "rank": "Rang",
+	  "player-name": "Joueur"
 
 	},
 	"es": {
@@ -179,7 +183,9 @@
 	  "bracket-title": "Cuadro",
 	  "start-match-button": "¡Iniciar el siguiente partido!",
 	  "results-title": "🏆 Clasificación Final del Torneo",
-	  "back-home-button": "Volver al Inicio"
+	  "back-home-button": "Volver al Inicio",
+	  "rank": "Rango",
+	  "player-name": "Jugador"
 
 	}
   }

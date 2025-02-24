@@ -211,7 +211,7 @@ export const routes = {
                 <tr>
                     <th data-translate="rank">Rank</th>
                     <th data-translate="player-name">Player</th>
-                    <th data-translate="wins">Wins</th>
+                    <th data-translate="wins">Score</th>
                 </tr>
             </thead>
             <tbody id="leaderboard-list"></tbody>
