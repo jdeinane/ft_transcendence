@@ -49,7 +49,15 @@
 	  "select-number": "Select number of players:",
 	  "all-fields-required": "All fields are required!",
 	  "passwords-no-match": "Passwords do not match!",
-	  "username-taken": "Username already taken!"
+	  "username-taken": "Username already taken!",
+	  "tournament-title": "🏆 Pong Tournament",
+	  "tournament-placeholder": "Enter alias",
+	  "join-button": "Join",
+	  "players-title": "Players:",
+	  "bracket-title": "Bracket",
+	  "start-match-button": "Start next match!",
+	  "results-title": "🏆 Tournament Final Ranking",
+	  "back-home-button": "Back to Home"
 
 	},
 	"fr": {
@@ -102,7 +110,15 @@
 	  "select-number": "Selectionnez le nombre de joueurs:",
 	  "all-fields-required": "Tous les champs sont requis !",
 	  "passwords-no-match": "Les mots de passe ne correspondent pas !",
-	  "username-taken": "Nom d'utilisateur déjà pris !"
+	  "username-taken": "Nom d'utilisateur déjà pris !",
+	  "tournament-title": "🏆 Tournoi Pong",
+	  "tournament-placeholder": "Entrez un alias",
+	  "join-button": "Rejoindre",
+	  "players-title": "Joueurs :",
+	  "bracket-title": "Tableau",
+	  "start-match-button": "Démarrer le prochain match !",
+	  "results-title": "🏆 Classement Final du Tournoi",
+	  "back-home-button": "Retour à l'Accueil"
 
 	},
 	"es": {
@@ -155,7 +171,15 @@
 	  "select-number": "Seleccione el número de jugadores:",
 	  "all-fields-required": "¡Todos los campos son obligatorios!",
 	  "passwords-no-match": "¡Las contraseñas no coinciden!",
-	  "username-taken": "¡Nombre de usuario ya utilizado!"
+	  "username-taken": "¡Nombre de usuario ya utilizado!",
+	  "tournament-title": "🏆 Torneo Pong",
+	  "tournament-placeholder": "Ingresa alias",
+	  "join-button": "Unirse",
+	  "players-title": "Jugadores:",
+	  "bracket-title": "Cuadro",
+	  "start-match-button": "¡Iniciar el siguiente partido!",
+	  "results-title": "🏆 Clasificación Final del Torneo",
+	  "back-home-button": "Volver al Inicio"
 
 	}
   }

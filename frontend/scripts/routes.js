@@ -102,22 +102,22 @@ export const routes = {
 	`,
 
 	"/tournament": `
-		<h1 data-translate="tournament">🏆 Tournoi Pong</h1>
+		<h1 data-translate="tournament-title">🏆 Pong</h1>
 		<div id="tournament-container">
 			<div id="tournament-setup">
-				<input type="text" id="tournament-player-name" placeholder="Enter alias">
-				<button id="join-tournament">Join</button>
+				<input type="text" id="tournament-player-name" placeholder="Enter alias" data-translate="tournament-placeholder">
+				<button id="join-tournament" data-translate="join-button">Join</button>
 			</div>
 
 			<div id="players-list-container">
-				<h2> Players: </h2>
+				<h2 data-translate="players-title"> Players: </h2>
 				<ul id="players-list"></ul>
 			</div>
 
 			<div id="bracket-container" class="hidden">
-				<h2>Bracket</h2>
+				<h2 data-translate="bracket-title">Bracket</h2>
 				<div id="bracket"></div>
-				<button id="start-next-match" class="hidden">Start next match!</button>
+				<button id="start-next-match" class="hidden" data-translate="start-match-button">Start next match!</button>
 			</div>
 
 			<div id="pong-container" class="hidden"></div>
@@ -126,12 +126,12 @@ export const routes = {
 
 	"/results": `
 		<div class="results-container">
-			<h1> Tournament Final Ranking</h1>
+			<h1 data-translate="results-title"> Tournament Final Ranking</h1>
 			<ol id="ranking-list"></ol>
-			<button id="back-to-home"> Back to Home</button>
+			<button id="back-to-home" data-translate="back-home-button"> Back to Home</button>
 		</div>
 	`,
-	
+
 	"/login": `
 	<div class="login-container">
 		<div class="login-box">
