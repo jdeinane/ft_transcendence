@@ -206,6 +206,7 @@ export function navigate(path, addToHistory = true) {
 			navigate("/");
 		});
 	}
+
 	if (cleanPath === "/livechat") {
 		const chatMessages = document.getElementById("chat-messages");
 		const messageInput = document.getElementById("message-input");
@@ -308,16 +309,6 @@ function updateActiveLink(path) {
 	});
 }
   
-
-function loadGameScript() {
-	const existingScript = document.querySelector('script[src="/scripts/pongGame.js"]');
-	if (existingScript)
-		existingScript.remove();
-
-	const script = document.createElement("script");
-	script.src = "/frontend/scripts/pongGame.js";
-	document.body.appendChild(script);
-  }
 
 	// GESTIONAIRE D'EVENEMENT
 

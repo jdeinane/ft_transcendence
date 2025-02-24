@@ -137,10 +137,8 @@ export function setupTournament() {
 	
 	
 	function startMatchForThirdPlace(onComplete) {
-		if (losers.length < 2) {
-			console.error("❌ Pas assez de perdants pour jouer la 3ème place !");
+		if (losers.length < 2)
 			return;
-		}
 	
 		const [player3, player4] = losers;
 		alert(`🎖 Match pour la 3ème place : ${player3} vs ${player4}`);
@@ -159,10 +157,8 @@ export function setupTournament() {
 	
 
 	function startFinalMatch() {
-		if (winners.length < 2) {
-			console.error("❌ Pas assez de gagnants pour jouer la finale !");
+		if (winners.length < 2)
 			return;
-		}
 	
 		const [finalist1, finalist2] = winners;
 		alert(`🏆 Finale : ${finalist1} vs ${finalist2}`);
@@ -170,10 +166,11 @@ export function setupTournament() {
 		startTournamentPongGame(finalist1, finalist2, winner => {
 			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
 
-			if (!finalRanking.includes(runnerUp))
-				finalRanking.splice(1, 0, runnerUp)
 			if (!finalRanking.includes(winner))
 				finalRanking.unshift(winner);
+
+			if (!finalRanking.includes(runnerUp))
+				finalRanking.splice(1, 0, runnerUp)
 	
 			setTimeout(() => {
 				declareWinner(winner);
@@ -182,9 +179,16 @@ export function setupTournament() {
 	}
 	
     function declareWinner(winner) {
+		if (finalRanking[0] !== winner) {
+			finalRanking = finalRanking.filter(player => player !== winner);
+			finalRanking.unshift(winner);
+		}
+
         alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
 
 		localStorage.setItem("finalRanking", JSON.stringify(finalRanking));
+
+		finalRanking = [...new Set(finalRanking)];
 
 		navigate("/results");
 
