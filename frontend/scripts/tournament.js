@@ -119,9 +119,12 @@ export function setupTournament() {
 	
 		startTournamentPongGame(player3, player4, winner => {
 			let loser = player3 === winner ? player4 : player3;
-			finalRanking.unshift(winner);
-			finalRanking.unshift(loser);
-	
+
+			if (!finalRanking.includes(winner))
+				finalRanking.splice(2, 0, winner);
+			if (!finalRanking.includes(loser))
+				finalRanking.push(loser);
+
 			if (onComplete) onComplete();
 		});
 	}
@@ -138,8 +141,11 @@ export function setupTournament() {
 	
 		startTournamentPongGame(finalist1, finalist2, winner => {
 			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
-			finalRanking.unshift(winner);
-			finalRanking.splice(1, 0, runnerUp);
+
+			if (!finalRanking.includes(runnerUp))
+				finalRanking.splice(1, 0, runnerUp)
+			if (!finalRanking.includes(winner))
+				finalRanking.unshift(winner);
 	
 			setTimeout(() => {
 				declareWinner(winner);
@@ -150,7 +156,7 @@ export function setupTournament() {
 
 	function declareWinner(winner) {
 		alert(`The tournament has finished! The big winner is: ${winner} !`);
-
+    	console.log("Classement avant affichage :", finalRanking);
 		finalRanking = [...new Set(finalRanking)];
 
 		let rankingMessage = `Final ranking:\n`;
