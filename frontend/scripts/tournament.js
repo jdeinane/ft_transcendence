@@ -21,15 +21,26 @@ export function setupTournament() {
         if (!playerName) {
             alert("Veuillez entrer un alias !");
             return;
+		}
+
+		if (tournamentPlayers.length >= 4) {
+			alert("4 Players max");
+			return;
         }
 
         if (!tournamentPlayers.includes(playerName)) {
             tournamentPlayers.push(playerName);
             updatePlayersList();
             updateBracket();
+			updateStartMatchButton();
         }
 
         playerNameInput.value = "";
+
+		if (tournamentPlayers.length === 4) {
+			joinButton.disabled = true;
+			playerNameInput.disabled = true;
+		}
     });
 
     function updatePlayersList() {
@@ -41,6 +52,14 @@ export function setupTournament() {
         });
     }
 
+	function updateStartMatchButton() {
+		startMatchButton.disabled = (tournamentPlayers.length !== 4);
+		if (tournamentPlayers.length === 4)
+			startMatchButton.classList.remove("hidden");
+		else
+			startMatchButton.classList.add("hidden");
+	}
+	
     function updateBracket() {
         if (tournamentPlayers.length < 2) return;
         
@@ -74,6 +93,14 @@ export function setupTournament() {
     startMatchButton.addEventListener("click", startNextMatch);
 
 	function startNextMatch() {
+		if (tournamentPlayers.length !== 4) {
+			alert("Must be 4 players");
+			return;
+		}
+
+		joinButton.disabled = true;
+		playerNameInput.disabled = true;
+
 		if (currentMatchIndex < tournamentMatches.length) {
 			const { player1, player2 } = tournamentMatches[currentMatchIndex];
 	
@@ -154,31 +181,6 @@ export function setupTournament() {
 		});
 	}
 	
-
-	function declareWinner(winner) {
-		alert(`The tournament has finished! The big winner is: ${winner} !`);
-    	console.log("Classement avant affichage :", finalRanking);
-		finalRanking = [...new Set(finalRanking)];
-
-		let rankingMessage = `Final ranking:\n`;
-		finalRanking.forEach((player, index) => {
-			rankingMessage += `{index + 1}. ${player}\n`;
-		});
-		alert(rankingMessage);
-
-		// reset tournament
-		tournamentPlayers = [];
-		tournamentMatches = [];
-		losers = [];
-		winners = [];
-		finalRanking = [];
-		currentMatchIndex = 0;
-
-		bracketDiv.innerHTML = "";
-		bracketContainer.classList.add("hidden");
-		updatePlayersList();
-	}
-	
     function declareWinner(winner) {
         alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
 
@@ -186,14 +188,19 @@ export function setupTournament() {
 
 		navigate("/results");
 
-        // // Reset du tournoi
-        // tournamentPlayers = [];
-        // tournamentMatches = [];
-        // losers = [];
-        // finalRanking = [];
-        // currentMatchIndex = 0;
-        // bracketDiv.innerHTML = "";
-        // bracketContainer.classList.add("hidden");
-        // updatePlayersList();
+        // Reset du tournoi
+        tournamentPlayers = [];
+        tournamentMatches = [];
+        losers = [];
+        finalRanking = [];
+
+        currentMatchIndex = 0;
+        bracketDiv.innerHTML = "";
+        bracketContainer.classList.add("hidden");
+        updatePlayersList();
+		updateStartMatchButton();
+
+		joinButton.disabled = false;
+		playerNameInput.disabled = false;
     }
 }

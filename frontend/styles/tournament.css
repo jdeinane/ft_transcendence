@@ -74,21 +74,6 @@
     margin: 10px 0;
 }
 
-#end-match {
-    margin-top: 15px;
-    padding: 10px 15px;
-    font-size: 1rem;
-    background: red;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-}
-
-#end-match:hover {
-    background: darkred;
-}
-
 /* RESULTS */
 
 #tournament-ranking {

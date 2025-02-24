@@ -337,19 +337,11 @@ export function startTournamentPongGame(player1, player2, onGameEnd) {
     gameContainer.innerHTML = `
         <h2>🏆 Match de tournoi : ${player1} 🆚 ${player2}</h2>
         <canvas id="pong" width="800" height="400"></canvas>
-        <button id="end-match">Fin du Match</button>
     `;
 
     gameContainer.classList.remove("hidden");
 
     startTournamentGameLogic(player1, player2, onGameEnd);
-
-    document.getElementById("end-match").addEventListener("click", () => {
-        const winner = Math.random() < 0.5 ? player1 : player2;
-        alert(`🏆 ${winner} a gagné ce match !`);
-        gameContainer.classList.add("hidden");
-        onGameEnd(winner);
-    });
 }
 
 function resetGame() {
