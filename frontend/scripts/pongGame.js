@@ -329,13 +329,12 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 let gameOver = false;
 
 export function startTournamentPongGame(player1, player2, onGameEnd) {
-    console.log(`🎾 Début du match de tournoi : ${player1} VS ${player2}`);
 
 	resetGame();
 
     const gameContainer = document.getElementById("pong-container");
     gameContainer.innerHTML = `
-        <h2>🏆 Match de tournoi : ${player1} 🆚 ${player2}</h2>
+        <h2>🏆${player1} 🆚 ${player2}</h2>
         <canvas id="pong" width="800" height="400"></canvas>
     `;
 
@@ -394,7 +393,7 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
 		ctx.fill();
         ctx.closePath();
 
-        ctx.font = "30px Arial";
+        ctx.font = "30px NintendoDS";
         ctx.fillStyle = "white";
         ctx.fillText(`${player1}: ${player1Score}`, 50, 50);
         ctx.fillText(`${player2}: ${player2Score}`, canvas.width - 200, 50);
@@ -466,7 +465,7 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
 		if (gameOver) return;
 		gameOver = true;
 	
-		alert(`🏆 ${winner} remporte la manche !`);
+		alert(`🏆 ${winner} wins !`);
 	
 		setTimeout(() => {
 			document.getElementById("pong-container").classList.add("hidden");

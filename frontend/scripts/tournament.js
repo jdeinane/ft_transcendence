@@ -19,7 +19,7 @@ export function setupTournament() {
     joinButton.addEventListener("click", () => {
         const playerName = playerNameInput.value.trim();
         if (!playerName) {
-            alert("Veuillez entrer un alias !");
+            alert("Please enter an alias !");
             return;
 		}
 
@@ -141,7 +141,7 @@ export function setupTournament() {
 			return;
 	
 		const [player3, player4] = losers;
-		alert(`🎖 Match pour la 3ème place : ${player3} vs ${player4}`);
+		alert(`🎖 Match for 3rd place : ${player3} vs ${player4}`);
 	
 		startTournamentPongGame(player3, player4, winner => {
 			let loser = player3 === winner ? player4 : player3;
@@ -161,7 +161,7 @@ export function setupTournament() {
 			return;
 	
 		const [finalist1, finalist2] = winners;
-		alert(`🏆 Finale : ${finalist1} vs ${finalist2}`);
+		alert(`🏆 Grand Finale : ${finalist1} vs ${finalist2}`);
 	
 		startTournamentPongGame(finalist1, finalist2, winner => {
 			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
@@ -184,7 +184,7 @@ export function setupTournament() {
 			finalRanking.unshift(winner);
 		}
 
-        alert(`🏆 Le tournoi est terminé ! Le grand gagnant est ${winner} !`);
+        alert(`🏆 The tournament is over! The big winner is ${winner} !`);
 
 		localStorage.setItem("finalRanking", JSON.stringify(finalRanking));
 
