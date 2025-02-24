@@ -86,13 +86,20 @@ export function setupTournament() {
 					currentMatchIndex++;
 	
 					if (currentMatchIndex === tournamentMatches.length) {
-						if (losers.length === 2)
-							startMatchForThirdPlace();
-						if (winners.length == 2)
+						if (losers.length === 2) {
+							startMatchForThirdPlace(() => {
+								if (winners.length === 2) {
+									startFinalMatch();
+								} else {
+									declareWinner(finalRanking[0]);
+								}
+							});
+						} else if (winners.length === 2) {
 							startFinalMatch();
-						else 
+						} else {
 							declareWinner(finalRanking[0]);
-					}
+						}					
+					}					
 					else
 						setTimeout(startNextMatch, 1000);
 				});
@@ -101,9 +108,9 @@ export function setupTournament() {
 	}
 	
 	
-	function startMatchForThirdPlace() {
+	function startMatchForThirdPlace(onComplete) {
 		if (losers.length < 2) {
-			console.error("Pas assez de perdants pour jouer la 3ème place !");
+			console.error("❌ Pas assez de perdants pour jouer la 3ème place !");
 			return;
 		}
 	
@@ -114,26 +121,37 @@ export function setupTournament() {
 			let loser = player3 === winner ? player4 : player3;
 			finalRanking.unshift(winner);
 			finalRanking.unshift(loser);
-			declareWinner(finalRanking[0]);
+	
+			if (onComplete) onComplete();
 		});
 	}
+	
 
 	function startFinalMatch() {
-		if (winners.length < 2)
+		if (winners.length < 2) {
+			console.error("❌ Pas assez de gagnants pour jouer la finale !");
 			return;
+		}
+	
 		const [finalist1, finalist2] = winners;
-		alert(`Finale: ${finalist1} vs ${finalist2}`);
-
+		alert(`🏆 Finale : ${finalist1} vs ${finalist2}`);
+	
 		startTournamentPongGame(finalist1, finalist2, winner => {
 			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
 			finalRanking.unshift(winner);
 			finalRanking.splice(1, 0, runnerUp);
-			declareWinner(winner);
+	
+			setTimeout(() => {
+				declareWinner(winner);
+			}, 500);
 		});
 	}
+	
 
 	function declareWinner(winner) {
 		alert(`The tournament has finished! The big winner is: ${winner} !`);
+
+		finalRanking = [...new Set(finalRanking)];
 
 		let rankingMessage = `Final ranking:\n`;
 		finalRanking.forEach((player, index) => {
