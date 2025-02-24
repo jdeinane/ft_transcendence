@@ -43,6 +43,7 @@ then
 fi
 
 echo "Rebuilding Docker containers..."
+wait
 
 # start dev environment
 echo "Starting development environment..."
@@ -55,13 +56,22 @@ docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 wait
 
 echo "Running Django migrations..."
+rm -rf backend/config/migrations/*
 docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations config
 docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate
+
+sleep 5
 
 echo "Loading initals data for Django..."
 docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json
 
+sleep 5
+
+echo "Generating translation messages..."
+docker exec -it ft_transcendence-backend-1 django-admin makemessages -l fr -l es > make_message.txt 2>&1 &
+docker exec -it ft_transcendence-backend-1 django-admin compilemessages > compile_message.txt 2>&1 &
+
 # wait for all background processes to complete
-wait # they don't love you like I love you xD titkok brainrot
+wait
 
 echo "Development and Production environments are running!"

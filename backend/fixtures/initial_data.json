@@ -28,6 +28,20 @@
 		}
 	},
 	{
+		"model": "config.user",
+		"pk": 1000,
+		"fields": {
+			"username": "AI_Bot",
+			"email": "ai_bot@example.com",
+			"password": "pbkdf2_sha256$260000$examplehash",
+			"is_superuser": false,
+			"is_staff": false,
+			"is_online": false,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},	
+	{
 		"model": "config.chatroom",
 		"pk": 1,
 		"fields": {
