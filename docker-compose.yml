@@ -60,3 +60,4 @@ volumes:
 
 networks:
   ft_transcendence_network:
+    external: true
