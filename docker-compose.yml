@@ -60,4 +60,5 @@ volumes:
 
 networks:
   ft_transcendence_network:
-    external: true
+    name: ft_transcendence_network
+    driver: bridge

@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",  # API REST Django
     "config",  # application principale
+	"corsheaders",
 ]
 
 # --------------------
@@ -46,6 +47,19 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+CORS_ALLOWED_ORIGINS = [
+    "https://localhost:8443",  # Nginx (frontend)
+    "http://localhost:4000",   # Backend local
+    "http://127.0.0.1:4000",   # Backend via localhost
+    "http://127.0.0.1:5000",   # Backend via autre port
+]
+
+MIDDLEWARE.insert(1, "corsheaders.middleware.CorsMiddleware")
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_ALLOW_METHODS = ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+CORS_ALLOW_HEADERS = ["Authorization", "Content-Type"]
 
 # --------------------
 # Root URLs & WSGI / ASGI

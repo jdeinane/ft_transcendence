@@ -55,6 +55,15 @@ docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
 wait
 
+# waiting for PostgreSQL to be ready
+echo "Waiting for PostgreSQL to be ready..."
+until docker exec -it ft_transcendence-postgres-1 psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
+  echo "PostgreSQL not ready, retrying in 5 seconds..."
+  sleep 5
+done
+echo "PostgreSQL is ready!"
+
+
 echo "Running Django migrations..."
 rm -rf backend/config/migrations/*
 docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations config

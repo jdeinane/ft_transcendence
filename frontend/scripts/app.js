@@ -22,6 +22,14 @@ import { setupLeaderboard } from "./leaderboard.js";
 export function navigate(path, addToHistory = true) {
 	const app = document.getElementById("app");
 	const cleanPath = path.replace("#", "");
+	const user = getCurrentUser();
+
+	const protectedRoutes = ["/profile", "/edit-profile", "/game", "/leaderboard"];
+    if (!user && protectedRoutes.includes(cleanPath)) {
+        navigate("#/login");
+        return;
+    }
+
 	app.innerHTML = routes[cleanPath] || routes["*"]; 
 
 	if (addToHistory) {
@@ -389,3 +397,6 @@ document.addEventListener("DOMContentLoaded", () => {
         });
     });
 });
+
+
+setInterval(refreshToken, 15 * 60 * 1000);

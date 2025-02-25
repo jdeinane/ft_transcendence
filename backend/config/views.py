@@ -2,7 +2,8 @@ import threading
 import random
 import time
 from rest_framework import viewsets
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from config.models import Tournament, PongGame, TicTacToeGame, MatchmakingQueue
@@ -14,7 +15,8 @@ from django.utils.translation import activate
 from django.utils.translation import gettext as _
 from django.db import connections
 from django.shortcuts import get_object_or_404
-from django.contrib.auth import get_user_model
+from django.contrib.auth import get_user_model, authenticate
+from rest_framework_simplejwt.tokens import RefreshToken
 
 User = get_user_model()
 
@@ -176,10 +178,26 @@ def tictactoe_ai_move(request):
 
 	return Response({"move": move})
 
+@api_view(['POST'])
+@permission_classes([AllowAny])
 def login_view(request):
-	if request.method == "POST":
-		return Response({"message": _("Login successful")})
-	return Response({"error": _("Invalid request")}, status=400)
+    """ Authentification de l'utilisateur """
+    username = request.data.get('username')
+    password = request.data.get('password')
+
+    if not username or not password:
+        return Response({'error': 'Nom d’utilisateur et mot de passe requis'}, status=400)
+
+    user = authenticate(username=username, password=password)
+
+    if user is not None:
+        refresh = RefreshToken.for_user(user)
+        return Response({
+            'access': str(refresh.access_token),
+            'refresh': str(refresh)
+        })
+    else:
+        return Response({'error': 'Nom d’utilisateur ou mot de passe incorrect'}, status=401)
 
 # API pour langage
 @api_view(["POST"])
@@ -192,3 +210,47 @@ def set_language(request):
 		return Response({"message": f"Langue changée en {language}"})
 	else:
 		return Response({"error": "Langue non supportée"}, status=400)
+
+User = get_user_model()
+
+@api_view(['POST'])
+@permission_classes([AllowAny])
+def register(request):
+    """ Inscription d'un utilisateur """
+    username = request.data.get('username')
+    email = request.data.get('email')
+    password = request.data.get('password')
+    confirm_password = request.data.get('confirm_password')
+
+    if not username or not email or not password or not confirm_password:
+        return Response({'error': 'Tous les champs sont obligatoires'}, status=400)
+
+    if password != confirm_password:
+        return Response({'error': 'Les mots de passe ne correspondent pas'}, status=400)
+
+    if User.objects.filter(username=username).exists():
+        return Response({'error': 'Ce nom d’utilisateur est déjà pris'}, status=400)
+
+    if User.objects.filter(email=email).exists():
+        return Response({'error': 'Cet email est déjà utilisé'}, status=400)
+
+    try:
+        user = User.objects.create_user(username=username, email=email, password=password)
+        print(f"✅ Utilisateur {username} créé avec succès !")  # 🔍 Debug
+        return Response({'message': 'Utilisateur créé avec succès !'}, status=201)
+    except Exception as e:
+        print(f"❌ Erreur lors de la création de l'utilisateur : {e}")  # 🔍 Debug
+        return Response({'error': 'Erreur interne lors de la création de l’utilisateur'}, status=500)
+
+@api_view(["GET"])
+def get_current_user(request):
+    """ Renvoie les informations de l'utilisateur connecté """
+    user = request.user
+    if user.is_authenticated:
+        return Response({
+            "id": user.id,
+            "username": user.username,
+            "email": user.email,
+            "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
+        })
+    return Response({"error": "Non authentifié"}, status=401)
