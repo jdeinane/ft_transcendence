@@ -31,9 +31,9 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "rest_framework",  # API REST Django
-    "config",  # application principale
 	"corsheaders",
     "rest_framework_simplejwt",
+    "config",  # application principale
 ]
 
 REST_FRAMEWORK = {

@@ -14,10 +14,7 @@ urlpatterns = [
     path('api/auth/register/', register, name="register"),
 	path('api/auth/login/', login_view, name="login"),
 	path('api/auth/me/', get_current_user, name="me"),
-]
-
-urlpatterns += [
-    path("api/tournaments/", list_tournaments, name="list_tournaments"),
+	path("api/tournaments/", list_tournaments, name="list_tournaments"),
     path("api/tournaments/join/<int:tournament_id>/", join_tournament, name="join_tournament"),
     path("api/tournaments/leave/<int:tournament_id>/", leave_tournament, name="leave_tournament"),
 ]

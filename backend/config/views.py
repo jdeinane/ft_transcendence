@@ -1,11 +1,13 @@
 import threading
 import random
 import time
-from rest_framework import viewsets
-from rest_framework import status
+from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
+from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
+from rest_framework.decorators import api_view, permission_classes
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from config.models import Tournament, PongGame, TicTacToeGame
 from config.serializers import UserSerializer
 from config.ai import PongAI, TicTacToeAI
@@ -16,7 +18,6 @@ from django.utils.translation import gettext as _
 from django.db import connections
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 
 User = get_user_model()
 
@@ -41,7 +42,6 @@ wait_for_db()
 class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
-
 
 # API pour join tournament
 @api_view(["POST"])
@@ -127,6 +127,20 @@ def tictactoe_ai_move(request):
 
 	return Response({"move": move})
 
+# API pour langage
+@api_view(["POST"])
+def set_language(request):
+	"""
+	Change la langue de l'utilisateur.
+	"""
+	language = request.data.get("language")
+
+	if language in dict(settings.LANGUAGES):
+		activate(language)
+		return Response({"message": f"Langue changée en {language}"})
+	else:
+		return Response({"error": "Langue non supportée"}, status=400)
+
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -149,22 +163,6 @@ def login_view(request):
         })
     else:
         return Response({'error': 'Nom d’utilisateur ou mot de passe incorrect'}, status=401)
-
-# API pour langage
-@api_view(["POST"])
-def set_language(request):
-	"""
-	Change la langue de l'utilisateur.
-	"""
-	language = request.data.get("language")
-
-	if language in dict(settings.LANGUAGES):
-		activate(language)
-		return Response({"message": f"Langue changée en {language}"})
-	else:
-		return Response({"error": "Langue non supportée"}, status=400)
-
-User = get_user_model()
 
 @api_view(['POST'])
 @permission_classes([AllowAny])
@@ -191,10 +189,10 @@ def register(request):
 
     try:
         user = User.objects.create_user(username=username, email=email, password=password)
-        print(f"✅ Utilisateur {username} créé avec succès !")  # 🔍 Debug
+        print(f"✅ Utilisateur {username} créé avec succès !")
         return Response({'message': 'Utilisateur créé avec succès !'}, status=201)
     except Exception as e:
-        print(f"❌ Erreur lors de la création de l'utilisateur : {e}")  # 🔍 Debug
+        print(f"❌ Erreur lors de la création de l'utilisateur : {e}")
         return Response({'error': 'Erreur interne lors de la création de l’utilisateur'}, status=500)
 
 @api_view(["GET"])
@@ -204,8 +202,8 @@ def get_current_user(request):
 	Renvoie les informations de l'utilisateur connecté
 	"""
     try:
-        token = request.headers.get('Authorization').split(' ')[1]  # Récupère le token de l'en-tête
-        UntypedToken(token)  # Vérifie si le token est valide
+        token = request.headers.get('Authorization').split(' ')[1] # Récupère le token de l'en-tête
+        UntypedToken(token) # Vérifie si le token est valide
         user = request.user
         return Response({
             "id": user.id,
