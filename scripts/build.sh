@@ -13,7 +13,7 @@ then
     set +o allexport
 else
     echo "No ./dockers/.env.dev file found. Please create one."
-    exit 1    
+    exit 1
 fi
 
 # ensure docker is installed
@@ -66,13 +66,14 @@ echo "PostgreSQL is ready!"
 
 echo "Running Django migrations..."
 rm -rf backend/config/migrations/*
-docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations config
-docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate
+docker exec -it ft_transcendence-backend-1 python3 /app/manage.py makemigrations config > make_migration.txt 2>&1 &
+docker exec -it ft_transcendence-backend-1 python3 /app/manage.py migrate > migrate.txt 2>&1 &
+docker exec -it ft_transcendence-backend-1 python3 /app/manage.py showmigration > show_migration.txt 2>&1 &
 
 sleep 5
 
 echo "Loading initals data for Django..."
-docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json
+docker exec -it ft_transcendence-backend-1 python3 /app/manage.py loaddata fixtures/initial_data.json
 
 sleep 5
 

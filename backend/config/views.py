@@ -2,11 +2,11 @@ import threading
 import random
 import time
 from rest_framework import viewsets
-from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework import status
+from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
-from config.models import Tournament, PongGame, TicTacToeGame, MatchmakingQueue
+from config.models import Tournament, PongGame, TicTacToeGame
 from config.serializers import UserSerializer
 from config.ai import PongAI, TicTacToeAI
 from django.utils import timezone
@@ -42,96 +42,45 @@ class UserViewSet(viewsets.ModelViewSet):
 	queryset = User.objects.all()
 	serializer_class = UserSerializer
 
-def start_matchmaking():
-	"""
-	Trouve deux joueurs et les appaire pour une partie.
-	"""
-	for game_type in ["pong", "tictactoe"]:
-		players_waiting = MatchmakingQueue.objects.filter(game_type=game_type).order_by("joined_at")
 
-		while players_waiting.count() >= 2:
-			try:
-				player1 = players_waiting.first()
-				player2 = players_waiting[1]
-
-				if game_type == "pong":
-					PongGame.objects.create(
-						player1=player1.user,
-						player2=player2.user,
-						created_at=timezone.now(),
-					)
-				elif game_type == "tictactoe":
-					TicTacToeGame.objects.create(
-						player1=player1.user,
-						player2=player2.user,
-						created_at=timezone.now(),
-					)
-
-				print(f"🎮 Match trouvé : {player1.user.username} VS {player2.user.username} ({game_type})")
-
-				# Supprimer les joueurs de la file d'attente
-				player1.delete()
-				player2.delete()
-
-			except Exception as e:
-				print(f"⚠️ Erreur lors du matchmaking: {e}")
-
-def run_matchmaking():
-	"""
-	Exécute le matchmaking en arrière-plan.
-	"""
-	print("🚀 Démarrage du matchmaking en arrière-plan...")
-	while True:
-		try:
-			start_matchmaking()
-		except Exception as e:
-			print(f"❌ Erreur dans le matchmaking: {e}")
-		time.sleep(10)
-
-def matchmaking_ready():
-	try:
-		MatchmakingQueue.objects.first()
-		return True
-	except Exception as e:
-		print(f"⚠️ Impossible de vérifier `MatchmakingQueue`: {e}")
-		return False
-
-# Lancer le matchmaking en arrière-plan dès le démarrage du serveur
-if matchmaking_ready():
-	threading.Thread(target=run_matchmaking, daemon=True).start()
-else:
-	print("⚠️ Matchmaking désactivé car `MatchmakingQueue` n'existe pas.")
-
-# API pour join queue
+# API pour join tournament
 @api_view(["POST"])
-def join_matchmaking(request):
+def join_tournament(request, tournament_id):
 	"""
-	Ajoute un joueur à la file d'attente
+	Permet à un utilisateur de rejoindre un tournoi directement
 	"""
+	tournament = get_object_or_404(Tournament, id=tournament_id)
 	user = request.user
-	game_type = request.data.get("game_type")
 
-	if game_type not in ["pong", "tictactoe"]:
-		return Response({"error": "Invalid game type"}, status=400)
+	if user in tournament.players.all():
+		return Response({"message": "Vous êtes déjà inscrit à ce tournoi."}, status=status.HTTP_400_BAD_REQUEST)
 
-	# Vérifier si l'utilisateur est déjà en matchmaking
-	if MatchmakingQueue.objects.filter(user=user, game_type=game_type).exists():
-		return Response({"error": "User already in matchmaking"}, status=400)
+	tournament.players.add(user)
+	return Response({"message": "Inscription réussie."}, status=status.HTTP_200_OK)
 
-	MatchmakingQueue.objects.create(user=user, game_type=game_type)
-	return Response({"message": "Player added to matchmaking queue"})
+# Api pour voir tournament
+@api_view(["GET"])
+def list_tournaments(request):
+	"""
+	Retourne la liste des tournois disponibles
+	"""
+	tournaments = Tournament.objects.all().values("id", "name")
+	return Response({"tournaments": list(tournaments)}, status=status.HTTP_200_OK)
 
-# API pour quit queue
+# API pour leave tournament
 @api_view(["POST"])
-def leave_matchmaking(request):
+def leave_tournament(request, tournament_id):
 	"""
-	Retire un joueur de la file d'attente
+	Permet à un utilisateur de quitter un tournoi
 	"""
+	tournament = get_object_or_404(Tournament, id=tournament_id)
 	user = request.user
-	game_type = request.data.get("game_type")
 
-	MatchmakingQueue.objects.filter(user=user, game_type=game_type).delete()
-	return Response({"message": "Player removed from matchmaking queue"})
+	if user not in tournament.players.all():
+		return Response({"message": "Vous n'êtes pas inscrit à ce tournoi."}, status=status.HTTP_400_BAD_REQUEST)
+
+	tournament.players.remove(user)
+	return Response({"message": "Vous avez quitté le tournoi avec succès."}, status=status.HTTP_200_OK)
 
 # API pour IA
 @api_view(["POST"])
@@ -181,7 +130,9 @@ def tictactoe_ai_move(request):
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
-    """ Authentification de l'utilisateur """
+    """
+	Authentification de l'utilisateur
+	"""
     username = request.data.get('username')
     password = request.data.get('password')
 
@@ -202,7 +153,9 @@ def login_view(request):
 # API pour langage
 @api_view(["POST"])
 def set_language(request):
-	"""Change la langue de l'utilisateur."""
+	"""
+	Change la langue de l'utilisateur.
+	"""
 	language = request.data.get("language")
 
 	if language in dict(settings.LANGUAGES):
@@ -216,7 +169,9 @@ User = get_user_model()
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-    """ Inscription d'un utilisateur """
+    """
+	Inscription d'un utilisateur
+	"""
     username = request.data.get('username')
     email = request.data.get('email')
     password = request.data.get('password')
@@ -245,7 +200,9 @@ def register(request):
 @api_view(["GET"])
 @permission_classes([IsAuthenticated])
 def get_current_user(request):
-    """ Renvoie les informations de l'utilisateur connecté """
+    """
+	Renvoie les informations de l'utilisateur connecté
+	"""
     try:
         token = request.headers.get('Authorization').split(' ')[1]  # Récupère le token de l'en-tête
         UntypedToken(token)  # Vérifie si le token est valide
