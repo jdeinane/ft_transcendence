@@ -247,9 +247,12 @@ def register(request):
 def get_current_user(request):
     """ Renvoie les informations de l'utilisateur connecté """
     try:
-        token = request.headers.get('Authorization').split(' ')[1]  # Récupère le token de l'en-tête
+        token = request.headers.get('Authorization', '').split(' ')[1]  # Récupère le token
+        print("🛠️ Token reçu dans Django:", token)  # Debug
+
         UntypedToken(token)  # Vérifie si le token est valide
         user = request.user
+
         return Response({
             "id": user.id,
             "username": user.username,
@@ -257,4 +260,44 @@ def get_current_user(request):
             "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
         })
     except Exception as e:
+        print("❌ Erreur de token:", str(e))
         return Response({"error": "Token invalide ou expiré"}, status=403)
+
+@api_view(["POST"])
+@permission_classes([IsAuthenticated])
+def update_avatar(request):
+    """
+    Met à jour l'avatar de l'utilisateur authentifié.
+    """
+    token = request.headers.get('Authorization', '').split(' ')[1]
+    print(f"🛠️ Token reçu dans Django: {token}")  # Debugging du token reçu
+
+    user = request.user
+    if not user.is_authenticated:
+        print("❌ Utilisateur non authentifié")
+        return Response({"error": "Non authentifié"}, status=401)
+
+    print(f"🛠️ Utilisateur authentifié: {user.username}")
+
+    new_avatar_url = request.data.get("avatar_url")
+
+    # Vérifie si l'avatar est valide
+    valid_avatars = [
+        "avataralien.png",
+        "avatarboy1.png",
+        "avatarboy2.png",
+        "avatargirl1.png",
+        "avatargirl2.png"
+    ]
+
+    if new_avatar_url not in valid_avatars:
+        print("❌ Avatar non valide:", new_avatar_url)
+        return Response({"error": "Avatar non valide"}, status=400)
+
+    # Mettre à jour l'avatar dans la base de données
+    user.avatar_url = new_avatar_url
+    user.save()
+
+    print(f"✅ Avatar mis à jour: {new_avatar_url} pour {user.username}")
+
+    return Response({"message": "Avatar mis à jour avec succès", "avatar_url": user.avatar_url})

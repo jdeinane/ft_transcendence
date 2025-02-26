@@ -16,6 +16,8 @@ import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
 import { setupTournament } from "./tournament.js";
 import { setupLeaderboard } from "./leaderboard.js";
+import { loadProfile, loadEditProfile } from "./profile.js";
+import { refreshToken } from "./user.js";
 
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
@@ -79,67 +81,11 @@ export function navigate(path, addToHistory = true) {
 	  }
 
 	if (cleanPath === "/profile") {
-		const user = getCurrentUser();
-		if (!user)
-				navigate("#/login");
-		else {
-			setTimeout(() => {
-				const avatarImg = document.getElementById("avatar-img");
-				const savedAvatar = localStorage.getItem("selectedAvatar");
-				if (savedAvatar) {
-					avatarImg.src = savedAvatar;
-				}
-
-			const editProfileBtn = document.getElementById("edit-profile-btn");
-			if (editProfileBtn) {
-				editProfileBtn.addEventListener("click", () => {
-					navigate("#/edit-profile");
-				});
-			}
-
-			const logoutBtn = document.getElementById("logout-btn");
-			if (logoutBtn) {
-				logoutBtn.addEventListener("click", () => {
-					logoutUser();
-					updateHeaderAvatar();
-					navigate("#/");
-				});
-			}
-		}, 50); 
+		loadProfile();
 	}
-}
 	  
 	if (cleanPath === "/edit-profile") {
-		const avatarImg = document.getElementById("avatar-img");
-		const avatarOptions = document.querySelectorAll(".avatar-option");
-		const saveAvatarBtn = document.getElementById("save-avatar-btn");
-		const cancelEditBtn = document.getElementById("cancel-edit-btn");
-	
-		const savedAvatar = localStorage.getItem("selectedAvatar");
-		if (savedAvatar) {
-			avatarImg.src = savedAvatar;
-		}
-	
-		avatarOptions.forEach(avatar => {
-			avatar.addEventListener("click", () => {
-				avatarOptions.forEach(a => a.classList.remove("selected"));
-				avatar.classList.add("selected");
-				avatarImg.src = avatar.src;
-			});
-		});
-	
-		saveAvatarBtn.addEventListener("click", () => {
-			const selectedAvatar = avatarImg.src;
-			localStorage.setItem("selectedAvatar", selectedAvatar);
-			
-			updateHeaderAvatar(); // Met à jour l'avatar dans le header
-			navigate("#/profile"); // Retour au profil après sauvegarde
-		});
-		
-	
-		cancelEditBtn.addEventListener("click", () => {
-			navigate("#/profile");
-		});
+		loadEditProfile();
 	}
 		
 	if (cleanPath === "/") {
