@@ -11,5 +11,5 @@ channels-redis
 daphne>=4.0
 
 # 2FA et JWT
-django-rest-framework-simplejwt
+djangorestframework-simplejwt==5.3.1
 pyotp==2.8.0
