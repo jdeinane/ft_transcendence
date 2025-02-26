@@ -1,3 +1,5 @@
+version: '3.3'
+
 services:
   backend:
     image: ft_transcendence_backend
@@ -27,7 +29,7 @@ services:
       - postgres_data_dev:/var/lib/postgresql/data
       - ../dockers/postgres/conf/postgres.conf:/etc/postgresql/postgresql.conf
     ports:
-      - "5432:5432"
+      - "${POSTGRES_PORT}:${POSTGRES_PORT}"
     networks:
       - ft_transcendence_network
 

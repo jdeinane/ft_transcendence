@@ -1,6 +1,7 @@
 import threading, random, time, pyotp
 from datetime import datetime, timedelta
-from rest_framework import viewsets, status
+from rest_framework import views, viewsets, status
+from rest_framework.views import APIView
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
@@ -11,9 +12,11 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from config.models import Tournament, PongGame, TicTacToeGame, UserTwoFactor
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
+from config.utils import generate_and_send_2fa_code
+from config.utils import generate_otp_secret
 from django.conf import settings
 from django.db import connections
-from django.utils import timezone, generate_and_send_2fa_code
+from django.utils import timezone
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
 from django.shortcuts import get_object_or_404
@@ -214,96 +217,64 @@ def get_current_user(request):
     except Exception as e:
         return Response({"error": "Token invalide ou expiré"}, status=403)
 
-class Generate2FAView(views.APIView):
+class Generate2FAView(APIView):
+	"""
+	Génère et envoie un code 2FA à l'utilisateur authentifié.
+	"""
 	permission_classes = [IsAuthenticated]
 
 	def post(self, request):
-		# Générer et envoyer le code par email
-		secret, code = generate_and_send_2fa_code(request.user)
+		try:
+			generate_and_send_2fa_code(request.user)
+			return Response({"message": "Le code 2FA a été envoyé à votre email."}, status=status.HTTP_200_OK)
+		except ValueError as e:
+			return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error": "Une erreur est survenue. Contactez le support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
-		# Sauvegarder ou mettre à jour la clé
-		two_factor, created = UserTwoFactor.objects.get_or_create(
-			user=request.user,
-			defaults={
-				'secret_key': secret,
-				'is_enabled': False,
-				'code_expiry': timezone.now() + timedelta(minutes=10)
-			}
-		)
-		if not created:
-			two_factor.secret_key = secret
-			two_factor.code_expiry = timezone.now() + timedelta(minutes=10)
-			two_factor.save()
-
-		return Response({
-			'message': 'Code de vérification envoyé par email',
-			'expires_in': '10 minutes'
-		})
-
-class Enable2FAView(views.APIView):
+class Enable2FAView(APIView):
+	"""
+	Active le 2FA pour un utilisateur en générant un secret OTP
+	"""
 	permission_classes = [IsAuthenticated]
 
 	def post(self, request):
-		serializer = Enable2FASerializer(data=request.data)
-		if serializer.is_valid():
-			try:
-				two_factor = UserTwoFactor.objects.get(user=request.user)
+		user = request.user
+		if user.two_factor_secret:
+			return Response({"message": "Le 2FA est déjà activé."}, status=400)
 
-				# Vérifier si le code n'a pas expiré
-				if timezone.now() > two_factor.code_expiry:
-					return Response(
-						{'error': 'Code expiré'},
-						status=status.HTTP_400_BAD_REQUEST
-					)
+		user.two_factor_secret = generate_otp_secret()
+		user.save()
+        
+		return Response({"message": "2FA activé avec succès.", "otp_secret": user.two_factor_secret}, status=200)
 
-				totp = pyotp.TOTP(two_factor.secret_key, interval=600)
-				if totp.verify(serializer.validated_data['code']):
-					two_factor.is_enabled = True
-					two_factor.save()
-					return Response({'message': '2FA activé avec succès'})
+class Verify2FAView(APIView):
+	"""
+	Vérifie un code OTP saisi par l'utilisateur
+	"""
+	permission_classes = [IsAuthenticated]
 
-				return Response(
-					{'error': 'Code invalide'},
-					status=status.HTTP_400_BAD_REQUEST
-				)
-			except UserTwoFactor.DoesNotExist:
-				return Response(
-					{'error': 'Session 2FA non trouvée'},
-					status=status.HTTP_400_BAD_REQUEST
-				)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-class Verify2FAView(views.APIView):
 	def post(self, request):
-		serializer = Verify2FASerializer(data=request.data)
-		if serializer.is_valid():
-			try:
-				two_factor = UserTwoFactor.objects.get(
-					user=request.user,
-					is_enabled=True
-				)
+		user = request.user
+		otp_code = request.data.get("otp_code")
 
-				# Générer et envoyer un nouveau code
-				secret, _ = generate_and_send_2fa_code(request.user)
-				two_factor.secret_key = secret
-				two_factor.code_expiry = timezone.now() + timedelta(minutes=10)
-				two_factor.save()
+		if not user.two_factor_secret:
+			return Response({"error": "Le 2FA n'est pas activé."}, status=400)
 
-				totp = pyotp.TOTP(two_factor.secret_key, interval=600)
-				if totp.verify(serializer.validated_data['code']):
-					refresh = RefreshToken.for_user(request.user)
-					return Response({
-						'refresh': str(refresh),
-						'access': str(refresh.access_token),
-					})
+		totp = pyotp.TOTP(user.two_factor_secret)
+		if totp.verify(otp_code):
+			return Response({"message": "Vérification réussie."}, status=200)
+		else:
+			return Response({"error": "Code 2FA invalide."}, status=400)
 
-				return Response(
-					{'error': 'Code invalide'},
-					status=status.HTTP_400_BAD_REQUEST
-				)
-			except UserTwoFactor.DoesNotExist:
-				return Response(
-					{'error': '2FA non activé'},
-					status=status.HTTP_400_BAD_REQUEST
-				)
-		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+class Disable2FAView(APIView):
+	"""
+	Désactive le 2FA pour un utilisateur
+	"""
+	permission_classes = [IsAuthenticated]
+
+	def post(self, request):
+		user = request.user
+		user.two_factor_secret = None
+		user.save()
+		return Response({"message": "2FA désactivé avec succès."}, status=200)
