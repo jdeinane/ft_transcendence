@@ -3,7 +3,7 @@ import random
 import time
 from rest_framework import viewsets
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny
+from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from config.models import Tournament, PongGame, TicTacToeGame, MatchmakingQueue
@@ -16,7 +16,7 @@ from django.utils.translation import gettext as _
 from django.db import connections
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate
-from rest_framework_simplejwt.tokens import RefreshToken
+from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 
 User = get_user_model()
 
@@ -243,14 +243,18 @@ def register(request):
         return Response({'error': 'Erreur interne lors de la création de l’utilisateur'}, status=500)
 
 @api_view(["GET"])
+@permission_classes([IsAuthenticated])
 def get_current_user(request):
     """ Renvoie les informations de l'utilisateur connecté """
-    user = request.user
-    if user.is_authenticated:
+    try:
+        token = request.headers.get('Authorization').split(' ')[1]  # Récupère le token de l'en-tête
+        UntypedToken(token)  # Vérifie si le token est valide
+        user = request.user
         return Response({
             "id": user.id,
             "username": user.username,
             "email": user.email,
             "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
         })
-    return Response({"error": "Non authentifié"}, status=401)
+    except Exception as e:
+        return Response({"error": "Token invalide ou expiré"}, status=403)

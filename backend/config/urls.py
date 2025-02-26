@@ -14,5 +14,5 @@ urlpatterns = [
     path('api/set-language/', set_language, name="set_language"),
     path('api/auth/register/', register, name="register"),
 	path('api/auth/login/', login_view, name="login"),
-	    path('api/auth/me/', get_current_user, name="me"),
+	path('api/auth/me/', get_current_user, name="me"),
 ]
