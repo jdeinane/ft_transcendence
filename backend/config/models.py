@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractBaseUser, BaseUserManager, PermissionsMixin
+from django.contrib.auth import get_user_model
 
 class UserManager(BaseUserManager):
 	def create_user(self, username, email, password=None):
@@ -126,3 +127,15 @@ class MatchmakingQueue(models.Model):
 
 	def __str__(self):
 		return f"{self.user.username} - {self.game_type}"
+
+# 2FA
+User = get_user_model()
+
+class UserTwoFactor(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	secret_key = models.CharField(max_length=32, blank=True)
+	is_enabled = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"2FA for {self.user.username}"
