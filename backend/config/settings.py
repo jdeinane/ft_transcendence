@@ -32,6 +32,7 @@ INSTALLED_APPS = [
     "django.contrib.staticfiles",
     "rest_framework",  # API REST Django
     "config",  # application principale
+	"rest_framework_simplejwt", # JWT
 ]
 
 # --------------------

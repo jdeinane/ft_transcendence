@@ -12,4 +12,4 @@ daphne>=4.0
 
 # 2FA et JWT
 django-rest-framework-simplejwt
-pyotp
+pyotp==2.8.0
