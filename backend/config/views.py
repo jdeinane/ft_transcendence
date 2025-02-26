@@ -1,21 +1,21 @@
-import threading
-import random
-import time
+import threading, random, time, pyotp
+from datetime import datetime, timedelta
 from rest_framework import viewsets, status
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
+from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from config.models import Tournament, PongGame, TicTacToeGame
-from config.serializers import UserSerializer
+from config.models import Tournament, PongGame, TicTacToeGame, UserTwoFactor
+from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
-from django.utils import timezone
 from django.conf import settings
+from django.db import connections
+from django.utils import timezone, generate_and_send_2fa_code
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
-from django.db import connections
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate
 
@@ -213,3 +213,97 @@ def get_current_user(request):
         })
     except Exception as e:
         return Response({"error": "Token invalide ou expiré"}, status=403)
+
+class Generate2FAView(views.APIView):
+	permission_classes = [IsAuthenticated]
+
+	def post(self, request):
+		# Générer et envoyer le code par email
+		secret, code = generate_and_send_2fa_code(request.user)
+
+		# Sauvegarder ou mettre à jour la clé
+		two_factor, created = UserTwoFactor.objects.get_or_create(
+			user=request.user,
+			defaults={
+				'secret_key': secret,
+				'is_enabled': False,
+				'code_expiry': timezone.now() + timedelta(minutes=10)
+			}
+		)
+		if not created:
+			two_factor.secret_key = secret
+			two_factor.code_expiry = timezone.now() + timedelta(minutes=10)
+			two_factor.save()
+
+		return Response({
+			'message': 'Code de vérification envoyé par email',
+			'expires_in': '10 minutes'
+		})
+
+class Enable2FAView(views.APIView):
+	permission_classes = [IsAuthenticated]
+
+	def post(self, request):
+		serializer = Enable2FASerializer(data=request.data)
+		if serializer.is_valid():
+			try:
+				two_factor = UserTwoFactor.objects.get(user=request.user)
+
+				# Vérifier si le code n'a pas expiré
+				if timezone.now() > two_factor.code_expiry:
+					return Response(
+						{'error': 'Code expiré'},
+						status=status.HTTP_400_BAD_REQUEST
+					)
+
+				totp = pyotp.TOTP(two_factor.secret_key, interval=600)
+				if totp.verify(serializer.validated_data['code']):
+					two_factor.is_enabled = True
+					two_factor.save()
+					return Response({'message': '2FA activé avec succès'})
+
+				return Response(
+					{'error': 'Code invalide'},
+					status=status.HTTP_400_BAD_REQUEST
+				)
+			except UserTwoFactor.DoesNotExist:
+				return Response(
+					{'error': 'Session 2FA non trouvée'},
+					status=status.HTTP_400_BAD_REQUEST
+				)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class Verify2FAView(views.APIView):
+	def post(self, request):
+		serializer = Verify2FASerializer(data=request.data)
+		if serializer.is_valid():
+			try:
+				two_factor = UserTwoFactor.objects.get(
+					user=request.user,
+					is_enabled=True
+				)
+
+				# Générer et envoyer un nouveau code
+				secret, _ = generate_and_send_2fa_code(request.user)
+				two_factor.secret_key = secret
+				two_factor.code_expiry = timezone.now() + timedelta(minutes=10)
+				two_factor.save()
+
+				totp = pyotp.TOTP(two_factor.secret_key, interval=600)
+				if totp.verify(serializer.validated_data['code']):
+					refresh = RefreshToken.for_user(request.user)
+					return Response({
+						'refresh': str(refresh),
+						'access': str(refresh.access_token),
+					})
+
+				return Response(
+					{'error': 'Code invalide'},
+					status=status.HTTP_400_BAD_REQUEST
+				)
+			except UserTwoFactor.DoesNotExist:
+				return Response(
+					{'error': '2FA non activé'},
+					status=status.HTTP_400_BAD_REQUEST
+				)
+		return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

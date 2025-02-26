@@ -9,4 +9,7 @@ whitenoise>=6.5  # static files management in production
 channels>=4.0
 channels-redis
 daphne>=4.0
-djangorestframework-simplejwt
+
+# 2FA et JWT
+djangorestframework-simplejwt==5.3.1
+pyotp==2.8.0

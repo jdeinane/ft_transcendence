@@ -2,7 +2,7 @@ __pycache__/
 *.pyc
 *.pyo
 *.sqlite3
-venv/
+myvenv/
 .env
 
 */.DS_Store

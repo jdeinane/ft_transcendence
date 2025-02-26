@@ -1,5 +1,4 @@
-import os
-import sys
+import os, sys
 from django.core.wsgi import get_wsgi_application
 
 # définir le bon module de configuration

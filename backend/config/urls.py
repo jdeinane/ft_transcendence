@@ -1,8 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from config.views import UserViewSet, set_language, login_view, register, get_current_user
-from config.views import join_tournament, leave_tournament, list_tournaments
+from config.views import UserViewSet, set_language, login_view, register, get_current_user, join_tournament, leave_tournament, list_tournaments
 
 router = DefaultRouter()
 router.register(r'users', UserViewSet)

@@ -39,6 +39,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 		related_name="custom_user_groups",
 		blank=True
 	)
+
 	user_permissions = models.ManyToManyField(
 		"auth.Permission",
 		related_name="custom_user_permissions",
@@ -124,3 +125,12 @@ class Tournament(models.Model):
 
 	def __str__(self):
 		return self.name
+
+class UserTwoFactor(models.Model):
+	user = models.OneToOneField(User, on_delete=models.CASCADE)
+	secret_key = models.CharField(max_length=32, blank=True)
+	is_enabled = models.BooleanField(default=False)
+	created_at = models.DateTimeField(auto_now_add=True)
+
+	def __str__(self):
+		return f"2FA for {self.user.username}"
