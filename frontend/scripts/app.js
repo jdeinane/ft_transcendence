@@ -46,11 +46,11 @@ export function navigate(path, addToHistory = true) {
 		const form = document.getElementById("login-form");
 		const errorMessage = document.getElementById("login-error");
 
-		form.addEventListener("submit", (e) => {
+		form.addEventListener("submit", async (e) => {
 			e.preventDefault();
 			const username = form.username.value;
 			const password = form.password.value;
-			const loginSuccess = loginUser(username, password);
+			const loginSuccess = await loginUser(username, password);
 
 			if (loginSuccess) {
 				updateHeaderAvatar();

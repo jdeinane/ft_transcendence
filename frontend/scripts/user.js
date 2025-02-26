@@ -69,7 +69,12 @@ export async function loginUser(username, password) {
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-            await fetchUserProfile(); // Récupère les infos de l'utilisateur connecté
+            await fetchUserProfile();
+
+            setTimeout(() => {
+                navigate("#/profile");
+            },100);
+
             return true;
         } else {
             showError("login-error", data.error || "Invalid credentials");
@@ -92,7 +97,10 @@ export function logoutUser() {
 
 export async function fetchUserProfile() {
     const token = localStorage.getItem("access_token");
-    if (!token) return;
+    if (!token) {
+        console.warn("No access token found");
+        return;
+    }
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/me/`, {
