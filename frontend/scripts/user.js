@@ -69,11 +69,13 @@ export async function loginUser(username, password) {
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-            await fetchUserProfile();
+            
+            console.log("✅ Connexion réussie, récupération du profil...");
+            
+            await fetchUserProfile(); // Assure-toi que l'utilisateur est chargé
 
-            setTimeout(() => {
-                navigate("#/profile");
-            },100);
+            console.log("✅ Navigation vers le profil");
+            navigate("#/profile");
 
             return true;
         } else {
@@ -81,11 +83,12 @@ export async function loginUser(username, password) {
             return false;
         }
     } catch (error) {
-        console.error("Error:", error);
+        console.error("❌ Error:", error);
         showError("login-error", "Something went wrong");
         return false;
     }
 }
+
 
 export function logoutUser() {
     localStorage.removeItem("access_token");
@@ -113,7 +116,15 @@ export async function fetchUserProfile() {
 
         if (response.ok) {
             const user = await response.json();
+            console.log("👤 Profil utilisateur récupéré :", user);
+
+            // Construire le chemin de l'avatar
+            const avatarPath = user.avatar_url
+                ? `assets/avatars/${user.avatar_url}`
+                : "assets/avatars/avataralien.png"; // Avatar par défaut
+
             localStorage.setItem("loggedInUser", JSON.stringify(user));
+            localStorage.setItem("selectedAvatar", avatarPath);
             updateNavigation();
         } else {
             console.warn("Failed to fetch user profile");
@@ -130,10 +141,16 @@ export function getCurrentUser() {
 
 export async function refreshToken() {
     const refreshToken = localStorage.getItem("refresh_token");
-    if (!refreshToken) return;
+    if (!refreshToken) {
+        console.error("❌ Aucun refresh token trouvé, impossible de renouveler l'accès.");
+        logoutUser();
+        return;
+    }
 
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/register/`, {
+        console.log("🔄 Tentative de rafraîchissement du token...");
+
+        const response = await fetch(`${API_BASE_URL}/api/auth/token/refresh/`, {
             method: "POST",
             headers: {
                 "Content-Type": "application/json"
@@ -143,14 +160,17 @@ export async function refreshToken() {
 
         const data = await response.json();
 
+        console.log("📩 Réponse API refresh:", data);
+
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
+            console.log("✅ Token rafraîchi avec succès !");
         } else {
+            console.error("❌ Échec du rafraîchissement du token :", data);
             logoutUser();
         }
     } catch (error) {
-        console.error("Error refreshing token:", error);
+        console.error("❌ Erreur lors du rafraîchissement du token:", error);
         logoutUser();
     }
 }
-
