@@ -71,6 +71,11 @@ docker compose exec backend python /app/manage.py makemigrations config
 docker compose exec backend python /app/manage.py migrate
 docker compose exec backend python /app/manage.py migrate authtoken
 
+docker compose exec backend python manage.py makemigrations config
+docker compose exec backend python manage.py migrate
+docker compose exec backend python manage.py migrate authtoken
+
+
 
 sleep 5
 
