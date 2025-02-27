@@ -58,21 +58,32 @@ wait
 # waiting for PostgreSQL to be ready
 echo "Waiting for PostgreSQL to be ready..."
 until docker exec -it ft_transcendence-postgres-1 psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
-  echo "PostgreSQL not ready, retrying in 5 seconds..."
-  sleep 5
+  echo "PostgreSQL not ready, retrying in 10 seconds..."
+  sleep 10
 done
 echo "PostgreSQL is ready!"
 
+wait
 
 echo "Running Django migrations..."
 rm -rf backend/config/migrations/*
-docker exec -it ft_transcendence-backend-1 python /app/manage.py makemigrations config
-docker exec -it ft_transcendence-backend-1 python /app/manage.py migrate
+docker compose exec backend python /app/manage.py makemigrations config
+docker compose exec backend python /app/manage.py migrate
+docker compose exec backend python /app/manage.py migrate authtoken
+
+
+sleep 5
+
+echo "Verifying that tables exist..."
+docker compose exec backend python /app/manage.py shell <<EOF
+from django.db import connection
+print("Existing tables:", connection.introspection.table_names())
+EOF
 
 sleep 5
 
 echo "Loading initals data for Django..."
-docker exec -it ft_transcendence-backend-1 python /app/manage.py loaddata fixtures/initial_data.json
+docker compose exec backend python /app/manage.py loaddata fixtures/initial_data.json
 
 sleep 5
 

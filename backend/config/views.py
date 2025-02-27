@@ -12,8 +12,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from config.models import Tournament, PongGame, TicTacToeGame, UserTwoFactor
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
-from config.utils import generate_and_send_2fa_code
-from config.utils import generate_otp_secret
+from config.utils import generate_and_send_2fa_code, generate_otp_secret
 from django.conf import settings
 from django.db import connections
 from django.utils import timezone
@@ -260,21 +259,6 @@ def update_avatar(request):
 
     return Response({"message": "Avatar mis à jour avec succès", "avatar_url": user.avatar_url})
 
-class Generate2FAView(APIView):
-	"""
-	Génère et envoie un code 2FA à l'utilisateur authentifié.
-	"""
-	permission_classes = [IsAuthenticated]
-
-	def post(self, request):
-		try:
-			generate_and_send_2fa_code(request.user)
-			return Response({"message": "Le code 2FA a été envoyé à votre email."}, status=status.HTTP_200_OK)
-		except ValueError as e:
-			return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
-		except Exception as e:
-			return Response({"error": "Une erreur est survenue. Contactez le support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
-
 class Enable2FAView(APIView):
 	"""
 	Active le 2FA pour un utilisateur en générant un secret OTP
@@ -290,6 +274,21 @@ class Enable2FAView(APIView):
 		user.save()
         
 		return Response({"message": "2FA activé avec succès.", "otp_secret": user.two_factor_secret}, status=200)
+
+class Generate2FAView(APIView):
+	"""
+	Génère et envoie un code 2FA à l'utilisateur authentifié.
+	"""
+	permission_classes = [IsAuthenticated]
+
+	def post(self, request):
+		try:
+			generate_and_send_2fa_code(request.user)
+			return Response({"message": "Le code 2FA a été envoyé à votre email."}, status=status.HTTP_200_OK)
+		except ValueError as e:
+			return Response({"error": str(e)}, status=status.HTTP_400_BAD_REQUEST)
+		except Exception as e:
+			return Response({"error": "Une erreur est survenue. Contactez le support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class Verify2FAView(APIView):
 	"""
