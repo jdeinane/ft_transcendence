@@ -1,6 +1,15 @@
 import { navigate } from "./app.js"
 import { logoutUser, refreshToken } from "./user.js";
 
+let player1Score = 0;
+let player2Score = 0;
+let player3Score = 0;
+let player4Score = 0;
+let gameOver = false;
+let ballX, ballY;
+let ballSpeedX = 3;
+let ballSpeedY = 3;
+
 export function setupPongGame() {
 	let selectedMode = "solo";
 	let playerCount = 2;
@@ -64,8 +73,8 @@ export function setupPongGame() {
 export function startPongGame(canvas, isSinglePlayer, playerCount) {
 	const ctx = canvas.getContext("2d");
 
-	let ballX = canvas.width / 2;
-	let ballY = canvas.height / 2;
+	ballX = canvas.width / 2;
+	ballY = canvas.height / 2;
 	let ballSpeedX = 3;
 	let ballSpeedY = 3;
   
@@ -82,15 +91,7 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 	let paddle4X = canvas.width / 2 - paddleHeight / 2;
 	let paddle3Y = 0;
 	let paddle4Y = canvas.height - paddleWidth;
-	
-
-	let player1Score = 0;
-	let player2Score = 0;
-	let player3Score = 0;
-	let player4Score = 0;
-  
-	const aiSpeed = 2;
-  
+	  
 	const keys = {
 	  w: false,
 	  s: false,
@@ -186,9 +187,13 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 	
 		if (ballX <= 0) {
 			player2Score++;
+			if (player2Score >= 5)
+				return endGame(2);
 			resetBall();
 		} else if (ballX >= canvas.width) {
 			player1Score++;
+			if (player1Score >= 5)
+				return endGame(1);
 			resetBall();
 		}
 			
@@ -255,8 +260,37 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 		ballY = canvas.height / 2;
 		ballSpeedX = -ballSpeedX;
 		}
-  
+
+	function endGame(winner) {
+		if (gameOver) return;
+		gameOver = true;
+	
+		alert(`🏆 Player ${winner} won !`);
+	
+		const canvas = document.getElementById("pong");
+		const backButton = document.getElementById("back-to-mode-selection");
+		const modeSelectionContainer = document.querySelector(".mode-selection-container");
+	
+		if (canvas) {
+			canvas.style.display = "none";
+		}
+	
+		if (backButton) {
+			backButton.style.display = "none";
+		}
+	
+		if (modeSelectionContainer) {
+			modeSelectionContainer.style.display = "block";
+		}
+	
+		setTimeout(resetGame, 500);
+	}
+		
+		
+		
 	function gameLoop() {
+		if (gameOver)
+			return;
 		draw();
 		update();
 		requestAnimationFrame(gameLoop);
@@ -324,8 +358,6 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 }
 
 /////////// TOURNAMENT VERSION
-let gameOver = false;
-
 export function startTournamentPongGame(player1, player2, onGameEnd) {
 
 	resetGame();
@@ -343,9 +375,29 @@ export function startTournamentPongGame(player1, player2, onGameEnd) {
 
 function resetGame() {
     gameOver = false;
-	const gameContainer = document.getElementById("pong-container");
-	gameContainer.innerHTML = "";
+
+    player1Score = 0;
+    player2Score = 0;
+    player3Score = 0;
+    player4Score = 0;
+
+    ballX = window.innerWidth / 2; 
+    ballY = window.innerHeight / 2;
+    ballSpeedX = 4;
+    ballSpeedY = 4;
+
+    const gameContainer = document.getElementById("pong-container");
+    const canvas = document.getElementById("pong"); 
+
+    if (gameContainer) {
+        gameContainer.innerHTML = "";
+    }
+
+    if (canvas) {
+        canvas.style.display = "none";
+    }
 }
+
 
 function startTournamentGameLogic(player1, player2, onGameEnd) {
     const canvas = document.getElementById("pong");
