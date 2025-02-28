@@ -156,10 +156,35 @@ export async function check2FAStatus() {
 
         console.log("🔍 2FA activé :", is2FAEnabled);
 
-        document.getElementById("activate-2fa-btn").style.display = is2FAEnabled ? "none" : "block";
-        document.getElementById("deactivate-2fa-btn").style.display = is2FAEnabled ? "block" : "none";
+        // Vérifie si les boutons existent avant d'essayer de modifier leur style
+        const activateBtn = document.getElementById("activate-2fa-btn");
+        const deactivateBtn = document.getElementById("deactivate-2fa-btn");
+
+        if (activateBtn && deactivateBtn) {
+            activateBtn.style.display = is2FAEnabled ? "none" : "block";
+            deactivateBtn.style.display = is2FAEnabled ? "block" : "none";
+        } else {
+            console.warn("⚠ Les boutons 2FA ne sont pas présents dans le DOM.");
+        }
 
     } catch (error) {
         console.error("❌ Erreur lors de la vérification du 2FA :", error);
     }
 }
+
+function waitFor2FAButtons() {
+    const observer = new MutationObserver((mutations, obs) => {
+        const activateBtn = document.getElementById("activate-2fa-btn");
+        const deactivateBtn = document.getElementById("deactivate-2fa-btn");
+
+        if (activateBtn && deactivateBtn) {
+            console.log("✅ Boutons 2FA détectés, lancement de check2FAStatus...");
+            check2FAStatus();
+            obs.disconnect();
+        }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+}
+
+waitFor2FAButtons();
