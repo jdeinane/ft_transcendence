@@ -1,5 +1,6 @@
 import { navigate } from "./app.js";
 import { refreshToken } from "./user.js";
+import { check2FAStatus } from "./2fa.js"
 
 export function getCurrentUser() {
     return JSON.parse(localStorage.getItem("loggedInUser"));
@@ -120,3 +121,5 @@ export async function saveAvatar(selectedAvatar) {
         console.error("❌ Error updating avatar:", error);
     }
 }
+
+document.addEventListener("DOMContentLoaded", check2FAStatus);
