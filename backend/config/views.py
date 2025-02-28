@@ -13,6 +13,7 @@ from config.models import Tournament, PongGame, TicTacToeGame, UserTwoFactor
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
 from config.utils import generate_and_send_2fa_code, generate_otp_secret
+from django.http import JsonResponse
 from django.conf import settings
 from django.db import connections
 from django.utils import timezone
@@ -315,3 +316,37 @@ class Disable2FAView(APIView):
 		user.two_factor_secret = None
 		user.save()
 		return Response({"message": "2FA désactivé avec succès."}, status=200)
+	
+def verify_2fa(request):
+	if request.method == "POST":
+		data = json.loads(request.body)
+		otp_code = data.get("otp_code", "")
+
+		user = request.user
+		if not user.two_factor_secret:
+			return JsonResponse({"error": "2FA non activé."}, status=400)
+
+		totp = pyotp.TOTP(user.two_factor_secret)
+		if totp.verify(otp_code, valid_window=1):
+			user.register_2fa_success()
+			user.set_token_expiry()
+
+			return JsonResponse({"message": "2FA vérifié avec succès. Token valide 30 minutes."})
+
+		user.register_2fa_failure()
+		if user.failed_2fa_attempts >= 5:
+			return JsonResponse({"error": "Trop de tentatives échouées. Essayez plus tard."}, status=403)
+
+		return JsonResponse({"error": "Code 2FA invalide."}, status=400)
+
+def check_token_expiry(user):
+	if user.is_token_expired():
+		return JsonResponse({"error": "Token expiré. Veuillez vous reconnecter."}, status=401)
+	return None
+
+def protected_view(request):
+	response = check_token_expiry(request.user)
+	if response:
+		return response
+
+	return JsonResponse({"message": "Accès autorisé avec Token valide."})

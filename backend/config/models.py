@@ -1,3 +1,4 @@
+from datetime import date, time, datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.apps import apps
@@ -33,6 +34,10 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
+	token_expiry = models.DateTimeField(null=True, blank=True)
+	is_2fa_enabled = models.BooleanField(default=False)
+	last_2fa_verified = models.DateTimeField(null=True, blank=True)
+	failed_2fa_attempts = models.IntegerField(default=0)
 
 	groups = models.ManyToManyField(
 		"auth.Group",
@@ -45,6 +50,34 @@ class User(AbstractBaseUser, PermissionsMixin):
 		related_name="custom_user_permissions",
 		blank=True
 	)
+
+	def set_token_expiry(self):
+		"""
+		Définit l'expiration du Token après vérification du 2FA.
+		"""
+		self.token_expiry = now() + timedelta(minutes=30)
+		self.save()
+
+	def set_token_expiry(self):
+		"""
+		Vérifie si le Token est encore valide.
+		"""
+		return self.token_expiry is None or now() < self.token_expiry
+
+	def register_2fa_success(self):
+		"""
+		Met à jour la dernière vérification et réinitialise les échecs.
+		"""
+		self.last_2fa_verified = now()
+		self.failed_2fa_attempts = 0
+		self.save()
+	
+	def register_2fa_failure(self):
+		"""
+		Incrémente le compteur d'échecs de 2FA.
+		"""
+		self.failed_2fa_attempts += 1
+		self.save()
 
 	objects = UserManager()
 
