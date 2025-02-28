@@ -1,5 +1,9 @@
 FROM nginx:1.27
 
+# forcer le bon fuseau horaire
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # remove default nginx configuration
 RUN rm -rf /etc/nginx/conf.d/default.conf
 

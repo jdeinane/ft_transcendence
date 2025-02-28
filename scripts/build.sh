@@ -42,20 +42,19 @@ then
     export DOCKER_HOST="unix://$HOME/.colima/default/docker.sock"
 fi
 
-echo "Rebuilding Docker containers..."
 wait
+echo "Building Docker containers..."
 
-# start dev environment
+docker network create ft_transcendence_network || true
+
 echo "Starting development environment..."
 docker compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>&1 &
 
-# start prod environment
 echo "Starting production environment..."
 docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
 
 wait
 
-# waiting for PostgreSQL to be ready
 echo "Waiting for PostgreSQL to be ready..."
 until docker exec -it ft_transcendence-postgres-1 psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
   echo "PostgreSQL not ready, retrying in 10 seconds..."
@@ -63,29 +62,29 @@ until docker exec -it ft_transcendence-postgres-1 psql -U admin -d ft_transcende
 done
 echo "PostgreSQL is ready!"
 
-wait
-
 echo "Running Django migrations..."
-rm -rf backend/config/migrations/*
-docker compose exec backend python /app/manage.py makemigrations config
-docker compose exec backend python /app/manage.py migrate
+docker compose exec backend python /app/manage.py makemigrations --noinput
+docker compose exec backend python /app/manage.py migrate --noinput
 docker compose exec backend python /app/manage.py migrate authtoken
-
-docker compose exec backend python manage.py makemigrations config
-docker compose exec backend python manage.py migrate
-docker compose exec backend python manage.py migrate authtoken
-
-
 
 sleep 5
 
+# ensure 'config_user' exists before loading 'fixtures'
 echo "Verifying that tables exist..."
 docker compose exec backend python /app/manage.py shell <<EOF
 from django.db import connection
-print("Existing tables:", connection.introspection.table_names())
+tables = connection.introspection.table_names()
+if "config_user" in tables:
+    print("Table `config_user` found, loading allowed fixtures")
+else:
+    print("Table `config_user` not found. Cannot load fixtures")
+    exit(1)
 EOF
 
 sleep 5
+
+echo "Checking applied migrations..."
+docker compose exec backend python /app/manage.py showmigrations
 
 echo "Loading initals data for Django..."
 docker compose exec backend python /app/manage.py loaddata fixtures/initial_data.json

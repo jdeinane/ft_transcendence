@@ -1,6 +1,10 @@
 # utilisation de l'image Python légère
 FROM python:3.11-slim
 
+# forcer le bon fuseau horaire
+ENV TZ=Europe/Paris
+RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+
 # installation des dépendances système
 RUN apt-get update -y && \
     apt-get install -y bash sudo passwd python3-venv python3-pip postgresql-client gettext && \
