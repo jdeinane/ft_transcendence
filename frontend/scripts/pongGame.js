@@ -1,4 +1,5 @@
 import { navigate } from "./app.js"
+import { logoutUser, refreshToken } from "./user.js";
 
 export function setupPongGame() {
 	let selectedMode = "solo";
@@ -159,7 +160,7 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 		if (playerCount === 4 && loser !== 4) player4Score++;
 	}
 	
-	function update() {
+	async function update() {
 		ballX += ballSpeedX;
 		ballY += ballSpeedY;
 	
@@ -222,12 +223,9 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 			if (keys.i) paddle2Y -= 5;
 			if (keys.k) paddle2Y += 5;
 		} else {
-			if (ballY < paddle2Y + paddleHeight / 2) {
-			paddle2Y -= aiSpeed;
-			} else {
-			paddle2Y += aiSpeed;
+			const aiMove = await fetchAIMove(ballY, paddle2Y, Math.abs(ballSpeedY), "medium");
+			paddle2Y += aiMove * 2;
 			}
-		}
 		
 		if (playerCount >= 3) {
 			if (keys.r)
@@ -474,4 +472,68 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
 	}
 	
     gameLoop();
+}
+
+async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
+    let token = localStorage.getItem("access_token");
+
+    if (!token) {
+        console.error("❌ Aucun token JWT trouvé. Impossible d'appeler l'IA du backend.");
+        logoutUser();
+        return 0;
+    }
+
+    try {
+        let response = await fetch("http://127.0.0.1:4000/api/game/ai-move/", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({
+                ball_position: ballY,
+                paddle_position: paddleY,
+                difficulty: difficulty
+            })
+        });
+
+        if (response.status === 401) {  
+            console.warn("🔄 Token expiré, tentative de rafraîchissement...");
+
+            const refreshed = await refreshToken();
+
+            if (!refreshed) {
+                console.error("🔴 Impossible de rafraîchir le token, déconnexion...");
+                logoutUser();
+                return 0;
+            }
+
+            token = localStorage.getItem("access_token");
+            response = await fetch("http://127.0.0.1:4000/api/game/ai-move/", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({
+                    ball_position: ballY,
+                    paddle_position: paddleY,
+                    difficulty: difficulty
+                })
+            });
+        }
+
+        if (!response.ok) {
+            console.error(`❌ Erreur API IA (Status ${response.status})`);
+            return 0;
+        }
+
+        const data = await response.json();
+        console.log(`🤖 Backend AI Move: ${data.move}`);
+        return data.move; 
+
+    } catch (error) {
+        console.error("❌ Erreur lors de la récupération du mouvement de l'IA :", error);
+        return 0;
+    }
 }

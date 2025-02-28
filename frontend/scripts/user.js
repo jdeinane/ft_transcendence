@@ -99,10 +99,12 @@ export function logoutUser() {
 }
 
 export async function fetchUserProfile() {
-    const token = localStorage.getItem("access_token");
+    let token = localStorage.getItem("access_token");
     if (!token) {
-        console.warn("No access token found");
-        return;
+        console.warn("No access token found, trying to refresh...");
+        const refreshed = await refreshToken();
+        if (!refreshed) return;
+        token = localStorage.getItem("access_token");
     }
 
     try {
@@ -117,14 +119,7 @@ export async function fetchUserProfile() {
         if (response.ok) {
             const user = await response.json();
             console.log("👤 Profil utilisateur récupéré :", user);
-
-            // Construire le chemin de l'avatar
-            const avatarPath = user.avatar_url
-                ? `assets/avatars/${user.avatar_url}`
-                : "assets/avatars/avataralien.png"; // Avatar par défaut
-
             localStorage.setItem("loggedInUser", JSON.stringify(user));
-            localStorage.setItem("selectedAvatar", avatarPath);
             updateNavigation();
         } else {
             console.warn("Failed to fetch user profile");
@@ -144,12 +139,10 @@ export async function refreshToken() {
     if (!refreshToken) {
         console.error("❌ Aucun refresh token trouvé, impossible de renouveler l'accès.");
         logoutUser();
-        return;
+        return false;
     }
 
     try {
-        console.log("🔄 Tentative de rafraîchissement du token...");
-
         const response = await fetch(`${API_BASE_URL}/api/auth/token/refresh/`, {
             method: "POST",
             headers: {
@@ -160,17 +153,18 @@ export async function refreshToken() {
 
         const data = await response.json();
 
-        console.log("📩 Réponse API refresh:", data);
-
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
             console.log("✅ Token rafraîchi avec succès !");
+            return true;
         } else {
             console.error("❌ Échec du rafraîchissement du token :", data);
             logoutUser();
+            return false;
         }
     } catch (error) {
         console.error("❌ Erreur lors du rafraîchissement du token:", error);
         logoutUser();
+        return false;
     }
 }

@@ -86,6 +86,7 @@ def leave_tournament(request, tournament_id):
 
 # API pour IA
 @api_view(["POST"])
+@permission_classes([AllowAny])
 def pong_ai_move(request):
 	"""
 	Retourne le mouvement de l'IA en fonction de la position de la balle
@@ -97,14 +98,8 @@ def pong_ai_move(request):
 
 	ai = PongAI(difficulty)
 	move = ai.move(ball_position, paddle_position)
+	return Response({"move": move})
 
-	# Simule un score pour rendre l'IA plus réaliste
-	score_ai = random.randint(0, 10)
-	score_player = random.randint(0, 10)
-
-	print(f"🤖 PongAI ({difficulty}) - Move: {move}, Score AI: {score_ai}, Score Player: {score_player}")
-
-	return Response({"move": move, "ai_score": score_ai, "player_score": score_player})
 
 @api_view(["POST"])
 def tictactoe_ai_move(request):
@@ -155,7 +150,7 @@ def login_view(request):
     if not username or not password:
         return Response({'error': 'Nom d’utilisateur et mot de passe requis'}, status=400)
 
-    user = authenticate(username=username, password=password)
+    user = authenticate(username=request.data["username"], password=request.data["password"])
 
     if user is not None:
         refresh = RefreshToken.for_user(user)
