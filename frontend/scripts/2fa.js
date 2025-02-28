@@ -152,11 +152,10 @@ export async function check2FAStatus() {
         }
 
         const userData = await response.json();
-        const is2FAEnabled = userData.two_factor_secret !== null; // 🔴 Vérifie que ce champ existe bien
+        const is2FAEnabled = userData.two_factor_secret !== null;
 
         console.log("🔍 2FA activé :", is2FAEnabled);
 
-        // Affichage dynamique des boutons
         document.getElementById("activate-2fa-btn").style.display = is2FAEnabled ? "none" : "block";
         document.getElementById("deactivate-2fa-btn").style.display = is2FAEnabled ? "block" : "none";
 
