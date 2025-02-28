@@ -193,6 +193,8 @@ export const routes = {
 				<img class="avatar-option" src="assets/avatars/avatarboy2.png" alt="Avatar 4">
 				<img class="avatar-option" src="assets/avatars/avataralien.png" alt="Avatar 5">
 			</div>
+			<button id="activate-2fa-btn" onclick="enable2FA()" style="display: none;">Activate 2FA</button>
+			<button id="deactivate-2fa-btn" onclick="disable2FA()" style="display: none;">Deactivate 2FA</button>
 			<button id="save-avatar-btn" data-translate="save-avatar">Save Avatar</button>
 			<button id="cancel-edit-btn" data-translate="cancel">Cancel</button>
 		</div>

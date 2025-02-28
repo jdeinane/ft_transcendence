@@ -1,5 +1,6 @@
 import { navigate, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
+import { verify2FA } from "./2fa.js";
 
 const API_BASE_URL = "http://127.0.0.1:4000";
 
@@ -51,16 +52,14 @@ export async function createUser(username, password, email, confirmPassword) {
 
 export async function loginUser(username, password) {
     if (!username || !password) {
-        showError("login-error", "All fields are required!");
+        showError("login-error", "Tous les champs sont requis !");
         return false;
     }
 
     try {
         const response = await fetch(`${API_BASE_URL}/api/auth/login/`, {
             method: "POST",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ username, password })
         });
 
@@ -69,26 +68,37 @@ export async function loginUser(username, password) {
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-            
-            console.log("✅ Connexion réussie, récupération du profil...");
-            
-            await fetchUserProfile(); // Assure-toi que l'utilisateur est chargé
 
-            console.log("✅ Navigation vers le profil");
+            console.log("✅ Connexion réussie, récupération du profil...");
+
+            // Vérification du 2FA après connexion
+            const otpRequired = data.otp_required; // Ajoute cette info côté backend
+
+            if (otpRequired) {
+                const otpCode = prompt("Entrez votre code 2FA :");
+                const verified = await verify2FA(otpCode);
+
+                if (!verified) {
+                    console.error("❌ Code 2FA invalide !");
+                    logoutUser();
+                    return false;
+                }
+            }
+
+            await fetchUserProfile();
             navigate("#/profile");
 
             return true;
         } else {
-            showError("login-error", data.error || "Invalid credentials");
+            showError("login-error", data.error || "Identifiants invalides.");
             return false;
         }
     } catch (error) {
-        console.error("❌ Error:", error);
-        showError("login-error", "Something went wrong");
+        console.error("❌ Erreur de connexion :", error);
+        showError("login-error", "Une erreur s'est produite.");
         return false;
     }
 }
-
 
 export function logoutUser() {
     localStorage.removeItem("access_token");

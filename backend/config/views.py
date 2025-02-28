@@ -209,6 +209,7 @@ def get_current_user(request):
             "id": user.id,
             "username": user.username,
             "email": user.email,
+			"two_factor_secret": user.two_factor_secret,
             "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
         })
     except Exception as e:
@@ -262,12 +263,17 @@ class Enable2FAView(APIView):
 
 	def post(self, request):
 		user = request.user
+
+		print(f"🔍 Tentative d'activation 2FA pour {user.username}")  # DEBUG
+
 		if user.two_factor_secret:
+			print("🚨 2FA déjà activé")  # DEBUG
 			return Response({"message": "Le 2FA est déjà activé."}, status=400)
 
 		user.two_factor_secret = generate_otp_secret()
 		user.save()
-        
+
+		print("✅ 2FA activé avec succès !")  # DEBUG
 		return Response({"message": "2FA activé avec succès.", "otp_secret": user.two_factor_secret}, status=200)
 
 class Generate2FAView(APIView):
