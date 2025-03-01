@@ -1,6 +1,7 @@
 import { navigate, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
 import { verify2FA } from "./2fa.js";
+import { loadProfile } from "./profile.js";
 
 const API_BASE_URL = "http://127.0.0.1:4000";
 
@@ -130,6 +131,8 @@ export async function fetchUserProfile() {
             const user = await response.json();
             console.log("👤 Profil utilisateur récupéré :", user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
+			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+			loadProfile();
             updateNavigation();
         } else {
             console.warn("Failed to fetch user profile");

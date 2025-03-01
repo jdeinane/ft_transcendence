@@ -35,6 +35,6 @@ docker system prune -af
 
 # remove logs
 echo "Deleting log files..."
-rm -rf logs_containers.txt make_message.txt compile_message.txt
+rm -rf logs_containers.txt make_message.txt compile_message.txt database.txt
 
 echo "Cleanup completed!"

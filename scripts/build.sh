@@ -68,7 +68,7 @@ docker compose exec backend python /app/manage.py migrate --noinput
 docker compose exec backend python /app/manage.py migrate authtoken
 
 echo "Verifying database schema..."
-docker compose exec postgres psql -U admin -d ft_transcendence -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"
+docker compose exec postgres psql -U admin -d ft_transcendence -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';" > database.txt 2>&1 &
 
 echo "Checking applied migrations..."
 docker compose exec backend python /app/manage.py makemigrations

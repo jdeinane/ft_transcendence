@@ -1,6 +1,7 @@
 import { navigate } from "./app.js";
 import { refreshToken } from "./user.js";
 import { check2FAStatus } from "./2fa.js"
+import { fetchUserProfile } from "./user.js";
 
 export function getCurrentUser() {
     return JSON.parse(localStorage.getItem("loggedInUser"));
@@ -15,7 +16,7 @@ export function loadProfile() {
     }
 
     const avatarImg = document.getElementById("avatar-img");
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avatar1.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avataralien.png";
     avatarImg.src = savedAvatar;
 
     document.getElementById("profile-username").textContent = user.username || "Unknown";
@@ -45,7 +46,7 @@ export function loadEditProfile() {
     const saveAvatarBtn = document.getElementById("save-avatar-btn");
     const cancelEditBtn = document.getElementById("cancel-edit-btn");
 
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avatar1.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avataralien.png";
     avatarImg.src = savedAvatar;
 
     avatarOptions.forEach((avatar) => {
@@ -68,29 +69,17 @@ export function loadEditProfile() {
 
 export async function saveAvatar(selectedAvatar) {
     let token = localStorage.getItem("access_token");
-
     if (!token) {
-        console.error("❌ Aucun token trouvé, tentative de rafraîchissement...");
+        console.error("❌ Aucun token trouvé.");
         await refreshToken();
         token = localStorage.getItem("access_token");
         if (!token) {
-            console.error("❌ Impossible de récupérer un token valide. Déconnexion...");
+            console.error("❌ Impossible de récupérer un token valide.");
             logoutUser();
             return;
         }
     }
 
-    // Vérifie si le token a expiré
-    const tokenExp = JSON.parse(atob(token.split('.')[1])).exp * 1000;
-    if (Date.now() >= tokenExp) {
-        console.log("🕒 Token expiré, tentative de rafraîchissement...");
-        await refreshToken();
-        token = localStorage.getItem("access_token");
-    }
-
-    console.log("🛠️ Envoi du token:", token);
-
-    // Récupère uniquement le nom du fichier
     const avatarFilename = selectedAvatar.split("/").pop();
 
     try {
@@ -106,14 +95,11 @@ export async function saveAvatar(selectedAvatar) {
         });
 
         const data = await response.json();
-
         console.log("📩 Réponse API:", data);
 
         if (response.ok) {
-            const newAvatarPath = `assets/avatars/${avatarFilename}`;
-            localStorage.setItem("selectedAvatar", newAvatarPath);  // 🔥 Stocke le chemin complet
+            await fetchUserProfile();  // 🔥 Recharge le profil après mise à jour
             navigate("#/profile");
-            loadProfile();
         } else {
             console.error("❌ Failed to update avatar:", data.error);
         }
@@ -121,5 +107,6 @@ export async function saveAvatar(selectedAvatar) {
         console.error("❌ Error updating avatar:", error);
     }
 }
+
 
 document.addEventListener("DOMContentLoaded", check2FAStatus);
