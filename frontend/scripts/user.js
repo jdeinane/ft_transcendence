@@ -1,4 +1,4 @@
-import { navigate, updateHeaderAvatar, updateNavigation } from "./app.js"
+import { navigate, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
 import { verify2FA } from "./2fa.js";
 import { loadProfile } from "./profile.js";
@@ -105,29 +105,21 @@ export function logoutUser() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("loggedInUser");
-	localStorage.removeItem("selectedAvatar");
-	updateHeaderAvatar();
-	updateNavigation();
     navigate("#/");
+    updateNavigation();
 }
 
 export async function fetchUserProfile() {
     let token = localStorage.getItem("access_token");
-    
     if (!token) {
-        console.warn("❌ Aucun access token trouvé, tentative de rafraîchissement...");
+        console.warn("No access token found, trying to refresh...");
         const refreshed = await refreshToken();
-        if (!refreshed) {
-            console.error("🚨 Impossible de récupérer le profil utilisateur !");
-            return;
-        }
+        if (!refreshed) return;
         token = localStorage.getItem("access_token");
     }
 
-    console.log("🔍 Vérification du profil avec token :", token);
-
     try {
-        const response = await fetch("http://127.0.0.1:4000/api/auth/me/", {
+        const response = await fetch(`${API_BASE_URL}/api/auth/me/`, {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -135,24 +127,20 @@ export async function fetchUserProfile() {
             }
         });
 
-        if (!response.ok) {
-            console.error("❌ Impossible de récupérer le profil, statut :", response.status);
-            return;
+        if (response.ok) {
+            const user = await response.json();
+            console.log("👤 Profil utilisateur récupéré :", user);
+            localStorage.setItem("loggedInUser", JSON.stringify(user));
+			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+			loadProfile();
+            updateNavigation();
+        } else {
+            console.warn("Failed to fetch user profile");
         }
-
-        const user = await response.json();
-        console.log("👤 Profil utilisateur récupéré :", user);
-
-        localStorage.setItem("loggedInUser", JSON.stringify(user));
-        localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
-        loadProfile();
-        updateNavigation();
-
     } catch (error) {
-        console.error("❌ Erreur lors de la récupération du profil utilisateur :", error);
+        console.error("Error fetching user:", error);
     }
 }
-
 
 
 export function getCurrentUser() {
