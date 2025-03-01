@@ -2,6 +2,7 @@ version: '3.3'
 
 services:
   backend:
+    container_name: ft_transcendence-backend
     image: ft_transcendence_backend
     build:
       context: .
@@ -12,6 +13,7 @@ services:
     volumes:
       - "./backend:/app/src"
       - "locale_volume:/app/src/locale"
+      - "./backend/fixtures:/app/fixtures"
     ports:
       - "4000:8000"
     depends_on:
@@ -20,6 +22,7 @@ services:
       - ft_transcendence_network
 
   postgres:
+    container_name: ft_transcendence-postgres
     image: ft_transcendence_postgres
     build:
       context: .
@@ -34,6 +37,7 @@ services:
       - ft_transcendence_network
 
   nginx:
+    container_name: ft_transcendence-nginx
     image: ft_transcendence_nginx
     build:
       context: .
@@ -49,6 +53,7 @@ services:
       - ft_transcendence_network
 
   redis:
+    container_name: ft_transcendence-redis
     image: redis:alpine
     restart: unless-stopped
     networks:

@@ -47,43 +47,32 @@ echo "Building Docker containers..."
 
 docker network create ft_transcendence_network || true
 
-echo "Starting development environment..."
-docker compose -f dockers/docker-compose.dev.yml up --build -d > logs_dev.txt 2>&1 &
-
-echo "Starting production environment..."
-docker compose -f docker-compose.yml up --build -d > logs_prod.txt 2>&1 &
+docker compose -f docker-compose.yml up --build -d > logs_containers.txt 2>&1 &
 
 wait
 
-echo "Waiting for PostgreSQL to be ready..."
-until docker exec -it ft_transcendence-postgres-1 psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
-  echo "PostgreSQL not ready, retrying in 10 seconds..."
-  sleep 10
+echo "Waiting for PostgreSQL to be fully ready..."
+until docker compose exec postgres psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
+  echo "PostgreSQL not ready yet... Retrying in 5 seconds."
+  sleep 5
 done
-echo "PostgreSQL is ready!"
+
+echo "PostgreSQL is now ready!"
 
 echo "Running Django migrations..."
+rm -rf backend/config/migrations/
+mkdir backend/config/migrations
+touch backend/config/migrations/__init__.py
 docker compose exec backend python /app/manage.py makemigrations --noinput
 docker compose exec backend python /app/manage.py migrate --noinput
 docker compose exec backend python /app/manage.py migrate authtoken
 
-sleep 5
-
-# ensure 'config_user' exists before loading 'fixtures'
-echo "Verifying that tables exist..."
-docker compose exec backend python /app/manage.py shell <<EOF
-from django.db import connection
-tables = connection.introspection.table_names()
-if "config_user" in tables:
-    print("Table `config_user` found, loading allowed fixtures")
-else:
-    print("Table `config_user` not found. Cannot load fixtures")
-    exit(1)
-EOF
-
-sleep 5
+echo "Verifying database schema..."
+docker compose exec backend python /app/manage.py dbshell -c "SELECT table_name FROM information_schema.tables WHERE table_schema = 'public';"
 
 echo "Checking applied migrations..."
+docker compose exec backend python /app/manage.py makemigrations
+docker compose exec backend python /app/manage.py migrate config
 docker compose exec backend python /app/manage.py showmigrations
 
 echo "Loading initals data for Django..."
@@ -92,10 +81,10 @@ docker compose exec backend python /app/manage.py loaddata fixtures/initial_data
 sleep 5
 
 echo "Generating translation messages..."
-docker exec -it ft_transcendence-backend-1 django-admin makemessages -l fr -l es > make_message.txt 2>&1 &
-docker exec -it ft_transcendence-backend-1 django-admin compilemessages > compile_message.txt 2>&1 &
+docker exec -it ft_transcendence-backend django-admin makemessages -l fr -l es > make_message.txt 2>&1 &
+docker exec -it ft_transcendence-backend django-admin compilemessages > compile_message.txt 2>&1 &
 
 # wait for all background processes to complete
 wait
 
-echo "Development and Production environments are running!"
+echo "Containers are running!"

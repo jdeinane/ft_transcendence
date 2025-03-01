@@ -2,6 +2,7 @@ from datetime import date, time, datetime, timedelta
 from django.db import models
 from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserManager, PermissionsMixin
 from django.apps import apps
+from django.utils.timezone import now
 
 apps.get_app_config("config").get_models()
 
@@ -26,18 +27,19 @@ class User(AbstractBaseUser, PermissionsMixin):
 	id = models.BigAutoField(primary_key=True)
 	username = models.CharField(max_length=150, unique=True)
 	email = models.EmailField(unique=True)
+	password = models.CharField(max_length=255, null=False ,blank=False)
 	avatar_url = models.TextField(blank=True, null=True)
 	two_factor_secret = models.CharField(max_length=255, blank=True, null=True)
 	is_online = models.BooleanField(default=False)
-	created_at = models.DateTimeField(auto_now_add=True)
-	updated_at = models.DateTimeField(auto_now=True)
 	is_active = models.BooleanField(default=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
-	token_expiry = models.DateTimeField(null=True, blank=True)
 	is_2fa_enabled = models.BooleanField(default=False)
-	last_2fa_verified = models.DateTimeField(null=True, blank=True)
-	failed_2fa_attempts = models.IntegerField(default=0)
+	#last_2fa_verified = models.DateTimeField(null=True, blank=True)
+	#failed_2fa_attempts = models.IntegerField(default=0)
+	#token_expiry = models.DateTimeField(null=True, blank=True)
+	created_at = models.DateTimeField(auto_now_add=True)
+	updated_at = models.DateTimeField(auto_now=True)
 
 	groups = models.ManyToManyField(
 		"auth.Group",

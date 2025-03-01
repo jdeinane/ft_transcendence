@@ -12,8 +12,8 @@
 			"created_at": "2025-02-15T10:00:00Z",
 			"updated_at": "2025-02-15T10:00:00Z",
 			"is_2fa_enabled": false,
-			"last_2fa_verified": false,
-			"failed_2fa_attempts": 0
+			"failed_2fa_attempts": 0,
+			"token_expiry": null
 		}
 	},
 	{
@@ -29,8 +29,8 @@
 			"created_at": "2025-02-15T10:00:00Z",
 			"updated_at": "2025-02-15T10:00:00Z",
 			"is_2fa_enabled": false,
-			"last_2fa_verified": false,
-			"failed_2fa_attempts": 0
+			"failed_2fa_attempts": 0,
+			"token_expiry": null
 		}
 	},
 	{
@@ -46,8 +46,8 @@
 			"created_at": "2025-02-15T10:00:00Z",
 			"updated_at": "2025-02-15T10:00:00Z",
 			"is_2fa_enabled": false,
-			"last_2fa_verified": false,
-			"failed_2fa_attempts": 0
+			"failed_2fa_attempts": 0,
+			"token_expiry": null
 		}
 	},	
 	{
