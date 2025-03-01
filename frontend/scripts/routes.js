@@ -168,7 +168,7 @@ export const routes = {
 		<div class="profile-container">
 			<h1 data-translate="user-profile">User Profile</h1>
 			<div class="profile-info">
-				<img id="avatar-img" src="assets/avatars/avatar1.png" alt="User Avatar">
+				<img id="avatar-img" src="assets/avatars/avataralien.png" alt="User Avatar">
 				<p><strong data-translate="username">Username:</strong> <span id="profile-username">Loading...</span></p>
 				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
 				<p><strong data-translate="number-of-games">Games Played:</strong> <span id="profile-games">0</span></p>
@@ -193,8 +193,8 @@ export const routes = {
 				<img class="avatar-option" src="assets/avatars/avatarboy2.png" alt="Avatar 4">
 				<img class="avatar-option" src="assets/avatars/avataralien.png" alt="Avatar 5">
 			</div>
-			<button id="activate-2fa-btn" onclick="enable2FA()" style="display: none;">Activate 2FA</button>
-			<button id="deactivate-2fa-btn" onclick="disable2FA()" style="display: none;">Deactivate 2FA</button>
+			<button id="activate-2fa-btn" data-translate="activate-2fa-btn" "onclick="enable2FA()" style="display: none;">Activate 2FA</button>
+			<button id="deactivate-2fa-btn" data-translate="deactivate-2fa-btn" onclick="disable2FA()" style="display: none;">Deactivate 2FA</button>
 			<button id="save-avatar-btn" data-translate="save-avatar">Save Avatar</button>
 			<button id="cancel-edit-btn" data-translate="cancel">Cancel</button>
 		</div>

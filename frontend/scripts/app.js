@@ -38,6 +38,8 @@ export function navigate(path, addToHistory = true) {
 		window.history.pushState({ path: cleanPath }, "", `#${cleanPath}`);
 	}
 
+	updateHeaderAvatar();
+
 	if (cleanPath === "/login") {
 		const user = getCurrentUser();
 		if (user) {

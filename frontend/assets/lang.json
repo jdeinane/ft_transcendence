@@ -59,7 +59,13 @@
 	  "results-title": "🏆 Tournament Final Ranking",
 	  "back-home-button": "Back to Home",
 	  "rank": "Rank",
-	  "player-name": "Player"
+	  "player-name": "Player",
+	  "edit-profile": "Edit Profile",
+	  "activate-2fa-btn": "Activate 2FA",
+	  "deactivate-2fa-btn": "Deactivate 2FA",
+	  "save-avatar": "Save avatar",
+	  "cancel": "Cancel",
+	  "select-avatar": "Select an avatar: "
 
 	},
 	"fr": {
@@ -122,7 +128,13 @@
 	  "results-title": "🏆 Classement Final du Tournoi",
 	  "back-home-button": "Retour à l'Accueil",
 	  "rank": "Rang",
-	  "player-name": "Joueur"
+	  "player-name": "Joueur",
+	  "edit-profile": "Modifier",
+	  "activate-2fa-btn": "Activer le 2FA",
+	  "deactivate-2fa-btn": "Désactiver le 2FA",
+	  "save-avatar": "Enregistrer l'avatar",
+	  "cancel": "Annuler",
+	  "select-avatar": "Sélectionner un avatar: "
 
 	},
 	"es": {
@@ -185,7 +197,13 @@
 	  "results-title": "🏆 Clasificación Final del Torneo",
 	  "back-home-button": "Volver al Inicio",
 	  "rank": "Rango",
-	  "player-name": "Jugador"
+	  "player-name": "Jugador",
+	  "edit-profile": "Editar perfil",
+	  "activate-2fa-btn": "Activar 2FA",
+	  "deactivate-2fa-btn": "Desactivar 2FA",
+	  "save-avatar": "Guardar avatar",
+	  "cancel": "Cancelar",
+	  "select-avatar": "Selecciona un avatar: "
 
 	}
   }

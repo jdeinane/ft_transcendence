@@ -1,4 +1,4 @@
-import { navigate, updateNavigation } from "./app.js"
+import { navigate, updateHeaderAvatar, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
 import { verify2FA } from "./2fa.js";
 import { loadProfile } from "./profile.js";
@@ -105,8 +105,10 @@ export function logoutUser() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("loggedInUser");
+	localStorage.removeItem("selectedAvatar");
+	updateHeaderAvatar();
+	updateNavigation();
     navigate("#/");
-    updateNavigation();
 }
 
 export async function fetchUserProfile() {
