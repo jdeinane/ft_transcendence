@@ -133,3 +133,32 @@ button:hover {
     background: #ccc;
     box-shadow: inset 2px 2px 0px #888, inset -2px -2px 0px #222;
 }
+
+.result-popup {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    font-size: 1.5em;
+    box-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
+}
+
+.result-popup button {
+    margin-top: 10px;
+    padding: 10px 20px;
+    font-size: 1em;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+    background: #ffcc00;
+    color: #000;
+}
+
+.result-popup button:hover {
+    background: #ffaa00;
+}

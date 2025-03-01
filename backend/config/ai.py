@@ -15,8 +15,6 @@ class PongAI:
 
 		return 0  
 
-		
-
 class TicTacToeAI:
 	def __init__(self, difficulty="medium"):
 		self.difficulty = difficulty
@@ -25,7 +23,11 @@ class TicTacToeAI:
 		"""
 		Renvoie le meilleur coup à jouer sur une grille de TicTacToe
 		"""
-		available_moves = [i for i, x in enumerate(board) if x == " "]
+		available_moves = [i for i, x in enumerate(board) if x == ""]
+
+		if not available_moves:  # ⚠️ Eviter l'erreur si aucun coup possible
+			print("❌ Aucun coup possible, l'IA ne peut pas jouer.")
+			return None  # Retourne None si le board est plein
 
 		if self.difficulty == "easy":
 			return random.choice(available_moves)
@@ -40,13 +42,13 @@ class TicTacToeAI:
 				board[move] = "O"
 				if self.check_win(board, "O"):
 					return move
-				board[move] = " "
+				board[move] = ""
 
 			for move in available_moves:
 				board[move] = "X"
 				if self.check_win(board, "X"):
 					return move
-				board[move] = " "
+				board[move] = ""
 
 			return random.choice(available_moves)
 

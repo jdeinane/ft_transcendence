@@ -1,4 +1,7 @@
 import { navigate } from "./app.js";
+import { refreshToken, logoutUser } from "./user.js";
+
+const API_BASE_URL = "http://127.0.0.1:4000";
 
 export function setupTicTacToeGame() {
     let selectedMode = "solo";
@@ -72,61 +75,18 @@ function startTicTacToeGame(boardElement, mode) {
         }
     }
 
-    function aiMove() {
-        let bestMove = getBestMove();
-        board[bestMove] = "O";
-        renderBoard();
-        checkWinner();
-        currentPlayer = "X";
-    }
-
-    function getBestMove() {
-        let bestScore = -Infinity;
-        let move = null;
-        for (let i = 0; i < board.length; i++) {
-            if (board[i] === "") {
-                board[i] = "O";
-                let score = minimax(board, 0, false);
-                board[i] = "";
-                if (score > bestScore) {
-                    bestScore = score;
-                    move = i;
-                }
-            }
-        }
-        return move;
-    }
-
-    function minimax(board, depth, isMaximizing) {
-        const winner = getWinner(board);
-        if (winner === "X") return -10 + depth;
-        if (winner === "O") return 10 - depth;
-        if (!board.includes("")) return 0;
-
-        if (isMaximizing) {
-            let bestScore = -Infinity;
-            for (let i = 0; i < board.length; i++) {
-                if (board[i] === "") {
-                    board[i] = "O";
-                    let score = minimax(board, depth + 1, false);
-                    board[i] = "";
-                    bestScore = Math.max(score, bestScore);
-                }
-            }
-            return bestScore;
-        } else {
-            let bestScore = Infinity;
-            for (let i = 0; i < board.length; i++) {
-                if (board[i] === "") {
-                    board[i] = "X";
-                    let score = minimax(board, depth + 1, true);
-                    board[i] = "";
-                    bestScore = Math.min(score, bestScore);
-                }
-            }
-            return bestScore;
-        }
-    }
+	async function aiMove() {
+		const bestMove = await fetchAIMove(board, "medium");
+	
+		if (bestMove !== null && board[bestMove] === "") {
+			board[bestMove] = "O";
+			renderBoard();
+			checkWinner();
+			currentPlayer = "X";
+		} else {
+			console.warn("⚠ Aucun coup valide retourné par l'IA.");
+		}
+	}
 
     function getWinner(board) {
         const winningCombos = [
@@ -173,4 +133,69 @@ function startTicTacToeGame(boardElement, mode) {
     }
 
     renderBoard();
+}
+
+async function fetchAIMove(board, difficulty = "medium") {
+    let token = localStorage.getItem("access_token");
+
+    if (!token) {
+        console.error("❌ Aucun token JWT trouvé. Impossible d'appeler l'IA.");
+        return null;
+    }
+
+    try {
+        console.log("📤 Envoi du board à l'IA :", board);
+
+        let response = await fetch(`${API_BASE_URL}/api/game/tictactoe-ai-move/`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ board, difficulty })
+        });
+
+        // 🔴 Si le token a expiré (Erreur 401 Unauthorized)
+        if (response.status === 401) {  
+            console.warn("🔄 Token expiré, tentative de rafraîchissement...");
+
+            const refreshed = await refreshToken();
+
+            if (!refreshed) {
+                console.error("🔴 Impossible de rafraîchir le token, déconnexion...");
+                logoutUser();
+                return null;
+            }
+
+            // 🔄 Récupérer le nouveau token après rafraîchissement
+            token = localStorage.getItem("access_token");
+
+            // 🔄 Refaire la requête avec le token rafraîchi
+            response = await fetch(`${API_BASE_URL}/api/game/tictactoe-ai-move/`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    "Authorization": `Bearer ${token}`
+                },
+                body: JSON.stringify({ board, difficulty })
+            });
+        }
+
+        // 🚨 Si toujours une erreur après le refresh, on affiche le message du backend
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error(`❌ Erreur API Tic-Tac-Toe AI (Status ${response.status})`);
+            console.error("📩 Réponse du serveur :", errorData);
+            return null;
+        }
+
+        // ✅ Si tout est bon, récupérer la réponse JSON et retourner le move
+        const data = await response.json();
+        console.log(`🤖 Backend AI Move: ${data.move}`);
+        return data.move;
+
+    } catch (error) {
+        console.error("❌ Erreur lors de la récupération du coup de l'IA :", error);
+        return null;
+    }
 }

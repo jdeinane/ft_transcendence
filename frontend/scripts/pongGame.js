@@ -7,8 +7,6 @@ let player3Score = 0;
 let player4Score = 0;
 let gameOver = false;
 let ballX, ballY;
-let ballSpeedX = 3;
-let ballSpeedY = 3;
 
 export function setupPongGame() {
 	let selectedMode = "solo";
@@ -65,6 +63,7 @@ export function setupPongGame() {
 	});
 
 	gameSelectionButton.addEventListener("click", () => {
+		console.log("🟢 Back to Game Selection clicked!");
 		navigate("#/game");
 	});
 }
@@ -261,33 +260,40 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 		ballSpeedX = -ballSpeedX;
 		}
 
-	function endGame(winner) {
-		if (gameOver) return;
-		gameOver = true;
+		function endGame(winner) {
+			if (gameOver) return;
+			gameOver = true;
+		
+			displayWinner(`🏆 Player ${winner} won !`);
+		}
+				
+	function displayWinner(message) {
+		const resultContainer = document.createElement("div");
+		resultContainer.classList.add("result-popup");
+		resultContainer.innerHTML = `
+			<p>${message}</p>
+			<button id="restart-game">Back to Mode Selection</button>
+		`;
+		document.body.appendChild(resultContainer);
 	
-		alert(`🏆 Player ${winner} won !`);
+		document.getElementById("restart-game").addEventListener("click", () => {
+			document.body.removeChild(resultContainer);
+			goToModeSelection();
+		});
+	}
 	
+	function goToModeSelection() {
 		const canvas = document.getElementById("pong");
 		const backButton = document.getElementById("back-to-mode-selection");
 		const modeSelectionContainer = document.querySelector(".mode-selection-container");
 	
-		if (canvas) {
-			canvas.style.display = "none";
-		}
+		if (canvas) canvas.style.display = "none";
+		if (backButton) backButton.style.display = "none";
+		if (modeSelectionContainer) modeSelectionContainer.style.display = "block";
 	
-		if (backButton) {
-			backButton.style.display = "none";
-		}
-	
-		if (modeSelectionContainer) {
-			modeSelectionContainer.style.display = "block";
-		}
-	
-		setTimeout(resetGame, 500);
+		resetGame();
 	}
-		
-		
-		
+	
 	function gameLoop() {
 		if (gameOver)
 			return;
@@ -394,8 +400,8 @@ function resetGame() {
     }
 
     if (canvas) {
-        canvas.style.display = "none";
-    }
+        canvas.style.display = "block";
+	}
 }
 
 

@@ -104,27 +104,37 @@ def pong_ai_move(request):
 
 @api_view(["POST"])
 def tictactoe_ai_move(request):
-	"""
-	Retourne le meilleur coup de l'IA pour TicTacToe
-	"""
-	data = request.data
-	board = data.get("board")
-	difficulty = data.get("difficulty", "medium")
+    """
+    Retourne le meilleur coup de l'IA pour TicTacToe
+    """
+    print("📩 Requête reçue :", request.data)  # Debug
+    
+    try:
+        data = request.data
+        board = data.get("board")
+        difficulty = data.get("difficulty", "medium")
 
-	ai = TicTacToeAI(difficulty)
+        if not board or len(board) != 9:
+            return Response({"error": "Board invalide"}, status=400)
 
-	# Vérifie si l'IA a déjà gagné ou s'il y a un gagnant avant de jouer
-	if ai.check_win(board, "O"):
-		return Response({"message": "L'IA a déjà gagné."})
-	if ai.check_win(board, "X"):
-		return Response({"message": "Le joueur a déjà gagné."})
+        ai = TicTacToeAI(difficulty)
+        
+        if not hasattr(ai, "best_move"):
+            return Response({"error": "Erreur: La classe TicTacToeAI ne contient pas best_move()"}, status=500)
 
-	move = ai.best_move(board)
+        move = ai.best_move(board)
 
-	print(f"🤖 TicTacToeAI ({difficulty}) - Move: {move}")
+        if move is None:  # ⚠️ Si aucun coup possible
+            return Response({"message": "Match nul, aucun coup possible."}, status=200)
 
-	return Response({"move": move})
-
+        print(f"🤖 IA joue : {move}")  # Debug
+        
+        return Response({"move": move})
+    
+    except Exception as e:
+        print("❌ Erreur backend :", str(e))  # Debug
+        return Response({"error": "Erreur interne du serveur", "details": str(e)}, status=500)
+		
 # API pour langage
 @api_view(["POST"])
 def set_language(request):

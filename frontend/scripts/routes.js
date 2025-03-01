@@ -198,7 +198,8 @@ export const routes = {
 			<button id="save-avatar-btn" data-translate="save-avatar">Save Avatar</button>
 			<button id="cancel-edit-btn" data-translate="cancel">Cancel</button>
 		</div>
-		`,
+		<script>waitFor2FAButtons();</script>		
+	`,
 
 	"/about": `
 		<h1 data-translate="about">about</h1>
