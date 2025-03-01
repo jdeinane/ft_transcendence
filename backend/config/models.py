@@ -40,6 +40,11 @@ class User(AbstractBaseUser, PermissionsMixin):
 	token_expiry = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	language = models.CharField(
+		max_length=10,
+		choices=[("en", "English"), ("fr", "Français"), ("es", "Español")],
+		default="en"
+	)
 
 	groups = models.ManyToManyField(
 		"auth.Group",

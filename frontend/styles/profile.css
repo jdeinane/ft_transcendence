@@ -182,3 +182,49 @@ button:hover {
     background: #ff9999;
     border-color: #cc0000;
 }
+
+/* 🎨 Style du sélecteur de langue */
+#language-select {
+    width: 200px;
+    padding: 8px;
+    font-size: 1.2rem;
+    border: 2px solid black;
+    border-radius: 5px;
+    background-color: #ffffff;
+    box-shadow: 2px 2px 0px black;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    margin-top: 10px;
+}
+
+#language-select:hover {
+    background-color: #f0f0f0;
+}
+
+#language-select:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+/* 🎨 Style du bouton Save Language */
+#save-language-btn {
+    background: #4CAF50; /* Vert */
+    border: 2px solid #2E7D32;
+    color: white;
+    padding: 10px 15px;
+    font-size: 1.2rem;
+    cursor: pointer;
+    border-radius: 5px;
+    margin-top: 10px;
+    box-shadow: 3px 3px 0px black;
+    transition: all 0.2s ease-in-out;
+}
+
+#save-language-btn:hover {
+    background: #45a049;
+    border-color: #1B5E20;
+}
+
+#save-language-btn:active {
+    transform: scale(0.98);
+}

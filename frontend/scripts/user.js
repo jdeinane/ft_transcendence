@@ -2,6 +2,7 @@ import { navigate, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
 import { verify2FA } from "./2fa.js";
 import { loadProfile } from "./profile.js";
+import { loadLanguage } from "./language.js";
 
 const API_BASE_URL = "http://127.0.0.1:4000";
 
@@ -73,9 +74,7 @@ export async function loginUser(username, password) {
             console.log("✅ Connexion réussie, récupération du profil...");
 
             // Vérification du 2FA après connexion
-            const otpRequired = data.otp_required; // Ajoute cette info côté backend
-
-            if (otpRequired) {
+            if (data.otp_required) {
                 const otpCode = prompt("Entrez votre code 2FA :");
                 const verified = await verify2FA(otpCode);
 
@@ -86,9 +85,29 @@ export async function loginUser(username, password) {
                 }
             }
 
-            await fetchUserProfile();
-            navigate("#/profile");
+            // Récupération du profil utilisateur
+            const profileResponse = await fetch(`${API_BASE_URL}/api/auth/me/`, {
+                method: "GET",
+                headers: {
+                    "Authorization": `Bearer ${data.access}`,
+                    "Content-Type": "application/json"
+                }
+            });
 
+            if (profileResponse.ok) {
+                const user = await profileResponse.json();
+                localStorage.setItem("loggedInUser", JSON.stringify(user));
+
+                // 🎯 Appliquer automatiquement la langue préférée
+                if (user.language) {
+                    localStorage.setItem("preferredLanguage", user.language);
+                    await loadLanguage(user.language);
+                    console.log(`🌍 Langue définie sur : ${user.language}`);
+                }
+            }
+			
+			await fetchUserProfile();
+            navigate("#/profile");
             return true;
         } else {
             showError("login-error", data.error || "Identifiants invalides.");

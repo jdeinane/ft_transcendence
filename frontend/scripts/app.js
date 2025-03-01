@@ -18,7 +18,7 @@ import { setupTournament } from "./tournament.js";
 import { setupLeaderboard } from "./leaderboard.js";
 import { loadProfile, loadEditProfile } from "./profile.js";
 import { refreshToken } from "./user.js";
-
+import { savePreferredLanguage } from "./profile.js";
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {
@@ -88,7 +88,16 @@ export function navigate(path, addToHistory = true) {
 	  
 	if (cleanPath === "/edit-profile") {
 		loadEditProfile();
+	
+		setTimeout(() => {
+			const saveLanguageBtn = document.getElementById("save-language-btn");
+			if (saveLanguageBtn) {
+				console.log("✅ Bouton Save Language détecté après chargement !");
+				saveLanguageBtn.addEventListener("click", savePreferredLanguage);
+			}
+		}, 100);
 	}
+	
 		
 	if (cleanPath === "/") {
 		setTimeout(async () => {

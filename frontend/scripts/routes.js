@@ -193,6 +193,16 @@ export const routes = {
 				<img class="avatar-option" src="assets/avatars/avatarboy2.png" alt="Avatar 4">
 				<img class="avatar-option" src="assets/avatars/avataralien.png" alt="Avatar 5">
 			</div>
+
+			<label for="language-select" data-translate="select-language">Choose your language:</label>
+			<select id="language-select">
+				<option value="en" data-translate="english">English</option>
+				<option value="fr" data-translate="french">Français</option>
+				<option value="es" data-translate="spanish">Español</option>
+			</select>
+
+		<button id="save-language-btn" data-translate="save-language">Save Language</button>
+
 			<button id="activate-2fa-btn" data-translate="activate-2fa-btn" onclick="enable2FA()" style="display: none;">Activate 2FA</button>
 			<button id="deactivate-2fa-btn" data-translate="deactivate-2fa-btn" onclick="disable2FA()" style="display: none;">Deactivate 2FA</button>
 			<button id="save-avatar-btn" data-translate="save-avatar">Save Avatar</button>

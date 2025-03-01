@@ -65,7 +65,9 @@
 	  "deactivate-2fa-btn": "Deactivate 2FA",
 	  "save-avatar": "Save avatar",
 	  "cancel": "Cancel",
-	  "select-avatar": "Select an avatar: "
+	  "select-avatar": "Select an avatar: ",
+	  "select-language": "Choose your language:",
+	  "save-language": "Save language"
 
 	},
 	"fr": {
@@ -134,7 +136,9 @@
 	  "deactivate-2fa-btn": "Désactiver le 2FA",
 	  "save-avatar": "Enregistrer l'avatar",
 	  "cancel": "Annuler",
-	  "select-avatar": "Sélectionner un avatar: "
+	  "select-avatar": "Sélectionner un avatar: ",
+	  "select-language": "Choisir la langue: ",
+	  "save-language": "Enregistrer la langue"
 
 	},
 	"es": {
@@ -203,7 +207,9 @@
 	  "deactivate-2fa-btn": "Desactivar 2FA",
 	  "save-avatar": "Guardar avatar",
 	  "cancel": "Cancelar",
-	  "select-avatar": "Selecciona un avatar: "
+	  "select-avatar": "Selecciona un avatar: ",
+	  "select-language": "Elige el idioma: ",
+	  "save-language": "Guardar idioma"
 
 	}
   }

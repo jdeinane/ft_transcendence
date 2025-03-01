@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from config.views import UserViewSet, pong_ai_move, tictactoe_ai_move, login_view, register, get_current_user, join_tournament, leave_tournament, list_tournaments, Generate2FAView, Enable2FAView, Disable2FAView, Verify2FAView, update_avatar, RefreshToken
+from config.views import UserViewSet, pong_ai_move, tictactoe_ai_move, login_view, register, get_current_user, join_tournament, leave_tournament, list_tournaments, Generate2FAView, Enable2FAView, Disable2FAView, Verify2FAView, update_avatar, set_language
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 router = DefaultRouter()
@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 	path('api/game/ai-move/', pong_ai_move, name="pong_ai_move"),
     path("api/game/tictactoe-ai-move/", tictactoe_ai_move, name="tictactoe-ai-move"),
+	path("api/auth/set-language/", set_language, name="set_language"),
 ]

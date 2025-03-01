@@ -1,3 +1,4 @@
+from django.utils.translation import activate, gettext as _
 import pyotp
 from django.core.mail import send_mail
 from django.conf import settings
@@ -43,3 +44,20 @@ def generate_and_send_2fa_code(user):
 	send_2fa_email(user, otp)
 
 	return otp
+
+def send_welcome_email(user):
+    """
+    Envoie un email de bienvenue dans la langue préférée de l'utilisateur.
+    """
+    activate(user.language)
+
+    subject = _("Welcome to ft_transcendence!")
+    message = _("Hello {user},\n\nWelcome to our platform!").format(user=user.username)
+
+    send_mail(
+        subject,
+        message,
+        "no-reply@ft_transcendence.com",
+        [user.email],
+        fail_silently=False,
+    )
