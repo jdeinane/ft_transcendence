@@ -35,9 +35,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 	is_2fa_enabled = models.BooleanField(default=False)
-	#last_2fa_verified = models.DateTimeField(null=True, blank=True)
-	#failed_2fa_attempts = models.IntegerField(default=0)
-	#token_expiry = models.DateTimeField(null=True, blank=True)
+	last_2fa_verified = models.DateTimeField(null=True, blank=True)
+	failed_2fa_attempts = models.IntegerField(default=0)
+	token_expiry = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
 
