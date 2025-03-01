@@ -11,7 +11,7 @@ urlpatterns = [
     path("admin/", admin.site.urls),
     path("api/auth/register/", register, name="register"),
     path("api/auth/login/", login_view, name="login"),
-    path("api/auth/me/", get_current_user, name="me"),
+    path("api/auth/me/", get_current_user, name="get_current_user"),
     path("api/auth/generate-2fa/", Generate2FAView.as_view(), name="generate-2fa"),
     path("api/auth/enable-2fa/", Enable2FAView.as_view(), name="enable-2fa"),
     path("api/auth/verify-2fa/", Verify2FAView.as_view(), name="verify-2fa"),

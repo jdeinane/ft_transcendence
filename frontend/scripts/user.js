@@ -111,15 +111,21 @@ export function logoutUser() {
 
 export async function fetchUserProfile() {
     let token = localStorage.getItem("access_token");
+    
     if (!token) {
-        console.warn("No access token found, trying to refresh...");
+        console.warn("❌ Aucun access token trouvé, tentative de rafraîchissement...");
         const refreshed = await refreshToken();
-        if (!refreshed) return;
+        if (!refreshed) {
+            console.error("🚨 Impossible de récupérer le profil utilisateur !");
+            return;
+        }
         token = localStorage.getItem("access_token");
     }
 
+    console.log("🔍 Vérification du profil avec token :", token);
+
     try {
-        const response = await fetch(`${API_BASE_URL}/api/auth/me/`, {
+        const response = await fetch("http://127.0.0.1:4000/api/auth/me/", {
             method: "GET",
             headers: {
                 "Authorization": `Bearer ${token}`,
@@ -127,20 +133,24 @@ export async function fetchUserProfile() {
             }
         });
 
-        if (response.ok) {
-            const user = await response.json();
-            console.log("👤 Profil utilisateur récupéré :", user);
-            localStorage.setItem("loggedInUser", JSON.stringify(user));
-			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
-			loadProfile();
-            updateNavigation();
-        } else {
-            console.warn("Failed to fetch user profile");
+        if (!response.ok) {
+            console.error("❌ Impossible de récupérer le profil, statut :", response.status);
+            return;
         }
+
+        const user = await response.json();
+        console.log("👤 Profil utilisateur récupéré :", user);
+
+        localStorage.setItem("loggedInUser", JSON.stringify(user));
+        localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+        loadProfile();
+        updateNavigation();
+
     } catch (error) {
-        console.error("Error fetching user:", error);
+        console.error("❌ Erreur lors de la récupération du profil utilisateur :", error);
     }
 }
+
 
 
 export function getCurrentUser() {

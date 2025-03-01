@@ -570,17 +570,23 @@ def get_current_user(request):
 	Renvoie les informations de l'utilisateur connecté
 	"""
     try:
-        token = request.headers.get('Authorization', '').split(' ')[1] # Récupère le token
-        print("🛠️ Token reçu dans Django:", token)  # Debug
+        token = request.headers.get('Authorization', '').split(' ')[1]
+        print("🛠️ Token reçu dans Django:", token)
 
-        UntypedToken(token) # Vérifie si le token est valide
+        UntypedToken(token)
         user = request.user
-
+        if not user:
+            print("❌ ERREUR : Utilisateur non trouvé dans la base de données")
+            return Response({"detail": "User not found", "code": "user_not_found"}, status=404)
+		
+        print(f"🔍 Utilisateur actuel : {user.username}, 2FA : {user.two_factor_secret}")
+        
         return Response({
             "id": user.id,
             "username": user.username,
             "email": user.email,
-            "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
+            "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None,
+            "two_factor_secret": user.two_factor_secret
         })
     except Exception as e:
         print("❌ Erreur de token:", str(e))

@@ -98,7 +98,7 @@ export async function saveAvatar(selectedAvatar) {
         console.log("📩 Réponse API:", data);
 
         if (response.ok) {
-            await fetchUserProfile();  // 🔥 Recharge le profil après mise à jour
+            await fetchUserProfile();
             navigate("#/profile");
         } else {
             console.error("❌ Failed to update avatar:", data.error);
