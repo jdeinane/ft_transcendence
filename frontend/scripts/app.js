@@ -114,7 +114,7 @@ export function navigate(path, addToHistory = true) {
 
 		const chatWidget = document.getElementById("chat-widget");
 		chatWidget.addEventListener("click", () => {
-			navigate("#/livechat");
+			navigate("#/profile");
 		});
 
 		const leaderboardWidget = document.getElementById("leaderboard-widget");
