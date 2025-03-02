@@ -32,6 +32,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	two_factor_secret = models.CharField(max_length=255, blank=True, null=True)
 	is_online = models.BooleanField(default=False)
 	is_active = models.BooleanField(default=True)
+	last_seen = models.DateTimeField(auto_now=True)
 	is_staff = models.BooleanField(default=False)
 	is_superuser = models.BooleanField(default=False)
 	is_2fa_enabled = models.BooleanField(default=False)
@@ -40,18 +41,17 @@ class User(AbstractBaseUser, PermissionsMixin):
 	token_expiry = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
+	number_of_games_played = models.IntegerField(null=True, blank=True)
 	language = models.CharField(
 		max_length=10,
 		choices=[("en", "English"), ("fr", "Français"), ("es", "Español")],
 		default="en"
 	)
-
 	groups = models.ManyToManyField(
 		"auth.Group",
 		related_name="custom_user_groups",
 		blank=True
 	)
-
 	user_permissions = models.ManyToManyField(
 		"auth.Permission",
 		related_name="custom_user_permissions",
@@ -85,6 +85,18 @@ class User(AbstractBaseUser, PermissionsMixin):
 		"""
 		self.failed_2fa_attempts += 1
 		self.save()
+	
+	def update_last_seen(self):
+		"""
+		Met à jour la dernière connexion de l'utilisateur
+		"""
+		self.last_seen = now()
+		self.save(update_fields=['last_seen'])
+
+	def increment_games_played(self):
+		""" Incrémente le nombre de parties jouées """
+		self.number_of_games_played += 1
+		self.save(update_fields=['number_of_games_played'])
 
 	objects = UserManager()
 

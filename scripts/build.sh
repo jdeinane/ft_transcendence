@@ -53,8 +53,8 @@ wait
 
 echo "Waiting for PostgreSQL to be fully ready..."
 until docker compose exec postgres psql -U admin -d ft_transcendence -c '\q' > /dev/null 2>&1; do
-  echo "PostgreSQL not ready yet... Retrying in 5 seconds."
-  sleep 5
+  echo "PostgreSQL not ready yet... Retrying in 10 seconds."
+  sleep 10
 done
 
 echo "PostgreSQL is now ready!"
