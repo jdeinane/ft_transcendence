@@ -23,4 +23,5 @@ urlpatterns = [
     path('api/auth/token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),
 	path('api/game/ai-move/', pong_ai_move, name="pong_ai_move"),
     path("api/game/tictactoe-ai-move/", tictactoe_ai_move, name="tictactoe-ai-move"),
+    path("api/users/current/", get_current_user, name="get_current_user"),
 ]
