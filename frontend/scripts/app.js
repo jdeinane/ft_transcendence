@@ -288,27 +288,28 @@ document.addEventListener("DOMContentLoaded", () => {
 setInterval(refreshToken, 15 * 60 * 1000);
 
 function handleOAuthCallback() {
-    const hashParams = new URLSearchParams(window.location.hash.split("?")[1]); // Récupérer les paramètres après "#/oauth-success?"
+    const hashParams = new URLSearchParams(window.location.hash.split("?")[1]);
     const accessToken = hashParams.get("access_token");
     const userId = hashParams.get("user_id");
     const username = hashParams.get("username");
-    const avatarUrl = hashParams.get("avatar_url");
+    const avatarUrl = hashParams.get("avatar_url") || "assets/avatars/avataralien.png";
 	const email = hashParams.get("email");
+    const language = hashParams.get("language") || "en";
 
     if (accessToken) {
-        // Stocker le token et l'utilisateur
         localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("loggedInUser", JSON.stringify({ userId, username, avatarUrl, email }));
+        localStorage.setItem("loggedInUser", JSON.stringify({ userId, username, avatarUrl, language, email }));
 
         console.log("🔑 Connexion réussie avec OAuth !");
-        navigate("#/profile"); // Rediriger vers la page profil
+		localStorage.setItem("preferredLanguage", language);
+		loadLanguage(language);
+        navigate("#/profile"); 
     } else {
         console.error("❌ Échec de la connexion OAuth");
         navigate("#/login");
     }
 }
 
-// Vérifier si on est sur la page OAuth après une redirection
 if (window.location.hash.startsWith("#/oauth-success")) {
     handleOAuthCallback();
 }

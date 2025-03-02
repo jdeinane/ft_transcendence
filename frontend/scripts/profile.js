@@ -16,7 +16,6 @@ export function loadProfile() {
         return;
     }
 
-
     // Vérifier si les éléments existent avant de les modifier
     const profileUsername = document.getElementById("profile-username");
     const profileEmail = document.getElementById("profile-email");
