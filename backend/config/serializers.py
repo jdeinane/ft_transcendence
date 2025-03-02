@@ -1,3 +1,4 @@
+from config.models import Tournament, TournamentPlayer, TournamentMatch, User
 from rest_framework import serializers
 from django.contrib.auth import get_user_model
 
@@ -37,3 +38,14 @@ class LoginSerializer(serializers.Serializer):
 	username = serializers.CharField()
 	password = serializers.CharField(write_only=True)
 	email = serializers.EmailField(required=False)
+
+class TournamentSerializer(serializers.ModelSerializer):
+	winner = serializers.StringRelatedField()  # Affiche le nom du gagnant
+	players = serializers.SerializerMethodField()
+
+	class Meta:
+		model = Tournament
+		fields = ["id", "name", "creator", "status", "winner", "players"]
+
+	def get_players(self, obj):
+		return [player.username for player in obj.players.all()]

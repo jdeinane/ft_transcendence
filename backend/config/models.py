@@ -4,7 +4,7 @@ from django.contrib.auth.models import AbstractUser, AbstractBaseUser, BaseUserM
 from django.apps import apps
 from django.utils.timezone import now
 
-apps.get_app_config("config").get_models()
+# apps.get_app_config("config").get_models()
 
 class UserManager(BaseUserManager):
 	def create_user(self, username, email, password=None):
@@ -61,18 +61,12 @@ class User(AbstractBaseUser, PermissionsMixin):
 		blank=True
 	)
 
-	def set_token_expiry(self):
+	def set_token_expiry(self, duration=30):
 		"""
 		Définit l'expiration du Token après vérification du 2FA.
 		"""
-		self.token_expiry = now() + timedelta(minutes=30)
-		self.save()
-
-	def set_token_expiry(self):
-		"""
-		Vérifie si le Token est encore valide.
-		"""
-		return self.token_expiry is None or now() < self.token_expiry
+		self.token_expiry = timezone.now() + timedelta(minutes=duration)
+		self.save(update_fields=["token_expiry"])
 
 	def register_2fa_success(self):
 		"""
@@ -176,12 +170,53 @@ class BlockedUser(models.Model):
 		unique_together = (("user", "blocked_user"),)
 
 class Tournament(models.Model):
-	name = models.CharField(max_length=100)
-	players = models.ManyToManyField(User, related_name="tournaments")
+	name = models.CharField(max_length=100, unique=True)
+	creator = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tournaments_created")
 	created_at = models.DateTimeField(auto_now_add=True)
+	max_players = models.IntegerField()
+	is_public = models.BooleanField(default=True)
+	status = models.CharField(
+		max_length=20,
+		choices=[("Pending", "Pending"), ("Ongoing", "Ongoing"), ("Finished", "Finished")],
+		default="Pending",
+	)
+	winner = models.ForeignKey(
+		User, null=True, blank=True, 
+		on_delete=models.SET_NULL, 
+		related_name="tournaments_won"
+	)
+	players = models.ManyToManyField(User, through="TournamentPlayer", related_name="tournaments_participated")
+
+	def declare_winner(self, user):
+		"""
+		Met à jour le gagnant du tournoi
+		"""
+		self.winner = user
+		self.status = "Finished"
+		self.save(update_fields=["winner", "status"])
 
 	def __str__(self):
-		return self.name
+		return f"{self.name} ({self.status})"
+
+class TournamentPlayer(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="tournament_players")
+	player = models.ForeignKey(User, on_delete=models.CASCADE, related_name="player_tournaments")
+	joined_at = models.DateTimeField(auto_now_add=True)
+
+	class Meta:
+		unique_together = ("tournament", "player")  # Un joueur ne peut s'inscrire qu'une seule fois
+
+	def __str__(self):
+		return f"{self.player.username} dans {self.tournament.name}"
+
+class TournamentMatch(models.Model):
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player1")
+	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player2")
+	winner = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="match_winner")
+	loser = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="match_loser")
+	round_number = models.IntegerField()
+	created_at = models.DateTimeField(auto_now_add=True)
 
 class UserTwoFactor(models.Model):
 	user = models.OneToOneField(User, on_delete=models.CASCADE)
