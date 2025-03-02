@@ -29,8 +29,8 @@ export function loadProfile() {
 
     if (profileUsername) profileUsername.textContent = user.username || "Unknown";
     if (profileEmail) profileEmail.textContent = user.email || "No email";
-    if (profileGames) profileGames.textContent = user.gamesPlayed || 0;
-    if (profileLastSeen) profileLastSeen.textContent = user.lastSeen || "N/A";
+    if (profileGames) profileGames.textContent = user.number_of_games_played || 0;
+    if (profileLastSeen) profileLastSeen.textContent = user.last_seen || "N/A";
 
     const editProfileBtn = document.getElementById("edit-profile-btn");
     if (editProfileBtn) {

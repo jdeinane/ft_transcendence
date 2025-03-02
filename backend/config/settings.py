@@ -18,6 +18,9 @@ CSRF_TRUSTED_ORIGINS = [
     "https://ft_transcendence.42.fr"
 ]
 
+TIME_ZONE = "Europe/Paris"
+USE_TZ = True
+
 # --------------------
 # Installed apps
 # --------------------
