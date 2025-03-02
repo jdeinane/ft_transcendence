@@ -90,33 +90,79 @@ def leave_tournament(request, tournament_id):
 @api_view(['POST'])
 @permission_classes([IsAuthenticated])
 def end_game(request):
-	"""
-	Enregistre un match et met à jour le nombre de parties jouées
-	"""
-	try:
-		player1 = request.user
-		player2_id = request.data.get("player2_id")
-		player2 = User.objects.get(id=player2_id)
+    """
+    Enregistre un match et met à jour le nombre de parties jouées pour le joueur inscrit.
+    """
+    try:
+        player1 = request.user  # Joueur connecté
+        score_player1 = request.data.get("score_player1", 0)
+        score_player2 = request.data.get("score_player2", 0)
+        game_mode = request.data.get("game_mode", "solo")  
 
-		score_player1 = request.data.get("score_player1", 0)
-		score_player2 = request.data.get("score_player2", 0)
+        print(f"📩 Requête reçue: score1={score_player1}, score2={score_player2}, mode={game_mode}") # DEBUG
 
-		winner = player1 if score_player1 > score_player2 else player2
+        # Déterminer le gagnant (ou nul si égalité)
+        winner = player1 if score_player1 > score_player2 else (None if score_player1 == score_player2 else None)
 
-		game = PongGame.objects.create(
-			player1=player1, player2=player2,
-			score_player1=score_player1, score_player2=score_player2,
-			winner=winner
-		)
+        # Enregistrer la partie
+        game = PongGame.objects.create(
+            player1=player1,
+            player2=None,  # Joueur 2 n'existe pas
+            score_player1=score_player1,
+            score_player2=score_player2,
+            winner=winner
+        )
 
-		# Met à jour 'number_of_games_played' pour les deux joueurs
-		player1.increment_games_played()
-		player2.increment_games_played()
+        # ✅ Incrémenter uniquement le joueur connecté
+        player1.increment_games_played()
 
-		return Response({"message": "Game recorded successfully", "game_id": game.id})
-	except Exception as e:
-		print("❌ Erreur lors de l'enregistrement du match :", str(e))
-		return Response({"error": "Erreur serveur"}, status=500)
+        return Response({
+            "message": "Game recorded successfully",
+            "game_id": game.id,
+            "number_of_games_played": player1.number_of_games_played
+        })
+    except Exception as e:
+        print("❌ Erreur lors de l'enregistrement du match :", str(e))
+        return Response({"error": "Erreur serveur"}, status=500)
+
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def end_tic_tac_toe_game(request):
+    """
+    Enregistre une partie de Tic Tac Toe et met à jour le nombre de parties jouées
+    """
+    try:
+        player1 = request.user
+        game_mode = request.data.get("game_mode", "solo")
+        score_player1 = request.data.get("score_player1", 0)
+        score_player2 = request.data.get("score_player2", 0)
+        is_draw = request.data.get("is_draw", False)
+
+        if game_mode == "solo":
+            player2 = None  
+        else:
+            player2_id = request.data.get("player2_id")
+            player2 = User.objects.get(id=player2_id) if player2_id else None
+
+        game = TicTacToeGame.objects.create(
+            player1=player1,
+            player2=player2,
+            score_player1=score_player1,
+            score_player2=score_player2,
+            is_draw=is_draw
+        )
+
+        player1.increment_games_played()
+
+        return Response({
+            "message": "Tic Tac Toe game recorded successfully",
+            "game_id": game.id,
+            "number_of_games_played": player1.number_of_games_played
+        })
+
+    except Exception as e:
+        print("❌ Erreur lors de l'enregistrement de la partie Tic Tac Toe :", str(e))
+        return Response({"error": "Erreur serveur"}, status=500)
 
 # API pour IA
 @api_view(["POST"])

@@ -41,7 +41,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 	token_expiry = models.DateTimeField(null=True, blank=True)
 	created_at = models.DateTimeField(auto_now_add=True)
 	updated_at = models.DateTimeField(auto_now=True)
-	number_of_games_played = models.IntegerField(null=True, blank=True)
+	number_of_games_played = models.IntegerField(default=0, null=False, blank=True)
 	language = models.CharField(
 		max_length=10,
 		choices=[("en", "English"), ("fr", "Français"), ("es", "Español")],
@@ -95,6 +95,8 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 	def increment_games_played(self):
 		""" Incrémente le nombre de parties jouées """
+		if self.number_of_games_played is None:
+			self.number_of_games_played = 0
 		self.number_of_games_played += 1
 		self.save(update_fields=['number_of_games_played'])
 
@@ -134,7 +136,7 @@ class ChatMessage(models.Model):
 class PongGame(models.Model):
 	id = models.BigAutoField(primary_key=True)
 	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pong_games_as_player1")
-	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pong_games_as_player2")
+	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="pong_games_as_player2", null=True, blank=True)
 	score_player1 = models.IntegerField(default=0)
 	score_player2 = models.IntegerField(default=0)
 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="pong_wins")
@@ -144,7 +146,7 @@ class PongGame(models.Model):
 class TicTacToeGame(models.Model):
 	id = models.BigAutoField(primary_key=True)
 	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tictactoe_games_as_player1")
-	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tictactoe_games_as_player2")
+	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="tictactoe_games_as_player2", null=True, blank=True)
 	score_player1 = models.IntegerField(default=0)
 	score_player2 = models.IntegerField(default=0)
 	winner = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name="tictactoe_wins")

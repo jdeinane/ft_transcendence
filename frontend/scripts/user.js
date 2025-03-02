@@ -151,6 +151,7 @@ export async function fetchUserProfile() {
             console.log("👤 Profil utilisateur récupéré :", user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
 			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+			document.getElementById("profile-games").textContent = user.number_of_games_played || 0;
 			loadProfile();
             updateNavigation();
         } else {

@@ -1,5 +1,6 @@
 import { navigate } from "./app.js"
-import { logoutUser, refreshToken } from "./user.js";
+import { logoutUser, refreshToken, fetchUserProfile } from "./user.js";
+import { getCurrentUser } from "./profile.js";
 
 let player1Score = 0;
 let player2Score = 0;
@@ -7,6 +8,7 @@ let player3Score = 0;
 let player4Score = 0;
 let gameOver = false;
 let ballX, ballY;
+let gameMode = "solo";
 
 export function setupPongGame() {
 	let selectedMode = "solo";
@@ -17,12 +19,15 @@ export function setupPongGame() {
 	const gameSelectionButton = document.getElementById("back-to-game-selection");
 	const modeSelectionContainer = document.querySelector(".mode-selection-container");
 	const playerSelection = document.getElementById("player-selection");
-
+	selectedMode = "solo";
+	
     document.querySelectorAll(".mode-button").forEach(button => {
         button.addEventListener("click", () => {
             document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
             button.classList.add("active-mode");
+
             selectedMode = button.dataset.mode;
+			gameMode = selectedMode;
 
 			if (selectedMode == "multiplayer")
 				playerSelection.classList.remove("hidden");
@@ -52,8 +57,9 @@ export function setupPongGame() {
 		canvas.style.display = "block";
 		backButton.style.display = "block";
 
-		const isSinglePlayer = selectedMode === "solo";
-		startPongGame(canvas, isSinglePlayer, playerCount);
+	const isSinglePlayer = selectedMode === "solo";
+	startPongGame(canvas, selectedMode, playerCount);
+
 	});
 
 	backButton.addEventListener("click", () => {
@@ -69,13 +75,13 @@ export function setupPongGame() {
 }
 
 
-export function startPongGame(canvas, isSinglePlayer, playerCount) {
+export function startPongGame(canvas, selectedMode, playerCount) {
 	const ctx = canvas.getContext("2d");
-
+	gameMode = selectedMode;
 	ballX = canvas.width / 2;
 	ballY = canvas.height / 2;
-	let ballSpeedX = 3;
-	let ballSpeedY = 3;
+	let ballSpeedX = 4;
+	let ballSpeedY = 4;
   
 	const paddleHeight = 100;
 	const paddleWidth = 10;
@@ -222,14 +228,14 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 
 		if (keys.w) paddle1Y -= 5;
 		if (keys.s) paddle1Y += 5;
-	
-		if (!isSinglePlayer) {
-			if (keys.i) paddle2Y -= 5;
-			if (keys.k) paddle2Y += 5;
-		} else {
+
+		if (gameMode === "solo") {
 			const aiMove = await fetchAIMove(ballY, paddle2Y, Math.abs(ballSpeedY), "medium");
 			paddle2Y += aiMove * 2;
-			}
+		} else {
+			if (keys.i) paddle2Y -= 5;
+			if (keys.k) paddle2Y += 5;
+		}
 		
 		if (playerCount >= 3) {
 			if (keys.r)
@@ -263,6 +269,15 @@ export function startPongGame(canvas, isSinglePlayer, playerCount) {
 		function endGame(winner) {
 			if (gameOver) return;
 			gameOver = true;
+		
+			let player2Id = null;
+			if (selectedMode !== "solo") {
+				// 🔹 Si c'est un mode multijoueur ou tournoi, récupérer l'ID de l'adversaire
+				const user = getCurrentUser();
+				player2Id = user.id === 1001 ? 1002 : 1001;  // Exemple, adapte selon ton système d'IDs
+			}
+		
+			sendEndGameRequest(player1Score, player2Score, selectedMode, player2Id);
 		
 			displayWinner(`🏆 Player ${winner} won !`);
 		}
@@ -593,5 +608,43 @@ async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
     } catch (error) {
         console.error("❌ Erreur lors de la récupération du mouvement de l'IA :", error);
         return 0;
+    }
+}
+
+async function sendEndGameRequest(player1Score, player2Score, gameMode = "solo", player2Id = null) {
+    let token = localStorage.getItem("access_token");
+
+    if (!token) {
+        console.error("❌ Aucun token trouvé. Impossible d'enregistrer le match.");
+        return;
+    }
+
+    try {
+        const requestBody = {
+            game_mode: gameMode,
+            score_player1: player1Score,
+            score_player2: player2Score
+        };
+
+        console.log("📤 Envoi de la requête end-game avec :", requestBody); // DEBUG
+
+        const response = await fetch("http://127.0.0.1:4000/api/game/end-game/", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log("✅ Match enregistré avec succès ! Nouveau nombre de parties :", data.number_of_games_played);
+            await fetchUserProfile();
+        } else {
+            console.error("❌ Erreur lors de l'enregistrement du match :", data.error);
+        }
+    } catch (error) {
+        console.error("❌ Erreur lors de la requête :", error);
     }
 }
