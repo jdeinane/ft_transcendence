@@ -21,7 +21,7 @@ from django.db import connections
 from django.utils import timezone
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
-from django.shortcuts import get_object_or_404
+from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.timezone import localtime
 
@@ -546,11 +546,7 @@ def oauth_callback(request):
 
     # Générer un JWT Token pour l'utilisateur
     refresh = RefreshToken.for_user(user)
-    return JsonResponse(
-        {
-            "access_token": str(refresh.access_token),
-            "user_id": user.id,
-            "username": user.username,
-            "avatar_url": user.avatar_url,
-        }
-    )
+
+    # 🔄 Rediriger vers le frontend avec le token
+    frontend_url = "https://localhost:8443/#/oauth-success"
+    return redirect(f"{frontend_url}?access_token={refresh.access_token}&user_id={user.id}&username={user.username}&avatar_url={user.avatar_url}&email={user.email}")

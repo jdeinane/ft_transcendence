@@ -1,10 +1,3 @@
-let users = [
-    { username: "Alice", avatar: "assets/avatars/avatargirl1.png", blocked: false },
-    { username: "Bob", avatar: "assets/avatars/avatarboy1.png", blocked: false },
-    { username: "Charlie", avatar: "assets/avatars/avatargirl2.png", blocked: false }
-];
-
-let conversations = {}; //
 
 import { routes } from "./routes.js"
 import { loadLanguage, setupLanguageSelector } from "./language.js";
@@ -178,70 +171,6 @@ export function navigate(path, addToHistory = true) {
 		setupLeaderboard();
 	}
 
-	if (cleanPath === "/livechat") {
-		const chatMessages = document.getElementById("chat-messages");
-		const messageInput = document.getElementById("message-input");
-		const sendMessageBtn = document.getElementById("send-message-btn");
-		const userList = document.getElementById("user-list");
-	
-		let selectedUser = null;
-	
-		function renderUserList() {
-			userList.innerHTML = "";
-			users.forEach(user => {
-				if (!user.blocked) {
-					const li = document.createElement("li");
-					li.innerHTML = `<img src="${user.avatar}" /> ${user.username}`;
-					li.addEventListener("click", () => openChat(user.username));
-					userList.appendChild(li);
-				}
-			});
-		}
-	
-		function openChat(username) {
-			selectedUser = username;
-			chatMessages.innerHTML = "";
-			if (conversations[username]) {
-				conversations[username].forEach(msg => {
-					addMessage(msg.text, msg.sender);
-				});
-			}
-		}
-	
-		function addMessage(text, sender) {
-			const messageElement = document.createElement("div");
-			messageElement.classList.add("chat-message", sender);
-			messageElement.textContent = text;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
-	
-			if (!conversations[selectedUser]) {
-				conversations[selectedUser] = [];
-			}
-			conversations[selectedUser].push({ text, sender });
-		}
-	
-		sendMessageBtn.addEventListener("click", () => {
-			const message = messageInput.value.trim();
-			if (message !== "" && selectedUser) {
-				addMessage(message, "user");
-				messageInput.value = "";
-	
-				setTimeout(() => {
-					addMessage("This is a simulated response.", "bot");
-				}, 1000);
-			}
-		});
-	
-		messageInput.addEventListener("keypress", (e) => {
-			if (e.key === "Enter")
-				sendMessageBtn.click();
-		});
-	
-		renderUserList();
-	}
-	
-
 	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 	loadLanguage(savedLanguage);
 	updateActiveLink(cleanPath);
@@ -357,3 +286,29 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 setInterval(refreshToken, 15 * 60 * 1000);
+
+function handleOAuthCallback() {
+    const hashParams = new URLSearchParams(window.location.hash.split("?")[1]); // Récupérer les paramètres après "#/oauth-success?"
+    const accessToken = hashParams.get("access_token");
+    const userId = hashParams.get("user_id");
+    const username = hashParams.get("username");
+    const avatarUrl = hashParams.get("avatar_url");
+	const email = hashParams.get("email");
+
+    if (accessToken) {
+        // Stocker le token et l'utilisateur
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem("loggedInUser", JSON.stringify({ userId, username, avatarUrl, email }));
+
+        console.log("🔑 Connexion réussie avec OAuth !");
+        navigate("#/profile"); // Rediriger vers la page profil
+    } else {
+        console.error("❌ Échec de la connexion OAuth");
+        navigate("#/login");
+    }
+}
+
+// Vérifier si on est sur la page OAuth après une redirection
+if (window.location.hash.startsWith("#/oauth-success")) {
+    handleOAuthCallback();
+}

@@ -239,5 +239,30 @@ export const routes = {
 	"*": `
 	<h1 data-translate="not-found">404 - Not Found</h1>
 	<p data-translate="page-not-found">Page could not be found.</p>
-	`
-  };
+	`,
+
+	"/oauth-success": `
+			<h1>Connexion réussie !</h1>
+			<p>Redirection en cours...</p>
+			<script>
+				setTimeout(() => {
+					const hashParams = new URLSearchParams(window.location.hash.split("?")[1]);
+					const accessToken = hashParams.get("access_token");
+					const userId = hashParams.get("user_id");
+					const username = hashParams.get("username");
+					const avatarUrl = hashParams.get("avatar_url");
+
+					if (accessToken && userId) {
+						localStorage.setItem("access_token", accessToken);
+						localStorage.setItem("loggedInUser", JSON.stringify({ id: userId, username, avatar_url: avatarUrl }));
+						console.log("✅ Connexion avec 42 réussie !");
+						window.location.href = "#/profile"; // Rediriger vers le profil
+					} else {
+						alert("❌ Échec de la connexion avec 42.");
+						window.location.href = "#/login";
+					}
+				}, 500); // Petit délai pour garantir la récupération des données
+			</script>
+`,
+
+};
