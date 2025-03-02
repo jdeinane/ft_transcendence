@@ -404,8 +404,8 @@ function resetGame() {
 
     ballX = window.innerWidth / 2; 
     ballY = window.innerHeight / 2;
-    ballSpeedX = 4;
-    ballSpeedY = 4;
+    let ballSpeedX = 4;
+    let ballSpeedY = 4;
 
     const gameContainer = document.getElementById("pong-container");
     const canvas = document.getElementById("pong"); 
@@ -540,12 +540,14 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
 	
 		setTimeout(() => {
 			document.getElementById("pong-container").classList.add("hidden");
-			onGameEnd(winner);  // Passe au prochain match
-		}, 500);  // Ajoute une petite pause pour éviter les conflits d'affichage
+			onGameEnd(winner, player1Score, player2Score); 
+		}, 500);
 	}
 	
     gameLoop();
 }
+
+/////////////////////////////////////////////////////////////////////////
 
 async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
     let token = localStorage.getItem("access_token");

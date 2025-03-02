@@ -1,5 +1,6 @@
 import { startTournamentPongGame } from "./pongGame.js";
 import { navigate } from "./app.js";
+import { fetchUserProfile } from "./user.js";
 
 let tournamentPlayers = [];
 let tournamentMatches = [];
@@ -97,19 +98,24 @@ export function setupTournament() {
 			alert("Must be 4 players");
 			return;
 		}
-
+	
 		joinButton.disabled = true;
 		playerNameInput.disabled = true;
-
+	
 		if (currentMatchIndex < tournamentMatches.length) {
 			const { player1, player2 } = tournamentMatches[currentMatchIndex];
 	
 			setTimeout(() => {
-				startTournamentPongGame(player1, player2, winner => {
+				startTournamentPongGame(player1, player2, async (winner, p1Score, p2Score) => {
 					let loser = player1 === winner ? player2 : player1;
 					finalRanking.unshift(winner);
 					winners.push(winner);
 					losers.push(loser);
+	
+					console.log(`🎯 Match terminé - ${winner} a gagné ! Score: ${p1Score} - ${p2Score}`);
+	
+					// 🔥 Envoi des scores au backend
+					await sendTournamentEndGameRequest(p1Score, p2Score, winner);
 	
 					currentMatchIndex++;
 	
@@ -126,15 +132,14 @@ export function setupTournament() {
 							startFinalMatch();
 						} else {
 							declareWinner(finalRanking[0]);
-						}					
-					}					
-					else
+						}                    
+					} else {
 						setTimeout(startNextMatch, 1000);
+					}
 				});
 			}, 500);
 		}
 	}
-	
 	
 	function startMatchForThirdPlace(onComplete) {
 		if (losers.length < 2)
@@ -218,5 +223,44 @@ export function setupTournament() {
 
 		joinButton.disabled = false;
 		playerNameInput.disabled = false;
+    }
+}
+
+async function sendTournamentEndGameRequest(player1Score, player2Score, winner) {
+    let token = localStorage.getItem("access_token");
+
+    if (!token) {
+        console.error("❌ Aucun token trouvé. Impossible d'enregistrer le match.");
+        return;
+    }
+
+    try {
+        const requestBody = {
+            game_mode: "tournament",
+            score_player1: player1Score,
+            score_player2: player2Score,
+            winner: winner
+        };
+
+        console.log("📤 Envoi de la requête end-tournament-game avec :", requestBody);
+
+        const response = await fetch("http://127.0.0.1:4000/api/game/end-tournament-game/", {
+            method: "POST",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify(requestBody)
+        });
+
+        const data = await response.json();
+        if (response.ok) {
+            console.log("✅ Match de tournoi enregistré avec succès ! Nouveau nombre de parties :", data.number_of_games_played);
+            await fetchUserProfile();
+        } else {
+            console.error("❌ Erreur lors de l'enregistrement du match de tournoi :", data.error);
+        }
+    } catch (error) {
+        console.error("❌ Erreur lors de la requête :", error);
     }
 }

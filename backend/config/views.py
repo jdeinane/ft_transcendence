@@ -164,6 +164,39 @@ def end_tic_tac_toe_game(request):
         print("❌ Erreur lors de l'enregistrement de la partie Tic Tac Toe :", str(e))
         return Response({"error": "Erreur serveur"}, status=500)
 
+@api_view(['POST'])
+@permission_classes([IsAuthenticated])
+def end_tournament_game(request):
+    """
+    Enregistre un match de tournoi et met à jour le nombre de parties jouées.
+    """
+    try:
+        player1 = request.user
+        score_player1 = request.data.get("score_player1", 0)
+        score_player2 = request.data.get("score_player2", 0)
+        winner_name = request.data.get("winner")
+        
+        winner = player1 if winner_name == player1.username else None
+
+        game = PongGame.objects.create(
+            player1=player1,
+            player2=None,
+            score_player1=score_player1,
+            score_player2=score_player2,
+            winner=winner
+        )
+
+        player1.increment_games_played()
+
+        return Response({
+            "message": "Tournament match recorded successfully",
+            "game_id": game.id,
+            "number_of_games_played": player1.number_of_games_played
+        })
+    except Exception as e:
+        print("❌ Erreur lors de l'enregistrement du match de tournoi :", str(e))
+        return Response({"error": "Erreur serveur"}, status=500)
+
 # API pour IA
 @api_view(["POST"])
 @permission_classes([AllowAny])
