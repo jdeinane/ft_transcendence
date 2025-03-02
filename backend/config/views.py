@@ -493,6 +493,7 @@ def protected_view(request):
 	return JsonResponse({"message": "Accès autorisé avec Token valide."})
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def oauth_callback(request):
     """
     Handles the OAuth callback from 42 and exchanges the code for an access token.
