@@ -261,7 +261,8 @@ def get_current_user(request):
 			"username": user.username,
 			"email": user.email,
 			"two_factor_secret": user.two_factor_secret,
-			"avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
+			"avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None,
+			"language": user.language
 		})
 	except Exception as e:
 		print("❌ Erreur de token:", str(e))
@@ -537,17 +538,24 @@ def tictactoe_ai_move(request):
 # API pour langage
 @api_view(["POST"])
 def set_language(request):
-	"""
-	Change la langue de l'utilisateur.
-	"""
-	language = request.data.get("language")
+    """
+    Change la langue de l'utilisateur.
+    """
+    language = request.data.get("language")
+    print(f"🌍 Requête reçue pour changer la langue en : {language}")
 
-	if language in dict(settings.LANGUAGES):
-		activate(language)
-		return Response({"message": f"Langue changée en {language}"})
-	else:
-		return Response({"error": "Langue non supportée"}, status=400)
-
+    if language in dict(settings.LANGUAGES):
+        if request.user.is_authenticated:
+            print(f"✅ Utilisateur {request.user.username} : mise à jour de la langue.")
+            request.user.language = language  # Correction ici
+            request.user.save()
+        
+        activate(language)
+        return Response({"message": f"Langue changée en {language}"})
+    else:
+        print("❌ Langue non supportée :", language)
+        return Response({"error": "Langue non supportée"}, status=400)
+	
 @api_view(['POST'])
 @permission_classes([AllowAny])
 def login_view(request):
@@ -619,7 +627,8 @@ def get_current_user(request):
             "id": user.id,
             "username": user.username,
             "email": user.email,
-            "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None
+            "avatar_url": user.avatar_url if hasattr(user, "avatar_url") else None,
+			"language": user.language
         })
     except Exception as e:
         print("❌ Erreur de token:", str(e))
