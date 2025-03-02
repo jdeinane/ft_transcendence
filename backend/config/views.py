@@ -1,4 +1,5 @@
 import json
+import requests
 import threading, random, time, pyotp
 from datetime import datetime, timedelta
 from rest_framework import views, viewsets, status
@@ -490,3 +491,65 @@ def protected_view(request):
 		return response
 
 	return JsonResponse({"message": "Accès autorisé avec Token valide."})
+
+@api_view(["GET"])
+def oauth_callback(request):
+    """
+    Handles the OAuth callback from 42 and exchanges the code for an access token.
+    """
+    code = request.GET.get("code")
+    if not code:
+        return JsonResponse({"error": "No authorization code provided."}, status=400)
+
+    token_url = "https://api.intra.42.fr/oauth/token"
+    token_data = {
+        "client_id": settings.OAUTH_CLIENT_ID,
+        "client_secret": settings.OAUTH_CLIENT_SECRET,
+        "code": code,
+        "redirect_uri": settings.OAUTH_REDIRECT_URI,
+        "grant_type": "authorization_code",
+    }
+    token_response = requests.post(token_url, data=token_data)
+
+    if token_response.status_code != 200:
+        return JsonResponse(
+            {"error": "Failed to fetch access token.", "details": token_response.json()},
+            status=token_response.status_code,
+        )
+
+    access_token = token_response.json().get("access_token")
+    if not access_token:
+        return JsonResponse({"error": "Access token not found."}, status=400)
+
+    # Fetch user data from 42 API
+    user_info_url = "https://api.intra.42.fr/v2/me"
+    user_info_headers = {"Authorization": f"Bearer {access_token}"}
+    user_info_response = requests.get(user_info_url, headers=user_info_headers)
+
+    if user_info_response.status_code != 200:
+        return JsonResponse(
+            {"error": "Failed to fetch user info.", "details": user_info_response.json()},
+            status=user_info_response.status_code,
+        )
+
+    user_data = user_info_response.json()
+
+    # Vérifier si l'utilisateur existe déjà
+    user, created = User.objects.get_or_create(forty_two_id=user_data["id"])
+
+    # Mettre à jour les données de l'utilisateur
+    user.username = user_data.get("login", f"user_{user_data['id']}")
+    user.email = user_data.get("email", f"user{user_data['id']}@42.fr")
+    user.avatar_url = user_data.get("image", {}).get("link", "")
+    user.save()
+
+    # Générer un JWT Token pour l'utilisateur
+    refresh = RefreshToken.for_user(user)
+    return JsonResponse(
+        {
+            "access_token": str(refresh.access_token),
+            "user_id": user.id,
+            "username": user.username,
+            "avatar_url": user.avatar_url,
+        }
+    )

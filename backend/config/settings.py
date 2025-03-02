@@ -181,3 +181,10 @@ DEFAULT_FROM_EMAIL = os.getenv('DEFAULT_FROM_EMAIL')
 # --------------------
 TIME_ZONE = "Europe/Paris"
 USE_TZ = True
+
+# --------------------
+# OAuth 2.0 Settings
+# --------------------
+OAUTH_CLIENT_ID = os.getenv('OAUTH_CLIENT_ID')
+OAUTH_CLIENT_SECRET = os.getenv('OAUTH_CLIENT_SECRET')
+OAUTH_REDIRECT_URI = os.getenv('OAUTH_REDIRECT_URI')

@@ -47,6 +47,9 @@ class User(AbstractBaseUser, PermissionsMixin):
 		choices=[("en", "English"), ("fr", "Français"), ("es", "Español")],
 		default="en"
 	)
+
+	forty_two_id = models.IntegerField(unique=True, blank=True, null=True)
+
 	groups = models.ManyToManyField(
 		"auth.Group",
 		related_name="custom_user_groups",
