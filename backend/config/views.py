@@ -342,7 +342,7 @@ def get_current_user(request):
 			"username": user.username,
 			"email": user.email,
 			"two_factor_secret": user.two_factor_secret,
-			"avatar_url": user.avatar_url if hasattr(user, "avatar_url") else "assets/avatars/avataralien.png",
+			"avatar_url": user.avatar_url if hasattr(user, "avatar_url") else "avataralien.png",
 			"language": user.language,
 			"number_of_games_played": user.number_of_games_played or 0,
             "last_seen": localtime(user.last_seen).strftime("%Y-%m-%d %H:%M:%S") 
@@ -534,17 +534,29 @@ def oauth_callback(request):
         )
 
     user_data = user_info_response.json()
+    avatar_url = user_data.get("image", {}).get("link", "")
 
     user, created = User.objects.get_or_create(forty_two_id=user_data["id"])
 
     user.username = user_data.get("login", f"user_{user_data['id']}")
     user.email = user_data.get("email", f"user{user_data['id']}@42.fr")
-    user.avatar_url = user_data.get("image", {}).get("link", user.avatar_url)
+    user.last_seen = timezone.now()
     if not user.language:
         user.language = "en"
+    if avatar_url:
+        user.avatar_url = avatar_url
+    if created:
+        user.avatar_url = "avataralien.png"
+        user.number_of_games_played = 0
+    user.update_last_seen()
     user.save()
 
     refresh = RefreshToken.for_user(user)
 
     frontend_url = "https://localhost:8443/#/oauth-success"
-    return redirect(f"{frontend_url}?access_token={refresh.access_token}&user_id={user.id}&username={user.username}&avatar_url={user.avatar_url}&email={user.email}&language={user.language}")
+    return redirect(
+        f"{frontend_url}?access_token={refresh.access_token}&user_id={user.id}"
+        f"&username={user.username}&avatar_url={user.avatar_url}&email={user.email}"
+        f"&language={user.language}&number_of_games_played={user.number_of_games_played}"
+		f"&last_seen={user.last_seen.strftime('%Y-%m-%d %H:%M:%S')}"
+	)

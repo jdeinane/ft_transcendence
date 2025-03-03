@@ -16,14 +16,13 @@ export function loadProfile() {
         return;
     }
 
-    // Vérifier si les éléments existent avant de les modifier
     const profileUsername = document.getElementById("profile-username");
     const profileEmail = document.getElementById("profile-email");
     const profileGames = document.getElementById("profile-games");
     const profileLastSeen = document.getElementById("profile-last-seen");
     const avatarImg = document.getElementById("avatar-img");
 
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avataralien.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatar/avataralien.png";
     avatarImg.src = savedAvatar;
 
     if (profileUsername) profileUsername.textContent = user.username || "Unknown";

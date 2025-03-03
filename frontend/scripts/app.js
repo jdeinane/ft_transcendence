@@ -292,16 +292,23 @@ function handleOAuthCallback() {
     const accessToken = hashParams.get("access_token");
     const userId = hashParams.get("user_id");
     const username = hashParams.get("username");
-    const avatarUrl = hashParams.get("avatar_url") || "assets/avatars/avataralien.png";
+    const avatarUrl = hashParams.get("avatar_url") || "avataralien.png";
 	const email = hashParams.get("email");
     const language = hashParams.get("language") || "en";
+    const numberOfGamesPlayed = hashParams.get("number_of_games_played") || 0;
+    const lastSeen = hashParams.get("last_seen") || "N/A";
 
     if (accessToken) {
         localStorage.setItem("access_token", accessToken);
-        localStorage.setItem("loggedInUser", JSON.stringify({ userId, username, avatarUrl, language, email }));
+        localStorage.setItem(
+			"loggedInUser",
+			JSON.stringify({ userId, username, avatarUrl, language, email, numberOfGamesPlayed, lastSeen }
+			));
 
         console.log("🔑 Connexion réussie avec OAuth !");
 		localStorage.setItem("preferredLanguage", language);
+		const avatarFileName = avatarUrl.startsWith("http") ? avatarUrl : `assets/avatars/${avatarUrl}`;
+		localStorage.setItem("selectedAvatar", avatarFileName);
 		loadLanguage(language);
         navigate("#/profile"); 
     } else {

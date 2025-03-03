@@ -150,7 +150,7 @@ export async function fetchUserProfile() {
             const user = await response.json();
             console.log("👤 Profil utilisateur récupéré :", user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
-			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+            localStorage.setItem("selectedAvatar", user.avatar_url.startsWith("http") ? user.avatar_url : `assets/avatars/${user.avatar_url}`);
 			document.getElementById("profile-games").textContent = user.number_of_games_played || 0;
 			loadProfile();
             updateNavigation();
