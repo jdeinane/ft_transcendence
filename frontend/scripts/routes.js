@@ -176,10 +176,23 @@ export const routes = {
 				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
 				<p><strong data-translate="number-of-games">Games Played:</strong> <span id="profile-games">0</span></p>
 				<p><strong data-translate="last-seen">Last Seen:</strong> <span id="profile-last-seen">N/A</span></p>
-				</div>
+			</div>
+
+        	<button id="view-match-history"> View Match History</button>
+
 			<div class="profile-buttons">
 				<button id="edit-profile-btn" data-translate="edit-profile">Edit Profile</button>
 				<button id="logout-btn" data-translate="logout">Logout</button>
+			</div>
+		</div>
+	`,
+
+	"/match-history": `
+		<div class="match-history-page">
+			<h1>Match History</h1>
+			<button id="back-to-profile"> Back </button>
+			<div id="match-history">
+				<p>Loading match history...</p>
 			</div>
 		</div>
 	`,

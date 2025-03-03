@@ -11,7 +11,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from config.models import Tournament, PongGame, TicTacToeGame, UserTwoFactor
+from config.models import MatchHistory, Tournament, PongGame, TicTacToeGame, UserTwoFactor
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
 from config.utils import generate_and_send_2fa_code, generate_otp_secret
@@ -95,7 +95,7 @@ def end_game(request):
     Enregistre un match et met à jour le nombre de parties jouées pour le joueur inscrit.
     """
     try:
-        player1 = request.user  # Joueur connecté
+        player1 = request.user
         score_player1 = request.data.get("score_player1", 0)
         score_player2 = request.data.get("score_player2", 0)
         game_mode = request.data.get("game_mode", "solo")  
@@ -108,13 +108,21 @@ def end_game(request):
         # Enregistrer la partie
         game = PongGame.objects.create(
             player1=player1,
-            player2=None,  # Joueur 2 n'existe pas
+            player2=None,
             score_player1=score_player1,
             score_player2=score_player2,
             winner=winner
         )
 
-        # ✅ Incrémenter uniquement le joueur connecté
+        match = MatchHistory.objects.create(
+            player1=player1,
+            player2=None,
+            winner=winner,
+            game_type="pong",
+            score_player1=score_player1,
+            score_player2=score_player2
+        )
+
         player1.increment_games_played()
 
         return Response({
@@ -145,12 +153,28 @@ def end_tic_tac_toe_game(request):
             player2_id = request.data.get("player2_id")
             player2 = User.objects.get(id=player2_id) if player2_id else None
 
+        winner = None
+        if not is_draw:
+            if score_player1 > score_player2:
+                winner = player1
+            elif score_player2 > score_player1:
+                winner = player2
+
         game = TicTacToeGame.objects.create(
             player1=player1,
             player2=player2,
             score_player1=score_player1,
             score_player2=score_player2,
             is_draw=is_draw
+        )
+
+        match = MatchHistory.objects.create(
+            player1=player1,
+            player2=player2,
+            winner=winner,
+            game_type="tictactoe",
+            score_player1=score_player1,
+            score_player2=score_player2
         )
 
         player1.increment_games_played()
@@ -560,3 +584,25 @@ def oauth_callback(request):
         f"&language={user.language}&number_of_games_played={user.number_of_games_played}"
 		f"&last_seen={user.last_seen.strftime('%Y-%m-%d %H:%M:%S')}"
 	)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def match_history(request):
+    """
+    Retourne l'historique des matchs de l'utilisateur connecté
+    """
+    user = request.user
+    matches = MatchHistory.objects.filter(player1=user).order_by("-created_at") | MatchHistory.objects.filter(player2=user).order_by("-created_at")
+    
+    match_data = [{
+        "id": match.id,
+        "player1": match.player1.username,
+        "player2": match.player2.username if match.player2 else "AI",
+        "winner": match.winner.username if match.winner else "Draw",
+        "game_type": match.game_type,
+        "score_player1": match.score_player1,
+        "score_player2": match.score_player2,
+        "created_at": match.created_at.strftime("%Y-%m-%d %H:%M:%S")
+    } for match in matches]
+
+    return Response({"matches": match_data}, status=200)

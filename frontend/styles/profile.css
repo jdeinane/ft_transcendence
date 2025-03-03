@@ -228,3 +228,81 @@ button:hover {
 #save-language-btn:active {
     transform: scale(0.98);
 }
+
+.match-history-page {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    max-width: 700px;
+    margin: 30px auto;
+    padding: 35px;
+    background: #f8f8f8;
+    border: 2px solid black;
+    box-shadow: 5px 5px 0px black;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1.8rem;
+    animation: fadeIn 0.5s ease-out;
+}
+
+/* 🎮 Titre */
+.match-history-page h1 {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 20px;
+    text-transform: uppercase;
+    text-shadow: 2px 2px 0px black;
+}
+
+/* 📜 Conteneur des matchs */
+.match-history-container {
+    width: 90%;
+    max-height: 400px;
+    overflow-y: auto;
+    border: 2px solid black;
+    padding: 15px;
+    background: #ffffff;
+    box-shadow: 3px 3px 0px black;
+    border-radius: 8px;
+    text-align: left;
+}
+
+/* 🏆 Entrée de match */
+.match-entry {
+    padding: 12px;
+    margin: 10px 0;
+    border: 2px solid black;
+    box-shadow: 3px 3px 0px black;
+    background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+    font-size: 1.2rem;
+    text-align: center;
+    border-radius: 5px;
+}
+
+.match-entry strong {
+    color: #000;
+    text-transform: uppercase;
+}
+
+/* 🎮 Score */
+.match-entry p {
+    margin: 5px 0;
+}
+
+/* 🔙 Bouton retour */
+#back-to-profile {
+    margin-top: 15px;
+    padding: 10px 20px;
+    border: 2px solid black;
+    background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 1.4rem;
+    border-radius: 5px;
+    box-shadow: 3px 3px 0px black;
+}
+
+#back-to-profile:hover {
+    background: #b0b0b0;
+}

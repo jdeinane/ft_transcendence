@@ -1,17 +1,14 @@
 
 import { routes } from "./routes.js"
-import { loadLanguage, setupLanguageSelector } from "./language.js";
-import { translations } from "./language.js";
-import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
+import { loadLanguage, setupLanguageSelector, translations } from "./language.js";
+import { createUser, loginUser, refreshToken, getCurrentUser } from "./user.js";
 import { setupPongGame, handleModeSelection } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
 import { setupTournament } from "./tournament.js";
 import { setupLeaderboard } from "./leaderboard.js";
-import { loadProfile, loadEditProfile } from "./profile.js";
-import { refreshToken } from "./user.js";
-import { savePreferredLanguage } from "./profile.js";
+import { loadProfile, loadEditProfile, savePreferredLanguage, loadMatchHistory } from "./profile.js";
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {
@@ -77,6 +74,7 @@ export function navigate(path, addToHistory = true) {
 
 	if (cleanPath === "/profile") {
 		loadProfile();
+		loadMatchHistory();
 	}
 	  
 	if (cleanPath === "/edit-profile") {
