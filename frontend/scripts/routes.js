@@ -190,10 +190,10 @@ export const routes = {
 	"/match-history": `
 		<div class="match-history-page">
 			<h1>Match History</h1>
-			<button id="back-to-profile"> Back </button>
 			<div id="match-history">
 				<p>Loading match history...</p>
 			</div>
+			<button id="back-to-profile"> Back </button>
 		</div>
 	`,
 

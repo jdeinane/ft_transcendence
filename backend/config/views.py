@@ -600,7 +600,7 @@ def match_history(request):
         "player1": match.player1.username,
         "player2": match.player2.username if match.player2 else "AI",
         "winner": match.winner.username if match.winner else "Draw",
-        "game_type": match.game_type,
+        "game_type": match.game_type.upper(),
         "score_player1": match.score_player1,
         "score_player2": match.score_player2,
         "created_at": match.created_at.strftime("%Y-%m-%d %H:%M:%S")
