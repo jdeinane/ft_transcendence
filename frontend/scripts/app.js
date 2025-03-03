@@ -76,7 +76,23 @@ export function navigate(path, addToHistory = true) {
 		loadProfile();
 		loadMatchHistory();
 	}
-	  
+
+	if (cleanPath === "/match-history") {
+		setTimeout(() => {
+			const backButton = document.getElementById("back-to-profile");
+			if (backButton) {
+				console.log("✅ Ajout de l'événement au bouton 'Back'");
+				backButton.addEventListener("click", () => {
+					console.log("🔙 Retour vers le profil");
+					navigate("#/profile");
+				});
+			} else {
+				console.error("❌ Impossible de détecter le bouton 'Back'");
+			}
+		}, 500);
+	}
+	
+
 	if (cleanPath === "/edit-profile") {
 		loadEditProfile();
 	

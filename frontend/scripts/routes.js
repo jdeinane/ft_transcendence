@@ -193,7 +193,7 @@ export const routes = {
 			<div id="match-history">
 				<p>Loading match history...</p>
 			</div>
-			<button id="back-to-profile"> Back </button>
+			<button id="back-to-profile" class="back-button">Back</button>
 		</div>
 	`,
 

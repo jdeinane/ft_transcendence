@@ -290,19 +290,24 @@ button:hover {
     margin: 5px 0;
 }
 
-/* 🔙 Bouton retour */
-#back-to-profile {
-    margin-top: 15px;
-    padding: 10px 20px;
+.back-button {
+    display: block;
+    margin: 10px auto;
+    padding: 10px 15px;
     border: 2px solid black;
     background: linear-gradient(to bottom, #e0e0e0, #c0c0c0);
     cursor: pointer;
     transition: all 0.2s ease-in-out;
-    font-size: 1.4rem;
-    border-radius: 5px;
+    font-size: 1.2rem;
+    text-align: center;
     box-shadow: 3px 3px 0px black;
+    border-radius: 5px;
 }
 
-#back-to-profile:hover {
+.back-button:hover {
     background: #b0b0b0;
+}
+
+.back-button:active {
+    transform: scale(0.98);
 }

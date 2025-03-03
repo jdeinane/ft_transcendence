@@ -168,6 +168,7 @@ export function loadMatchHistory() {
     
     setTimeout(() => {
         const historyContainer = document.getElementById("match-history");
+        const backButton = document.getElementById("back-to-profile");
 
         if (!historyContainer) {
             console.error("❌ Erreur: L'élément match-history est introuvable !");
@@ -198,14 +199,13 @@ export function loadMatchHistory() {
             historyContainer.appendChild(matchDiv);
         });
 
-        // Ajout de l'event listener pour le bouton "Back"
-        const backButton = document.getElementById("back-to-profile");
         if (backButton) {
             backButton.addEventListener("click", () => {
+                console.log("🔙 Bouton 'Back' cliqué, redirection vers #/profile");
                 navigate("#/profile");
             });
         }
-    }, 300);  // Ajoute un délai pour être sûr que la page est chargée
+    }, 300);
 }
 
 window.addEventListener("hashchange", () => {
