@@ -570,8 +570,9 @@ def oauth_callback(request):
     if avatar_url:
         user.avatar_url = avatar_url
     if created:
-        user.avatar_url = "avataralien.png"
         user.number_of_games_played = 0
+        if not avatar_url:
+           user.avatar_url = "avataralien.png"
     user.update_last_seen()
     user.save()
 

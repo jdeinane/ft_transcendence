@@ -41,6 +41,7 @@ export async function createUser(username, password, email, confirmPassword) {
 		const data = await response.json();
 		if (response.ok) {
 			alert("Account successfully created!");
+			localStorage.setItem("selectedAvatar", "assets/avatars/avataralien.png");
 			navigate("#/login");
 		} else {
 			showError("signup-error", data.error || "Registration failed");
@@ -129,6 +130,7 @@ export function logoutUser() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("loggedInUser");
+	localStorage.removeItem("selectedAvatar")
     navigate("#/");
     updateNavigation();
 }

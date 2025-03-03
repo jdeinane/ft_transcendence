@@ -290,7 +290,8 @@ function handleOAuthCallback() {
     const accessToken = hashParams.get("access_token");
     const userId = hashParams.get("user_id");
     const username = hashParams.get("username");
-    const avatarUrl = hashParams.get("avatar_url") || "avataralien.png";
+	const avatarUrl = hashParams.get("avatar_url");
+	const finalAvatar = avatarUrl && avatarUrl.startsWith("http") ? avatarUrl : `assets/avatars/${avatarUrl || "avataralien.png"}`;
 	const email = hashParams.get("email");
     const language = hashParams.get("language") || "en";
     const numberOfGamesPlayed = hashParams.get("number_of_games_played") || 0;
@@ -306,7 +307,7 @@ function handleOAuthCallback() {
         console.log("🔑 Connexion réussie avec OAuth !");
 		localStorage.setItem("preferredLanguage", language);
 		const avatarFileName = avatarUrl.startsWith("http") ? avatarUrl : `assets/avatars/${avatarUrl}`;
-		localStorage.setItem("selectedAvatar", avatarFileName);
+		localStorage.setItem("selectedAvatar", finalAvatar);
 		loadLanguage(language);
         navigate("#/profile"); 
     } else {
