@@ -142,8 +142,8 @@ export const routes = {
 					<button type="submit" data-translate="login">Login</button>
 					<p id="login-error" class="error-message"></p>
 			</form>
-			<button onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
-				Login with 42
+			<button class="oauth-42-btn" onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
+				<img src="assets/icons/42.png" alt="42 Logo"> Login with 42
 			</button>
 		</div>
 	<p class="no-account-text" data-translate="no-account">No account?</p>
