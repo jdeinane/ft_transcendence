@@ -6,3 +6,4 @@ myvenv/
 .env
 
 */.DS_Store
+*.txt

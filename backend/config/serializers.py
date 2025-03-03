@@ -40,12 +40,24 @@ class LoginSerializer(serializers.Serializer):
 	email = serializers.EmailField(required=False)
 
 class TournamentSerializer(serializers.ModelSerializer):
-	winner = serializers.StringRelatedField()  # Affiche le nom du gagnant
-	players = serializers.SerializerMethodField()
+	creator = serializers.StringRelatedField(read_only=True)
 
 	class Meta:
 		model = Tournament
-		fields = ["id", "name", "creator", "status", "winner", "players"]
+		fields = ["id", "name", "max_players", "is_public", "status", "creator"]
 
-	def get_players(self, obj):
-		return [player.username for player in obj.players.all()]
+class TournamentMatchSerializer(serializers.ModelSerializer):
+	player1 = serializers.StringRelatedField()
+	player2 = serializers.StringRelatedField()
+	winner = serializers.StringRelatedField()
+
+	class Meta:
+		model = TournamentMatch
+		fields = ["id", "tournament", "round_number", "player1", "player2", "winner", "created_at"]
+
+class TournamentSerializer(serializers.ModelSerializer):
+	creator = serializers.StringRelatedField(read_only=True)
+
+	class Meta:
+		model = Tournament
+		fields = ["id", "name", "max_players", "is_public", "status", "creator"]

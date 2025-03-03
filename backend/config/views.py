@@ -15,7 +15,7 @@ from django.http import JsonResponse
 from django.shortcuts import get_object_or_404
 from django.contrib.auth import get_user_model, authenticate
 from config.models import Tournament, TournamentPlayer, TournamentMatch, PongGame, TicTacToeGame, UserTwoFactor
-from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
+from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer, TournamentSerializer, TournamentMatchSerializer
 from config.ai import PongAI, TicTacToeAI
 from config.utils import generate_and_send_2fa_code, generate_otp_secret
 from django.utils.translation import activate
@@ -169,10 +169,13 @@ def create_tournament(request):
 	Permet à un utilisateur authentifié de créer un tournoi.
 	"""
 	serializer = TournamentSerializer(data=request.data, context={"request": request})
+    
 	if serializer.is_valid():
 		serializer.save(creator=request.user)
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
+    
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -221,10 +224,11 @@ def leave_tournament(request, tournament_id):
 	return Response({"message": "Vous avez quitté le tournoi avec succès."}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def list_tournaments(request):
-	tournaments = Tournament.objects.all().order_by("-created_at")
-	serializer = TournamentSerializer(tournaments, many=True)
-	return Response(serializer.data)
+    tournaments = Tournament.objects.all().order_by("-created_at")
+    serializer = TournamentSerializer(tournaments, many=True)
+    return Response(serializer.data)
 
 @api_view(["GET"])
 def list_tournament_matches(request, tournament_id):

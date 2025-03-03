@@ -137,29 +137,29 @@ export const routes = {
 		<div class="login-box">
 			<h1 class="login-title" data-translate="login">Login</h1>
 				<form id="login-form" class="login-form"> <!-- Ajout de id ici -->
-					<input type="text" name="username" placeholder="username" required data-translate="username">
-					<input type="password" name="password" placeholder="password" required data-translate="password">
+					<input type="text" name="username" placeholder="Username" required data-translate="username">
+					<input type="password" name="password" placeholder="Password" required data-translate="password">
 					<button type="submit" data-translate="login">Login</button>
 					<p id="login-error" class="error-message"></p>
 			</form>
 			<button onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
-				login with 42
+				Login with 42
 			</button>
 		</div>
 	<p class="no-account-text" data-translate="no-account">No account?</p>
-	<p><button id="go-to-signup" class="link-button" data-translate="-up">Sign Up</button></p>
+	<p><button id="go-to-signup" class="link-button" data-translate="sign-up">Sign Up</button></p>
 	</div>
 	`,
 
 	"/signup": `
 		<div class="signup-container">
 			<div class="signup-box">
-				<h1 class="signup-title" data-translate="-up">sign up</h1>
+				<h1 class="signup-title" data-translate="sign-up">Sign up</h1>
 				<form class="signup-form" id="signup-form">
-					<input type="text" name="username" placeholder="username" required data-translate="username"/>
-					<input type="email" name="email" placeholder="email" required data-translate="email"/>
-					<input type="password" name="password" placeholder="password" required data-translate="password"/>
-					<input type="password" name="confirm-password" placeholder="confirm password" required data-translate="confirm-password"/>
+					<input type="text" name="username" placeholder="Username" required data-translate="username"/>
+					<input type="email" name="email" placeholder="Email" required data-translate="email"/>
+					<input type="password" name="password" placeholder="Password" required data-translate="password"/>
+					<input type="password" name="confirm-password" placeholder="Confirm Password" required data-translate="confirm-password"/>
 					<button type="submit" class="signup-button" data-translate="sign-up">Sign up!</button>
 					<p id="signup-error" class="error-message"></p>
 				</form>
@@ -239,5 +239,30 @@ export const routes = {
 	"*": `
 	<h1 data-translate="not-found">404 - Not Found</h1>
 	<p data-translate="page-not-found">Page could not be found.</p>
-	`
-  };
+	`,
+
+	"/oauth-success": `
+			<h1>Connexion réussie !</h1>
+			<p>Redirection en cours...</p>
+			<script>
+				setTimeout(() => {
+					const hashParams = new URLSearchParams(window.location.hash.split("?")[1]);
+					const accessToken = hashParams.get("access_token");
+					const userId = hashParams.get("user_id");
+					const username = hashParams.get("username");
+					const avatarUrl = hashParams.get("avatar_url");
+
+					if (accessToken && userId) {
+						localStorage.setItem("access_token", accessToken);
+						localStorage.setItem("loggedInUser", JSON.stringify({ id: userId, username, avatar_url: avatarUrl }));
+						console.log("✅ Connexion avec 42 réussie !");
+						window.location.href = "#/profile"; // Rediriger vers le profil
+					} else {
+						alert("❌ Échec de la connexion avec 42.");
+						window.location.href = "#/login";
+					}
+				}, 500); // Petit délai pour garantir la récupération des données
+			</script>
+`,
+
+};
