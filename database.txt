@@ -1,0 +1,26 @@
+          table_name          
+------------------------------
+ django_migrations
+ django_content_type
+ auth_permission
+ auth_group
+ auth_group_permissions
+ config_user
+ config_user_groups
+ config_user_user_permissions
+ config_usertwofactor
+ config_tournament
+ config_tournament_players
+ config_tictactoegame
+ config_ponggame
+ config_matchhistory
+ config_leaderboard
+ config_chatroom
+ config_chatmessage
+ config_friend
+ config_blockeduser
+ django_admin_log
+ authtoken_token
+ django_session
+(22 rows)
+

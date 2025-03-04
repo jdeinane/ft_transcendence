@@ -124,6 +124,29 @@ export const routes = {
 		</div>
 	`,
 
+	"/tic-tac-toe-tournament": `
+		<h1 data-translate="tournament-title">🏆 Tic-Tac-Toe Tournament</h1>
+		<div id="tournament-container">
+			<div id="tournament-setup">
+				<input type="text" id="tournament-player-name" placeholder="Enter alias" data-translate="tournament-placeholder">
+				<button id="join-ttt-tournament" data-translate="join-button">Join</button>
+			</div>
+
+			<div id="players-list-container">
+				<h2 data-translate="players-title"> Players: </h2>
+				<ul id="players-list"></ul>
+			</div>
+
+			<div id="bracket-container" class="hidden">
+				<h2 data-translate="bracket-title">Bracket</h2>
+				<div id="bracket"></div>
+				<button id="start-next-ttt-match" class="hidden" data-translate="start-match-button">Start next match!</button>
+			</div>
+
+			<div id="ttt-container" class="hidden"></div>
+		</div>
+	`,
+
 	"/results": `
 		<div class="results-container">
 			<h1 data-translate="results-title"> Tournament Final Ranking</h1>

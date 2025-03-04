@@ -4,6 +4,7 @@ import { loadLanguage, setupLanguageSelector, translations } from "./language.js
 import { createUser, loginUser, refreshToken, getCurrentUser } from "./user.js";
 import { setupPongGame, handleModeSelection } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
+import { setupTicTacToeTournament } from "./tttTournament.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
 import { setupTournament } from "./tournament.js";
@@ -163,6 +164,10 @@ export function navigate(path, addToHistory = true) {
 		setupTournament();
 	}
 
+	if (cleanPath === "/tic-tac-toe-tournament") {
+		setupTicTacToeTournament();
+	}
+	
 	if (cleanPath === "/results") {
 		const rankingList = document.getElementById("ranking-list");
 		const backButton = document.getElementById("back-to-home");
