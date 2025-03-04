@@ -22,7 +22,7 @@
 		"model": "config.user",
 		"pk": 2,
 		"fields": {
-			"username": "player1",
+			"username": "mario",
 			"email": "player1@example.com",
 			"password": "pbkdf2_sha256$260000$examplehash",  
 			"last_seen": "2025-02-15T10:00:00Z",
@@ -34,16 +34,16 @@
 			"token_expiry": null,
 			"created_at": "2025-02-15T10:00:00Z",
 			"updated_at": "2025-02-15T10:00:00Z",
-			"number_of_games_played": 0
+			"number_of_games_played": 5
 		}
 	},
 	{
 		"model": "config.user",
-		"pk": 3,
+		"pk": 1005,
 		"fields": {
 			"username": "ty",
 			"email": "kurayjames30@gmail.com",
-			"password": "Noryt10.",
+			"password": "pbkdf2_sha256$600000$T6TmknuzGrPqQMsvEMKUt1$QT5O8KLIyFjukQY+dZXYj043QXzxWCMU1p1xKB+yNv4=",
 			"last_seen": "2025-02-15T10:00:00Z",
 			"is_superuser": false,
 			"is_staff": false,
@@ -76,6 +76,25 @@
 		}
 	},
 	{
+		"model": "config.user",
+		"pk": 1003,
+		"fields": {
+			"username": "jdeinane",
+			"email": "jenniferdianeu@gmail.com",
+			"password": "pbkdf2_sha256$600000$8cJRlywXAVZ4IaRpTHFJE5$mlA+X9wtHuEWMSNC44ul+8KHBZ0zbPHimXYZIFSTekA=",
+			"last_seen": "2025-02-15T10:00:00Z",
+			"is_superuser": true,
+			"is_staff": true,
+			"is_online": false,
+			"is_2fa_enabled": false,
+			"failed_2fa_attempts": 0,
+			"token_expiry": null,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z",
+			"number_of_games_played": 32
+		}
+	},
+	{
 		"model": "config.chatroom",
 		"pk": 1,
 		"fields": {
@@ -94,6 +113,104 @@
 			"games_won": 5,
 			"games_lost": 5,
 			"points": 50,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.user",
+		"pk": 4,
+		"fields": {
+			"username": "luigi",
+			"email": "player2@example.com",
+			"password": "pbkdf2_sha256$260000$examplehash",
+			"last_seen": "2025-02-15T10:00:00Z",
+			"is_superuser": false,
+			"is_staff": false,
+			"is_online": false,
+			"is_2fa_enabled": false,
+			"failed_2fa_attempts": 0,
+			"token_expiry": null,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z",
+			"number_of_games_played": 20
+		}
+	},
+	{
+		"model": "config.user",
+		"pk": 5,
+		"fields": {
+			"username": "roi soleil",
+			"email": "player3@example.com",
+			"password": "pbkdf2_sha256$260000$examplehash",
+			"last_seen": "2025-02-15T10:00:00Z",
+			"is_superuser": false,
+			"is_staff": false,
+			"is_online": false,
+			"is_2fa_enabled": false,
+			"failed_2fa_attempts": 0,
+			"token_expiry": null,
+			"created_at": "2025-02-15T10:00:00Z",
+			"updated_at": "2025-02-15T10:00:00Z",
+			"number_of_games_played": 15
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 2,
+		"fields": {
+			"user": 4,
+			"games_played": 20,
+			"games_won": 12,
+			"games_lost": 8,
+			"points": 120,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 3,
+		"fields": {
+			"user": 5,
+			"games_played": 15,
+			"games_won": 7,
+			"games_lost": 8,
+			"points": 70,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 5,
+		"fields": {
+			"user": 1,
+			"games_played": 5,
+			"games_won": 3,
+			"games_lost": 2,
+			"points": 30,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 8,
+		"fields": {
+			"user": 1003,
+			"games_played": 32,
+			"games_won": 32,
+			"games_lost": 0,
+			"points": 120403,
+			"updated_at": "2025-02-15T10:00:00Z"
+		}
+	},
+	{
+		"model": "config.leaderboard",
+		"pk": 6,
+		"fields": {
+			"user": 1005,
+			"games_played": 10,
+			"games_won": 5,
+			"games_lost": 5,
+			"points": 64,
 			"updated_at": "2025-02-15T10:00:00Z"
 		}
 	}
