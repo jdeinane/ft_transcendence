@@ -3,6 +3,7 @@ from django.utils.translation import activate, gettext as _
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.db.models import Count
 from config.models import TournamentMatch, TournamentPlayer
 
 User = get_user_model()
@@ -97,24 +98,47 @@ def generate_next_round(tournament):
 	"""
 	Génère automatiquement le tour suivant (demi-finales, finale) pour un tournoi donné.
 	"""
+	from config.models import TournamentMatch, TournamentPlayer
+
 	remaining_players = list(
-		tournament.players.exclude(
-			id__in=TournamentMatch.objects.filter(tournament=tournament).values_list("loser_id", flat=True)
-		).values_list("id", flat=True)
+		TournamentPlayer.objects.filter(
+			tournament=tournament,
+			player__in=TournamentMatch.objects.filter(tournament=tournament, winner__isnull=False)
+			.values_list("winner_id", flat=True)
+			.distinct()
+		).values_list("player_id", flat=True)
 	)
 
+	print(f"🏆 Joueurs qualifiés pour le tour suivant : {remaining_players}")
+
 	if len(remaining_players) == 1:
-		# si un seul joueur reste, il est le gagnant du tournoi
+		# 🔥 Si un seul joueur reste, il est le gagnant du tournoi
 		tournament.winner_id = remaining_players[0]
 		tournament.status = "Finished"
 		tournament.save()
 		print(f"🏆 Tournoi terminé ! Le gagnant est {tournament.winner.username}")
 		return
 
-	# organiser le prochain tour (Demi-finales, Finale)
-	random.shuffle(remaining_players)  # Mélanger les joueurs
+	new_round_number = TournamentMatch.objects.filter(tournament=tournament).aggregate(Count("round_number"))["round_number__count"] + 1
 
-	new_round_number = tournament.matches.aggregate(Count("round_number"))["round_number__count"] + 1
+	# 🔥 Gérer le cas où il y a un nombre impair de joueurs (3 restants)
+	if len(remaining_players) == 3:
+		print("⚠️ Nombre impair de joueurs : Création d'une demi-finale spéciale avec trois joueurs")
+
+		# Le premier match se joue entre les deux premiers joueurs
+		match1 = TournamentMatch.objects.create(
+			tournament=tournament,
+			player1_id=remaining_players[0],
+			player2_id=remaining_players[1],
+			round_number=new_round_number
+		)
+		print(f"✅ Match {match1.id} ajouté : {match1.player1} vs {match1.player2}")
+
+		# Le 3ème joueur passe en finale directement
+		finalist = remaining_players[2]
+		print(f"⚠️ {finalist} passe directement en finale")
+
+		return
 
 	for i in range(0, len(remaining_players), 2):
 		player1 = remaining_players[i]
@@ -126,4 +150,33 @@ def generate_next_round(tournament):
 			player2_id=player2,
 			round_number=new_round_number
 		)
-		print(f"✅ Nouveau match ajouté : {match.player1} vs {match.player2 if match.player2 else 'Bye'}")
+		print(f"✅ Nouveau match ajouté (Tour {new_round_number}) : {match.player1} vs {match.player2 if match.player2 else 'Bye'}")
+
+def generate_tournament_bracket(tournament):
+	"""
+	Génère les premiers matchs du tournoi.
+	"""
+	from config.models import TournamentMatch, TournamentPlayer
+
+	players = list(
+		TournamentPlayer.objects.filter(tournament=tournament)
+		.values_list("player_id", flat=True)
+	)
+
+	print(f"🎯 Joueurs inscrits : {players}")
+
+	if len(players) % 2 != 0:
+		print("⚠️ Nombre impair de joueurs, impossible de générer les matchs.")
+		return
+
+	round_number = 1
+	for i in range(0, len(players), 2):
+		match = TournamentMatch.objects.create(
+			tournament=tournament,
+			player1_id=players[i],
+			player2_id=players[i + 1],
+			round_number=round_number
+		)
+		print(f"✅ Match {match.id} ajouté : {match.player1} vs {match.player2}")
+
+	print("✅ Premier tour généré !")

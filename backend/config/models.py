@@ -185,18 +185,7 @@ class Tournament(models.Model):
 		on_delete=models.SET_NULL, 
 		related_name="tournaments_won"
 	)
-	players = models.ManyToManyField(User, through="TournamentPlayer", related_name="tournaments_participated")
-
-	def declare_winner(self, user):
-		"""
-		Met à jour le gagnant du tournoi
-		"""
-		self.winner = user
-		self.status = "Finished"
-		self.save(update_fields=["winner", "status"])
-
-	def __str__(self):
-		return f"{self.name} ({self.status})"
+	players = models.ManyToManyField(User, through="TournamentPlayer", related_name="tournament_players")
 
 class TournamentPlayer(models.Model):
 	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="tournament_players")
@@ -210,9 +199,9 @@ class TournamentPlayer(models.Model):
 		return f"{self.player.username} dans {self.tournament.name}"
 
 class TournamentMatch(models.Model):
-	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE)
+	tournament = models.ForeignKey(Tournament, on_delete=models.CASCADE, related_name="matches")
 	player1 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player1")
-	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player2")
+	player2 = models.ForeignKey(User, on_delete=models.CASCADE, related_name="match_player2", null=True, blank=True)
 	winner = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="match_winner")
 	loser = models.ForeignKey(User, null=True, blank=True, on_delete=models.SET_NULL, related_name="match_loser")
 	round_number = models.IntegerField()
