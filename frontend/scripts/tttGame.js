@@ -70,10 +70,9 @@ export function startTicTacToeGame(boardElement, mode, onGameEnd = null) {
 			document.querySelector(".mode-selection-container").style.display = "block";
 		});
 	} else if (mode !== "tournament") {
-		console.warn("⚠️ 'back-to-mode-selection' introuvable. Ignoré.");
+		console.warn("Le boutton 'back-to-mode-selection' introuvable.");
 	}
 		
-
     function renderBoard() {
         boardElement.innerHTML = "";
         board.forEach((cell, index) => {
@@ -110,7 +109,7 @@ export function startTicTacToeGame(boardElement, mode, onGameEnd = null) {
 			checkWinner();
 			currentPlayer = "X";
 		} else {
-			console.warn("⚠ Aucun coup valide retourné par l'IA.");
+			console.warn("Aucun coup valide retourne par l'IA.");
 		}
 	}
 
@@ -152,7 +151,6 @@ export function startTicTacToeGame(boardElement, mode, onGameEnd = null) {
 		resultContainer.classList.add("result-popup");
 	
 		if (mode === "tournament") {
-			console.log(`✅ Mode tournoi: Affichage du vrai gagnant ${winner}`);
 			resultContainer.innerHTML = `
 				<p>🏆 ${winner} wins the match!</p>
 				<button id="next-match">Next Match</button>
@@ -183,12 +181,11 @@ async function fetchAIMove(board, difficulty = "medium") {
     let token = localStorage.getItem("access_token");
 
     if (!token) {
-        console.error("❌ Aucun token JWT trouvé. Impossible d'appeler l'IA.");
         return null;
     }
 
     try {
-        console.log("📤 Envoi du board à l'IA :", board);
+        console.log("Envoi du board à l'IA :", board);
 
         let response = await fetch(`${API_BASE_URL}/api/game/tictactoe-ai-move/`, {
             method: "POST",
@@ -205,7 +202,6 @@ async function fetchAIMove(board, difficulty = "medium") {
             const refreshed = await refreshToken();
 
             if (!refreshed) {
-                console.error("🔴 Impossible de rafraîchir le token, déconnexion...");
                 logoutUser();
                 return null;
             }
@@ -224,8 +220,6 @@ async function fetchAIMove(board, difficulty = "medium") {
 
         if (!response.ok) {
             const errorData = await response.json();
-            console.error(`❌ Erreur API Tic-Tac-Toe AI (Status ${response.status})`);
-            console.error("📩 Réponse du serveur :", errorData);
             return null;
         }
 
@@ -234,7 +228,7 @@ async function fetchAIMove(board, difficulty = "medium") {
         return data.move;
 
     } catch (error) {
-        console.error("❌ Erreur lors de la récupération du coup de l'IA :", error);
+        console.error("Erreur lors de la recuperation du coup de l'IA :", error);
         return null;
     }
 }
@@ -243,7 +237,6 @@ async function sendTicTacToeEndGameRequest(winner) {
     let token = localStorage.getItem("access_token");
 
     if (!token) {
-        console.error("❌ Aucun token trouvé. Impossible d'enregistrer le match.");
         return;
     }
 
@@ -255,7 +248,6 @@ async function sendTicTacToeEndGameRequest(winner) {
             is_draw: winner === "draw"
         };
 
-        console.log("📤 Envoi de la requête end-tic-tac-toe-game avec :", requestBody);
 
         const response = await fetch("http://127.0.0.1:4000/api/game/end-tic-tac-toe-game/", {
             method: "POST",
@@ -268,12 +260,12 @@ async function sendTicTacToeEndGameRequest(winner) {
 
         const data = await response.json();
         if (response.ok) {
-            console.log("✅ Partie Tic Tac Toe enregistrée ! Nombre de parties :", data.number_of_games_played);
+            console.log("Tic Tac Toe game saved ! number_of_games_played incremented :", data.number_of_games_played);
             await fetchUserProfile();
         } else {
-            console.error("❌ Erreur lors de l'enregistrement de la partie :", data.error);
+            console.error("Error while saving the game :", data.error);
         }
     } catch (error) {
-        console.error("❌ Erreur lors de la requête :", error);
+        console.error("Error while fetching :", error);
     }
 }

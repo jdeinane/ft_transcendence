@@ -14,7 +14,7 @@ export async function setupLeaderboard() {
         
         const leaderboard = await response.json();
         
-        leaderboardList.innerHTML = ""; // Vider la table avant d'ajouter les données
+        leaderboardList.innerHTML = "";
         
         leaderboard.forEach(({ rank, username, score }) => {
             const row = document.createElement("tr");

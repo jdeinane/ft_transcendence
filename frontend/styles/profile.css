@@ -108,8 +108,6 @@ input {
 }
 
 
-/* Edit profile */
-
 .edit-profile-container {
     display: flex;
     flex-direction: column;
@@ -227,10 +225,8 @@ button:active {
     outline: none;
 }
 
-
-/* 🎨 Style du bouton Save Language */
 #save-language-btn {
-    background: #4CAF50; /* Vert */
+    background: #4CAF50;
     border: 2px solid #2E7D32;
     color: white;
     padding: 10px 15px;
@@ -268,7 +264,6 @@ button:active {
     animation: fadeIn 0.5s ease-out;
 }
 
-/* 🎮 Titre */
 .match-history-page h1 {
     font-size: 2.5rem;
     font-weight: bold;
@@ -277,7 +272,6 @@ button:active {
     text-shadow: 2px 2px 0px black;
 }
 
-/* 📜 Conteneur des matchs */
 .match-history-container {
     width: 90%;
     max-height: 400px;
@@ -290,7 +284,6 @@ button:active {
     text-align: left;
 }
 
-/* 🏆 Entrée de match */
 .match-entry {
     padding: 12px;
     margin: 10px 0;
@@ -307,7 +300,6 @@ button:active {
     text-transform: uppercase;
 }
 
-/* 🎮 Score */
 .match-entry p {
     margin: 5px 0;
 }

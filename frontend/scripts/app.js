@@ -82,13 +82,9 @@ export function navigate(path, addToHistory = true) {
 		setTimeout(() => {
 			const backButton = document.getElementById("back-to-profile");
 			if (backButton) {
-				console.log("✅ Ajout de l'événement au bouton 'Back'");
 				backButton.addEventListener("click", () => {
-					console.log("🔙 Retour vers le profil");
 					navigate("#/profile");
 				});
-			} else {
-				console.error("❌ Impossible de détecter le bouton 'Back'");
 			}
 		}, 500);
 	}
@@ -100,7 +96,6 @@ export function navigate(path, addToHistory = true) {
 		setTimeout(() => {
 			const saveLanguageBtn = document.getElementById("save-language-btn");
 			if (saveLanguageBtn) {
-				console.log("✅ Bouton Save Language détecté après chargement !");
 				saveLanguageBtn.addEventListener("click", savePreferredLanguage);
 			}
 		}, 100);
@@ -236,7 +231,7 @@ document.addEventListener("DOMContentLoaded", () => {
 		if (e.target.matches("[data-link]")) {
 			e.preventDefault();
 			navigate(e.target.getAttribute("href"));
-			updateNavigation(); // Mettre à jour le menu après navigation
+			updateNavigation();
     	}
 	});
 
@@ -303,8 +298,11 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 });
 
+// pour rafraichir le token
 
 setInterval(refreshToken, 15 * 60 * 1000);
+
+// api 42
 
 function handleOAuthCallback() {
     const hashParams = new URLSearchParams(window.location.hash.split("?")[1]);

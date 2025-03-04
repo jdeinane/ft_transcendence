@@ -6,17 +6,14 @@ export async function enable2FA() {
     let token = localStorage.getItem("access_token");
 
     if (!token || isTokenExpired(token)) {
-        console.warn("🚨 Token expiré, tentative de rafraîchissement...");
+        console.warn("Expired token, trying to refresh...");
         const refreshed = await refreshToken();
 
         if (!refreshed) {
-            alert("❌ Impossible d'activer le 2FA. Connexion requise.");
             return;
         }
-
         token = localStorage.getItem("access_token");
     }
-
     try {
         const response = await fetch("http://127.0.0.1:4000/api/auth/enable-2fa/", {
             method: "POST",
@@ -29,14 +26,14 @@ export async function enable2FA() {
         const data = await response.json();
 
         if (response.ok) {
-            alert("✅ 2FA activé avec succès !");
+            alert("2FA successfully activated !");
 			check2FAStatus();
-            console.log("🔐 OTP Secret :", data.otp_secret);
+            console.log("Secret OTP :", data.otp_secret);
         } else {
-            alert(data.message || "❌ Erreur lors de l'activation du 2FA.");
+            alert(data.message || "Error while activating 2FA.");
         }
     } catch (error) {
-        console.error("❌ Erreur activation 2FA :", error);
+        console.error("Error while activating 2FA :", error);
     }
 }
 
@@ -58,14 +55,14 @@ export async function disable2FA() {
         });
 
         if (response.ok) {
-            alert("2FA désactivé avec succès !");
+            alert("2FA successfully deactivated !");
 			check2FAStatus();
         } else {
             const data = await response.json();
-            alert(data.message || "Erreur lors de la désactivation du 2FA.");
+            alert(data.message || "encountered error while deactivating 2FA.");
         }
     } catch (error) {
-        console.error("❌ Erreur désactivation 2FA :", error);
+        console.error("Failed to deactivate 2FA :", error);
     }
 }
 
@@ -73,7 +70,6 @@ export async function verify2FA(otpCode) {
     const token = localStorage.getItem("access_token");
 
     if (!token) {
-        alert("Vous devez être connecté pour vérifier le 2FA.");
         return false;
     }
 
@@ -90,14 +86,13 @@ export async function verify2FA(otpCode) {
         const data = await response.json();
 
         if (response.ok) {
-            alert("Vérification réussie !");
             return true;
         } else {
-            alert(data.error || "Code 2FA invalide.");
+            alert(data.error || "Invalid 2FA code.");
             return false;
         }
     } catch (error) {
-        console.error("❌ Erreur vérification 2FA :", error);
+        console.error("Failed to check 2FA :", error);
         return false;
     }
 }
@@ -117,18 +112,18 @@ function isTokenExpired(token) {
 
 const token = localStorage.getItem("access_token");
 if (token && isTokenExpired(token)) {
-    console.warn("🚨 Token JWT expiré, rafraîchissement nécessaire !");
+    console.warn("Token JWT expired, need refresh !!");
 }
 
 export async function check2FAStatus() {
     let token = localStorage.getItem("access_token");
 
     if (!token || isTokenExpired(token)) {
-        console.warn("🚨 Token expiré, tentative de rafraîchissement...");
+        console.warn("Expired token ma gueule");
         const refreshed = await refreshToken();
 
         if (!refreshed) {
-            console.error("❌ Impossible de récupérer le statut du 2FA. Token invalide.");
+            console.error("Impossible to fetch 2FA status: Invalid token.");
             return;
         }
 
@@ -136,7 +131,7 @@ export async function check2FAStatus() {
     }
 
     try {
-        console.log("🔍 Vérification du statut 2FA avec token :", token); // DEBUG
+        console.log("Checking 2FA status with token :", token);
 
         const response = await fetch("http://127.0.0.1:4000/api/auth/me/", {
             method: "GET",
@@ -147,7 +142,7 @@ export async function check2FAStatus() {
         });
 
         if (!response.ok) {
-            console.error("❌ Erreur lors de la récupération du statut 2FA. Code :", response.status);
+            console.error("Failed to fetch 2FA status. Code :", response.status);
             return;
         }
 
@@ -164,7 +159,7 @@ export async function check2FAStatus() {
             deactivateBtn.style.display = is2FAEnabled ? "block" : "none";
 		}
     } catch (error) {
-        console.error("❌ Erreur lors de la vérification du 2FA :", error);
+        console.error("Failed to verify 2FA :", error);
     }
 }
 
@@ -174,7 +169,6 @@ function waitFor2FAButtons() {
         const deactivateBtn = document.getElementById("deactivate-2fa-btn");
 
         if (activateBtn && deactivateBtn) {
-            console.log("✅ Boutons 2FA détectés, lancement de check2FAStatus...");
             check2FAStatus();
             obs.disconnect();
         }

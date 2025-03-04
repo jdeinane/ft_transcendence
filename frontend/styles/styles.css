@@ -13,12 +13,12 @@
 }
 
 body {
-	background-color: #e0e0e0; /* Fond gris clair */
+	background-color: #e0e0e0;
 	background-image: 
-		linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),  /* Grille verticale */
-		linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px), /* Grille horizontale */
-		linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px); /* Fines lignes horizontales */
-	background-size: 20px 20px, 20px 20px, 100% 5px; /* Taille des motifs */
+		linear-gradient(to right, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0.1) 1px, transparent 1px),
+		linear-gradient(to bottom, rgba(0, 0, 0, 0.05) 1px, transparent 1px);
+	background-size: 20px 20px, 20px 20px, 100% 5px;
 	color: var(--text-color);
 	display: flex;
 	flex-direction: column;

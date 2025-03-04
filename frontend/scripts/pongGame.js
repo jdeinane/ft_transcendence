@@ -69,7 +69,6 @@ export function setupPongGame() {
 	});
 
 	gameSelectionButton.addEventListener("click", () => {
-		console.log("🟢 Back to Game Selection clicked!");
 		navigate("#/game");
 	});
 }
@@ -272,9 +271,8 @@ export function startPongGame(canvas, selectedMode, playerCount) {
 		
 			let player2Id = null;
 			if (selectedMode !== "solo") {
-				// 🔹 Si c'est un mode multijoueur ou tournoi, récupérer l'ID de l'adversaire
 				const user = getCurrentUser();
-				player2Id = user.id === 1001 ? 1002 : 1001;  // Exemple, adapte selon ton système d'IDs
+				player2Id = user.id === 1001 ? 1002 : 1001;
 			}
 		
 			sendEndGameRequest(player1Score, player2Score, selectedMode, player2Id);
@@ -404,8 +402,6 @@ function resetGame() {
 
     ballX = window.innerWidth / 2; 
     ballY = window.innerHeight / 2;
-    let ballSpeedX = 4;
-    let ballSpeedY = 4;
 
     const gameContainer = document.getElementById("pong-container");
     const canvas = document.getElementById("pong"); 
@@ -547,13 +543,12 @@ function startTournamentGameLogic(player1, player2, onGameEnd) {
     gameLoop();
 }
 
-/////////////////////////////////////////////////////////////////////////
+//////// API
 
 async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
     let token = localStorage.getItem("access_token");
 
     if (!token) {
-        console.error("❌ Aucun token JWT trouvé. Impossible d'appeler l'IA du backend.");
         logoutUser();
         return 0;
     }
@@ -573,12 +568,10 @@ async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
         });
 
         if (response.status === 401) {  
-            console.warn("🔄 Token expiré, tentative de rafraîchissement...");
 
             const refreshed = await refreshToken();
 
             if (!refreshed) {
-                console.error("🔴 Impossible de rafraîchir le token, déconnexion...");
                 logoutUser();
                 return 0;
             }
@@ -599,7 +592,6 @@ async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
         }
 
         if (!response.ok) {
-            console.error(`❌ Erreur API IA (Status ${response.status})`);
             return 0;
         }
 
@@ -608,7 +600,6 @@ async function fetchAIMove(ballY, paddleY, difficulty = "medium") {
         return data.move; 
 
     } catch (error) {
-        console.error("❌ Erreur lors de la récupération du mouvement de l'IA :", error);
         return 0;
     }
 }
@@ -617,7 +608,6 @@ async function sendEndGameRequest(player1Score, player2Score, gameMode = "solo",
     let token = localStorage.getItem("access_token");
 
     if (!token) {
-        console.error("❌ Aucun token trouvé. Impossible d'enregistrer le match.");
         return;
     }
 
@@ -628,7 +618,7 @@ async function sendEndGameRequest(player1Score, player2Score, gameMode = "solo",
             score_player2: player2Score
         };
 
-        console.log("📤 Envoi de la requête end-game avec :", requestBody); // DEBUG
+        console.log("Envoi de la requete end-game avec :", requestBody);
 
         const response = await fetch("http://127.0.0.1:4000/api/game/end-game/", {
             method: "POST",
@@ -641,12 +631,12 @@ async function sendEndGameRequest(player1Score, player2Score, gameMode = "solo",
 
         const data = await response.json();
         if (response.ok) {
-            console.log("✅ Match enregistré avec succès ! Nouveau nombre de parties :", data.number_of_games_played);
+            console.log("Match registered ! number_of_games_player incremented :", data.number_of_games_played);
             await fetchUserProfile();
         } else {
-            console.error("❌ Erreur lors de l'enregistrement du match :", data.error);
+            console.error("Error while saving match data :", data.error);
         }
     } catch (error) {
-        console.error("❌ Erreur lors de la requête :", error);
+        console.error("Error while fetching :", error);
     }
 }

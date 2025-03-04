@@ -35,17 +35,14 @@ export function setupLanguageSelector() {
             localStorage.setItem("preferredLanguage", selectedLanguage);
             loadLanguage(selectedLanguage);
 
-            // Mettre à jour l'apparence pour indiquer la langue active
             flags.forEach(f => f.classList.remove("active"));
             flag.classList.add("active");
         });
     });
 
-    // Charger la langue sauvegardée
     const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
     loadLanguage(savedLanguage);
     
-    // Mettre le drapeau actif
     const activeFlag = document.querySelector(`.lang-flag[data-lang="${savedLanguage}"]`);
     if (activeFlag) {
         activeFlag.classList.add("active");

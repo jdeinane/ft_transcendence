@@ -112,9 +112,8 @@ export function setupTournament() {
 					winners.push(winner);
 					losers.push(loser);
 	
-					console.log(`🎯 Match terminé - ${winner} a gagné ! Score: ${p1Score} - ${p2Score}`);
+					console.log(`Game finished - ${winner} won ! Score: ${p1Score} - ${p2Score}`);
 	
-					// 🔥 Envoi des scores au backend
 					await sendTournamentEndGameRequest(p1Score, p2Score, winner);
 	
 					currentMatchIndex++;
@@ -209,7 +208,6 @@ export function setupTournament() {
 
 		navigate("/results");
 
-        // Reset du tournoi
         tournamentPlayers = [];
         tournamentMatches = [];
         losers = [];
@@ -230,7 +228,7 @@ async function sendTournamentEndGameRequest(player1Score, player2Score, winner) 
     let token = localStorage.getItem("access_token");
 
     if (!token) {
-        console.error("❌ Aucun token trouvé. Impossible d'enregistrer le match.");
+        console.error("No valid token found. Can't register match data.");
         return;
     }
 
@@ -241,8 +239,6 @@ async function sendTournamentEndGameRequest(player1Score, player2Score, winner) 
             score_player2: player2Score,
             winner: winner
         };
-
-        console.log("📤 Envoi de la requête end-tournament-game avec :", requestBody);
 
         const response = await fetch("http://127.0.0.1:4000/api/game/end-tournament-game/", {
             method: "POST",
@@ -255,12 +251,11 @@ async function sendTournamentEndGameRequest(player1Score, player2Score, winner) 
 
         const data = await response.json();
         if (response.ok) {
-            console.log("✅ Match de tournoi enregistré avec succès ! Nouveau nombre de parties :", data.number_of_games_played);
             await fetchUserProfile();
         } else {
-            console.error("❌ Erreur lors de l'enregistrement du match de tournoi :", data.error);
+            console.error("Error while saving tournament game :", data.error);
         }
     } catch (error) {
-        console.error("❌ Erreur lors de la requête :", error);
+        console.error("Error while fetching :", error);
     }
 }

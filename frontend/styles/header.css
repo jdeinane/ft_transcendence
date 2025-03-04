@@ -60,9 +60,9 @@ nav a {
     height: 30px;
     border-radius: 50%;
     border: 1px solid rgb(255, 255, 255);
-    margin-left: 8px; /* Espacement entre le texte et l’avatar */
+    margin-left: 8px;
     object-fit: cover;
-    vertical-align: middle; /* Aligne avec le texte */
+    vertical-align: middle;
 }
 
 

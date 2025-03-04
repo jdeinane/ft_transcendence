@@ -22,7 +22,7 @@ export function loadProfile() {
     const profileLastSeen = document.getElementById("profile-last-seen");
     const avatarImg = document.getElementById("avatar-img");
 
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatar/avataralien.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "avataralien.png";
     avatarImg.src = savedAvatar;
 
     if (profileUsername) profileUsername.textContent = user.username || "Unknown";
@@ -36,12 +36,11 @@ export function loadProfile() {
     }
 
 	document.getElementById("view-match-history").addEventListener("click", async () => {
-		console.log("📤 Fetching Match History before navigating...");
-		await fetchMatchHistory(); // Récupère d'abord les données
+		console.log("Fetching Match History before navigating...");
+		await fetchMatchHistory();
 		navigate("#/match-history");
 	
 		setTimeout(() => {
-			console.log("🚀 Loading Match History after navigation...");
 			loadMatchHistory();
 		}, 300);
 	});
@@ -64,7 +63,7 @@ export function loadEditProfile() {
     const saveAvatarBtn = document.getElementById("save-avatar-btn");
     const cancelEditBtn = document.getElementById("cancel-edit-btn");
 
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avataralien.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "avataralien.png";
     avatarImg.src = savedAvatar;
 
     avatarOptions.forEach((avatar) => {
@@ -88,11 +87,11 @@ export function loadEditProfile() {
 export async function saveAvatar(selectedAvatar) {
     let token = localStorage.getItem("access_token");
     if (!token) {
-        console.error("❌ Aucun token trouvé.");
+        console.error("Aucun token trouvé.");
         await refreshToken();
         token = localStorage.getItem("access_token");
         if (!token) {
-            console.error("❌ Impossible de récupérer un token valide.");
+            console.error("Impossible de récupérer un token valide.");
             logoutUser();
             return;
         }
@@ -101,7 +100,7 @@ export async function saveAvatar(selectedAvatar) {
     const avatarFilename = selectedAvatar.split("/").pop();
 
     try {
-        console.log("🖼️ Avatar sélectionné:", avatarFilename);
+        console.log("Selected avatar:", avatarFilename);
 
         const response = await fetch("http://127.0.0.1:4000/api/auth/update-avatar/", {
             method: "POST",
@@ -113,16 +112,16 @@ export async function saveAvatar(selectedAvatar) {
         });
 
         const data = await response.json();
-        console.log("📩 Réponse API:", data);
+        console.log("API Response:", data);
 
         if (response.ok) {
             await fetchUserProfile();
             navigate("#/profile");
         } else {
-            console.error("❌ Failed to update avatar:", data.error);
+            console.error("Failed to update avatar:", data.error);
         }
     } catch (error) {
-        console.error("❌ Error updating avatar:", error);
+        console.error("Error updating avatar:", error);
     }
 }
 
@@ -130,12 +129,10 @@ export async function saveAvatar(selectedAvatar) {
 export async function savePreferredLanguage() {
     let token = localStorage.getItem("access_token");
     if (!token) {
-        console.error("❌ Aucun token trouvé, impossible d'enregistrer la langue.");
         return;
     }
 
     const selectedLanguage = document.getElementById("language-select").value;
-    console.log(`🌍 Tentative d'enregistrement de la langue : ${selectedLanguage}`);
 
     try {
         const response = await fetch("http://127.0.0.1:4000/api/auth/set-language/", {
@@ -147,40 +144,37 @@ export async function savePreferredLanguage() {
             body: JSON.stringify({ language: selectedLanguage })
         });
 
-        console.log("📩 Réponse API :", response);
+        console.log("API Response :", response);
 
         if (response.ok) {
             localStorage.setItem("preferredLanguage", selectedLanguage);
             await loadLanguage(selectedLanguage);
-            console.log(`✅ Langue enregistrée avec succès : ${selectedLanguage}`);
+            console.log(`LANG successfully saved : ${selectedLanguage}`);
         } else {
-            console.error("❌ Erreur lors de l'enregistrement de la langue.");
             const errorData = await response.json();
-            console.error("Détails de l'erreur :", errorData);
+            console.error("Error :", errorData);
         }
     } catch (error) {
-        console.error("❌ Erreur lors de la requête :", error);
+        console.error("Error while fetching :", error);
     }
 }
 
 export function loadMatchHistory() {
-    console.log("🔄 Chargement du Match History...");
     
     setTimeout(() => {
         const historyContainer = document.getElementById("match-history");
         const backButton = document.getElementById("back-to-profile");
 
         if (!historyContainer) {
-            console.error("❌ Erreur: L'élément match-history est introuvable !");
             return;
         }
 
-        historyContainer.innerHTML = "<p>🔄 Chargement en cours...</p>";
+        historyContainer.innerHTML = "<p>Loading...</p>";
 
         const matchHistory = JSON.parse(localStorage.getItem("matchHistory")) || [];
         if (!Array.isArray(matchHistory) || matchHistory.length === 0) {
-            console.warn("⚠️ Aucun match trouvé ou format incorrect.");
-            historyContainer.innerHTML = "<p>Aucun match enregistré</p>";
+            console.warn("No data found for match history.");
+            historyContainer.innerHTML = "<p>No match registered yet</p>";
             return;
         }
 
@@ -201,7 +195,6 @@ export function loadMatchHistory() {
 
         if (backButton) {
             backButton.addEventListener("click", () => {
-                console.log("🔙 Bouton 'Back' cliqué, redirection vers #/profile");
                 navigate("#/profile");
             });
         }
@@ -210,7 +203,6 @@ export function loadMatchHistory() {
 
 window.addEventListener("hashchange", () => {
     if (window.location.hash === "#/match-history") {
-        console.log("🔄 Page Match History détectée, chargement des matchs...");
         setTimeout(loadMatchHistory, 300);
     }
 });

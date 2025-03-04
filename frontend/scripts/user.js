@@ -10,8 +10,8 @@ function showError(elementId, message) {
 	const errorElement = document.getElementById(elementId);
 	if (errorElement) {
 		errorElement.textContent = message;
-		errorElement.classList.add("shake"); // effet secousse
-		setTimeout(() => errorElement.classList.remove("shake"), 500); // enleve l'effet apres 0.5s
+		errorElement.classList.add("shake");
+		setTimeout(() => errorElement.classList.remove("shake"), 500);
 	}
   }
 
@@ -55,7 +55,7 @@ export async function createUser(username, password, email, confirmPassword) {
 
 export async function loginUser(username, password) {
     if (!username || !password) {
-        showError("login-error", "Tous les champs sont requis !");
+        showError("login-error", "All fields are required !");
         return false;
     }
 
@@ -72,21 +72,17 @@ export async function loginUser(username, password) {
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
 
-            console.log("✅ Connexion réussie, récupération du profil...");
-
-            // Vérification du 2FA après connexion
             if (data.otp_required) {
                 const otpCode = prompt("Entrez votre code 2FA :");
                 const verified = await verify2FA(otpCode);
 
                 if (!verified) {
-                    console.error("❌ Code 2FA invalide !");
+                    console.error("Invalid 2FA code");
                     logoutUser();
                     return false;
                 }
             }
 
-            // Récupération du profil utilisateur
             const profileResponse = await fetch(`${API_BASE_URL}/api/auth/me/`, {
                 method: "GET",
                 headers: {
@@ -99,11 +95,10 @@ export async function loginUser(username, password) {
                 const user = await profileResponse.json();
                 localStorage.setItem("loggedInUser", JSON.stringify(user));
 
-                // 🎯 Appliquer automatiquement la langue préférée
                 if (user.language) {
                     localStorage.setItem("preferredLanguage", user.language);
                     await loadLanguage(user.language);
-                    console.log(`🌍 Langue définie sur : ${user.language}`);
+                    console.log(`Langue definie sur : ${user.language}`);
                 }
             }
 			await fetchUserProfile();
@@ -116,12 +111,11 @@ export async function loginUser(username, password) {
 
 			return true;
         } else {
-            showError("login-error", data.error || "Identifiants invalides.");
+            showError("login-error", data.error || "Invalid credentials.");
             return false;
         }
     } catch (error) {
-        console.error("❌ Erreur de connexion :", error);
-        showError("login-error", "Une erreur s'est produite.");
+        showError("login-error", "An error has occured.");
         return false;
     }
 }
@@ -155,7 +149,7 @@ export async function fetchUserProfile() {
 
         if (response.ok) {
             const user = await response.json();
-            console.log("👤 Profil utilisateur récupéré :", user);
+            console.log("Profile user fetched :", user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
             localStorage.setItem("selectedAvatar", user.avatar_url.startsWith("http") ? user.avatar_url : `assets/avatars/${user.avatar_url}`);
 			document.getElementById("profile-games").textContent = user.number_of_games_played || 0;
@@ -177,7 +171,6 @@ export function getCurrentUser() {
 export async function refreshToken() {
     const refreshToken = localStorage.getItem("refresh_token");
     if (!refreshToken) {
-        console.error("❌ Aucun refresh token trouvé, impossible de renouveler l'accès.");
         logoutUser();
         return false;
     }
@@ -195,15 +188,13 @@ export async function refreshToken() {
 
         if (response.ok) {
             localStorage.setItem("access_token", data.access);
-            console.log("✅ Token rafraîchi avec succès !");
+            console.log("✅ Token successfully refreshed !");
             return true;
         } else {
-            console.error("❌ Échec du rafraîchissement du token :", data);
             logoutUser();
             return false;
         }
     } catch (error) {
-        console.error("❌ Erreur lors du rafraîchissement du token:", error);
         logoutUser();
         return false;
     }
