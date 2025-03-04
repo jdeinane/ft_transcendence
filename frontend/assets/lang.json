@@ -73,7 +73,10 @@
 	  "oauth-42-btn": "Login with 42",
 	  "match-history": "Match History",
 	  "back-to-profile": "Back",
-	  "loading": "Loading match history..."
+	  "loading": "Loading match history...",
+	  "2fa-required": "🔑 2FA Required",
+	  "enter-OTP": "Enter the code from your authenticator app.",
+	  "verify-otp": "Verify"
 
 	},
 	"fr": {
@@ -150,7 +153,10 @@
 	  "oauth-42-btn": "Connexion avec 42",
 	  "match-history": "Historique des Matchs",
 	  "back-to-profile": "Retour",
-	  "loading": "Chargement de l'historique des matchs..."
+	  "loading": "Chargement de l'historique des matchs...",
+	  "2fa-required": "🔑 2FA Requis",
+	  "enter-OTP": "Entrez le code de votre application d'authentification.",
+	  "verify-otp": "Vérifier"
 
 	},
 	"es": {
@@ -227,7 +233,10 @@
 	  "oauth-42-btn": "Iniciar sesión con 42",
 	  "match-history": "Historical de Partidos",
 	  "back-to-profile": "Atrás",
-	  "loading": "Cargando historial de partidos..."
+	  "loading": "Cargando historial de partidos...",
+	  "2fa-required": "🔑 Se Requiere 2FA",
+	  "enter-OTP": "Ingrese el código de su aplicación de autenticación.",
+	  "verify-otp": "Verificar"
 
 	}
   }

@@ -69,19 +69,13 @@ export async function loginUser(username, password) {
         const data = await response.json();
 
         if (response.ok) {
+			if (data.otp_required) {
+                showOtpInput(data.user_id);
+                return false;
+            }
+			
             localStorage.setItem("access_token", data.access);
             localStorage.setItem("refresh_token", data.refresh);
-
-            if (data.otp_required) {
-                const otpCode = prompt("Entrez votre code 2FA :");
-                const verified = await verify2FA(otpCode);
-
-                if (!verified) {
-                    console.error("Invalid 2FA code");
-                    logoutUser();
-                    return false;
-                }
-            }
 
             const profileResponse = await fetch(`${API_BASE_URL}/api/auth/me/`, {
                 method: "GET",
@@ -227,5 +221,55 @@ export async function fetchMatchHistory() {
         }
     } catch (error) {
         console.error("Error fetching match history:", error);
+    }
+}
+
+function showOtpInput(userId) {
+    const loginForm = document.getElementById("login-form");
+    loginForm.innerHTML = `
+        <h2 data-translate="2fa-required">🔑 2FA Required</h2>
+        <p data-translate="enter-OTP">Enter the code from your authenticator app.</p>
+        <input type="text" id="otp-code" placeholder="Enter OTP">
+        <button id="verify-otp" data-translate="verify-otp">Verify</button>
+    `;
+
+    document.getElementById("verify-otp").addEventListener("click", () => {
+        submitOtp(userId);
+    });
+}
+
+
+async function submitOtp(userId) {
+    const otpInput = document.getElementById("otp-code");
+    if (!otpInput) {
+        console.error("❌ Impossible de trouver l'input OTP !");
+        return;
+    }
+
+    const otp = otpInput.value;
+    console.log("Envoi du code OTP :", otp);  // DEBUG
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/api/auth/verify-2fa/`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ user_id: userId, otp_code: otp })
+        });
+
+        const data = await response.json();
+        console.log("Réponse API :", data);  // DEBUG
+
+        if (response.ok) {
+            alert("✅ 2FA validé avec succès !");
+            localStorage.setItem("access_token", data.access);
+            localStorage.setItem("refresh_token", data.refresh);
+            await fetchUserProfile();
+            navigate("#/profile");
+        } else {
+            console.warn("⚠ Code incorrect :", data.error);
+            alert("⚠ Code incorrect !");
+        }
+    } catch (error) {
+        console.error("Erreur lors de la vérification du 2FA :", error);
     }
 }

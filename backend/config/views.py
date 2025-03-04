@@ -331,6 +331,12 @@ def login_view(request):
 	user = authenticate(username=request.data["username"], password=request.data["password"])
 
 	if user is not None:
+		if user.is_2fa_enabled:
+			return Response({
+				'otp_required': True, 
+				'user_id': user.id
+			}, status=200)
+		print(f"🟡 Debug 2FA: is_2fa_enabled={user.is_2fa_enabled}, last_2fa_verified={user.last_2fa_verified}")
 		refresh = RefreshToken.for_user(user)
 		return Response({
 			'access': str(refresh.access_token),
@@ -406,7 +412,7 @@ def update_avatar(request):
 	Met à jour l'avatar de l'utilisateur authentifié.
 	"""
 	token = request.headers.get('Authorization', '').split(' ')[1]
-	print(f"🛠️ Token reçu dans Django: {token}")  # Debugging du token reçu
+	print(f"🛠️ Token reçu dans Django: {token}")
 
 	user = request.user
 	if not user.is_authenticated:
@@ -417,7 +423,6 @@ def update_avatar(request):
 
 	new_avatar_url = request.data.get("avatar_url")
 
-	# Vérifie si l'avatar est valide
 	valid_avatars = [
 		"avataralien.png",
 		"avatarboy1.png",
@@ -430,7 +435,6 @@ def update_avatar(request):
 		print("❌ Avatar non valide:", new_avatar_url)
 		return Response({"error": "Avatar non valide"}, status=400)
 
-	# Mettre à jour l'avatar dans la base de données
 	user.avatar_url = new_avatar_url
 	user.save()
 
@@ -447,16 +451,17 @@ class Enable2FAView(APIView):
 	def post(self, request):
 		user = request.user
 
-		print(f"🔍 Tentative d'activation 2FA pour {user.username}")  # DEBUG
+		print(f"🔍 Tentative d'activation 2FA pour {user.username}")
 
 		if user.two_factor_secret:
-			print("🚨 2FA déjà activé")  # DEBUG
+			print("🚨 2FA déjà activé")
 			return Response({"message": "Le 2FA est déjà activé."}, status=400)
 
+		user.is_2fa_enabled = True
 		user.two_factor_secret = generate_otp_secret()
 		user.save()
 
-		print("✅ 2FA activé avec succès !")  # DEBUG
+		print("✅ 2FA activé avec succès !")
 		return Response({"message": "2FA activé avec succès.", "otp_secret": user.two_factor_secret}, status=200)
 
 class Generate2FAView(APIView):
@@ -475,23 +480,42 @@ class Generate2FAView(APIView):
 			return Response({"error": "Une erreur est survenue. Contactez le support."}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
 class Verify2FAView(APIView):
-	"""
-	Vérifie un code OTP saisi par l'utilisateur
-	"""
-	permission_classes = [IsAuthenticated]
+    permission_classes = [AllowAny]
 
-	def post(self, request):
-		user = request.user
-		otp_code = request.data.get("otp_code")
+    def post(self, request):
+        try:
+            user_id = request.data.get("user_id")
+            otp_code = request.data.get("otp_code")
 
-		if not user.two_factor_secret:
-			return Response({"error": "Le 2FA n'est pas activé."}, status=400)
+            print(f"🔍 Vérification du 2FA pour user_id={user_id} avec code={otp_code}")  # Debug
 
-		totp = pyotp.TOTP(user.two_factor_secret)
-		if totp.verify(otp_code):
-			return Response({"message": "Vérification réussie."}, status=200)
-		else:
-			return Response({"error": "Code 2FA invalide."}, status=400)
+            if not user_id or not otp_code:
+                return Response({"error": "Utilisateur ou code OTP manquant"}, status=400)
+
+            user = User.objects.filter(id=user_id).first()
+            if not user:
+                print("❌ Utilisateur introuvable")
+                return Response({"error": "Utilisateur introuvable"}, status=404)
+
+            if not user.two_factor_secret:
+                print("🚨 2FA non activé pour cet utilisateur")
+                return Response({"error": "Le 2FA n'est pas activé."}, status=400)
+
+            totp = pyotp.TOTP(user.two_factor_secret)
+            if totp.verify(otp_code):
+                print("✅ 2FA validé, génération du token...")
+                refresh = RefreshToken.for_user(user)
+                return Response({
+                    "message": "Vérification réussie.",
+                    "access": str(refresh.access_token),
+                    "refresh": str(refresh),
+                }, status=200)
+            else:
+                print("❌ Code OTP invalide")
+                return Response({"error": "Code 2FA invalide."}, status=400)
+        except Exception as e:
+            print(f"❌ ERREUR SERVER: {e}")  # Log erreur serveur
+            return Response({"error": "Erreur serveur"}, status=500)
 
 class Disable2FAView(APIView):
 	"""
@@ -502,6 +526,7 @@ class Disable2FAView(APIView):
 	def post(self, request):
 		user = request.user
 		user.two_factor_secret = None
+		user.is_2fa_enabled = False
 		user.save()
 		return Response({"message": "2FA désactivé avec succès."}, status=200)
 	
