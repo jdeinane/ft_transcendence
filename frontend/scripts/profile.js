@@ -193,7 +193,7 @@ export function loadMatchHistory() {
             matchDiv.innerHTML = `
                 <p><strong>${match.game_type}</strong>
                 <p>Score: ${match.score_player1} - ${match.score_player2}</p>
-                <p>Gagnant: ${match.winner}</p>
+                <p data-translate="winner">Winner: ${match.winner}</p>
                 <p>Date: ${match.created_at}</p>
             `;
             historyContainer.appendChild(matchDiv);

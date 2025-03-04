@@ -142,7 +142,7 @@ export const routes = {
 					<button type="submit" data-translate="login">Login</button>
 					<p id="login-error" class="error-message"></p>
 			</form>
-			<button class="oauth-42-btn" onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
+			<button class="oauth-42-btn" data-translate="oauth-42-btn" onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
 				<img src="assets/icons/42.png" alt="42 Logo"> Login with 42
 			</button>
 		</div>
@@ -178,7 +178,7 @@ export const routes = {
 				<p><strong data-translate="last-seen">Last Seen:</strong> <span id="profile-last-seen">N/A</span></p>
 			</div>
 
-        	<button id="view-match-history"> View Match History</button>
+        	<button id="view-match-history" data-translate="view-match-history"> View Match History</button>
 
 			<div class="profile-buttons">
 				<button id="edit-profile-btn" data-translate="edit-profile">Edit Profile</button>
@@ -189,11 +189,11 @@ export const routes = {
 
 	"/match-history": `
 		<div class="match-history-page">
-			<h1>Match History</h1>
+			<h1 data-translate="match-history">Match History</h1>
 			<div id="match-history">
-				<p>Loading match history...</p>
+				<p data-translate="loading">Loading match history...</p>
 			</div>
-			<button id="back-to-profile" class="back-button">Back</button>
+			<button id="back-to-profile" data-translate="back-to-profile" class="back-button">Back</button>
 		</div>
 	`,
 
