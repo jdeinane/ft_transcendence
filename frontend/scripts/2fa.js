@@ -107,11 +107,11 @@ window.disable2FA = disable2FA;
 
 function isTokenExpired(token) {
     try {
-        const payload = JSON.parse(atob(token.split(".")[1]));  // Décoder le token JWT
-        const exp = payload.exp * 1000;  // Convertir en millisecondes
-        return Date.now() >= exp;  // Comparer la date actuelle
+        const payload = JSON.parse(atob(token.split(".")[1]));
+        const exp = payload.exp * 1000;
+        return Date.now() >= exp;
     } catch (e) {
-        return true;  // Considérer comme expiré si erreur
+        return true;
     }
 }
 
@@ -156,17 +156,13 @@ export async function check2FAStatus() {
 
         console.log("🔍 2FA activé :", is2FAEnabled);
 
-        // Vérifie si les boutons existent avant d'essayer de modifier leur style
         const activateBtn = document.getElementById("activate-2fa-btn");
         const deactivateBtn = document.getElementById("deactivate-2fa-btn");
 
         if (activateBtn && deactivateBtn) {
             activateBtn.style.display = is2FAEnabled ? "none" : "block";
             deactivateBtn.style.display = is2FAEnabled ? "block" : "none";
-        } else {
-            console.warn("⚠ Les boutons 2FA ne sont pas présents dans le DOM.");
-        }
-
+		}
     } catch (error) {
         console.error("❌ Erreur lors de la vérification du 2FA :", error);
     }

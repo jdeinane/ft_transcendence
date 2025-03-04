@@ -223,9 +223,6 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveLanguageBtn = document.getElementById("save-language-btn");
 
     if (saveLanguageBtn) {
-        console.log("✅ Bouton Save Language détecté !");
         saveLanguageBtn.addEventListener("click", savePreferredLanguage);
-    } else {
-        console.error("❌ Bouton Save Language NON détecté !");
-    }
+	}
 });

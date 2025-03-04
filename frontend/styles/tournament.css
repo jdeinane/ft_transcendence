@@ -9,23 +9,24 @@
     text-align: center;
 }
 
-#players-list {
-    list-style-type: none;
-    padding: 0;
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-}
-
 #players-list li {
-    background: #f5f5f5;
-    padding: 10px 20px;
+    background: linear-gradient(135deg, #ff7eb3, #ff758c);
+    color: white;
+    padding: 12px 24px;
     border-radius: 8px;
     font-size: 1.2rem;
-    min-width: 80px;
+    min-width: 100px;
     text-align: center;
+    font-weight: bold;
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s;
+    box-shadow: 3px 3px 10px rgba(255, 118, 136, 0.5);
 }
+
+#players-list li:hover {
+    transform: scale(1.1);
+    box-shadow: 5px 5px 15px rgba(255, 118, 136, 0.8);
+}
+
 
 #bracket-container {
     margin-top: 20px;
@@ -38,15 +39,6 @@
     align-items: center;
     gap: 10px;
     padding: 10px;
-}
-
-.match {
-    background: lightgray;
-    padding: 10px;
-    border-radius: 5px;
-    width: 250px;
-    text-align: center;
-    font-weight: bold;
 }
 
 #pong-container {
@@ -143,4 +135,51 @@
 #back-home:hover {
     background: #ddd;
     transform: scale(1.05);
+}
+
+.match {
+    background: rgba(131, 75, 174, 0.8);
+    color: rgb(255, 255, 255);
+    padding: 12px;
+    border-radius: 10px;
+    width: 280px;
+    text-align: center;
+    font-weight: bold;
+    border: 2px solid rgb(0, 0, 0);
+    box-shadow: 0 0 10px rgb(0, 0, 0);
+    transition: transform 0.2s;
+	opacity: 0;
+    transform: translateY(-10px);
+    animation: fadeIn 0.5s ease-in-out forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#start-next-ttt-match {
+    margin-top: 15px;
+    margin-bottom: 20px;
+}
+
+#current-match-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+
+#ttt-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    margin-top: 30px;
+    padding: 20px;
+    background: rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+    min-width: 320px;
 }

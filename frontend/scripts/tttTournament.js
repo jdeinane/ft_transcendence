@@ -231,7 +231,7 @@ function startTournamentTicTacToeGame(player1, player2, onGameEnd) {
     }
 
     gameContainer.innerHTML = `
-        <h2>🏆 ${player1} 🆚 ${player2}</h2>
+        <h2>${player1} vs ${player2}</h2>
         <div id="tic-tac-toe-board"></div>
     `;
 

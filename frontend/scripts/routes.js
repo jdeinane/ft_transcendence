@@ -143,7 +143,9 @@ export const routes = {
 				<button id="start-next-ttt-match" class="hidden" data-translate="start-match-button">Start next match!</button>
 			</div>
 
-			<div id="ttt-container" class="hidden"></div>
+			<div id="ttt-container" class="hidden">
+				<div id="tic-tac-toe-board"></div>
+			</div>
 		</div>
 	`,
 

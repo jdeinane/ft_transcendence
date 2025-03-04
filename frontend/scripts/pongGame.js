@@ -385,7 +385,7 @@ export function startTournamentPongGame(player1, player2, onGameEnd) {
 
     const gameContainer = document.getElementById("pong-container");
     gameContainer.innerHTML = `
-        <h2>🏆${player1} 🆚 ${player2}</h2>
+        <h2>${player1} vs ${player2}</h2>
         <canvas id="pong" width="800" height="400"></canvas>
     `;
 
