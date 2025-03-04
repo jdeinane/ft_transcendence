@@ -1,9 +1,14 @@
+import { startTicTacToeGame } from "./tttGame.js";
+import { navigate } from "./app.js";
+
 let tttTournamentPlayers = [];
 let tttTournamentMatches = [];
 let tttCurrentMatchIndex = 0;
 let tttLosers = [];
 let tttWinners = [];
 let tttFinalRanking = [];
+let tournamentPlayerMap = {};
+let tttSemiFinalists = [];
 
 export function setupTicTacToeTournament() {
     const joinButton = document.getElementById("join-ttt-tournament");
@@ -98,56 +103,109 @@ export function setupTicTacToeTournament() {
         if (tttCurrentMatchIndex < tttTournamentMatches.length) {
             const { player1, player2 } = tttTournamentMatches[tttCurrentMatchIndex];
 
-            setTimeout(() => {
-                startTournamentTicTacToeGame(player1, player2, (winner) => {
-                    let loser = player1 === winner ? player2 : player1;
-                    tttFinalRanking.unshift(winner);
-                    tttWinners.push(winner);
-                    tttLosers.push(loser);
-
-                    tttCurrentMatchIndex++;
-
-                    if (tttCurrentMatchIndex === tttTournamentMatches.length) {
-                        if (tttWinners.length === 2) {
-                            startFinalMatch();
-                        } else {
-                            declareWinner(tttFinalRanking[0]);
-                        }
-                    } else {
-                        setTimeout(startNextMatch, 1000);
-                    }
-                });
-            }, 500);
-        }
+			setTimeout(() => {
+				startTournamentTicTacToeGame(player1, player2, (winner) => {
+					let loser = player1 === winner ? player2 : player1;
+					tttFinalRanking.unshift(winner);
+					tttWinners.push(winner);
+					tttLosers.push(loser);
+					tttSemiFinalists.push(loser);
+	
+					tttCurrentMatchIndex++;
+	
+					if (tttCurrentMatchIndex === tttTournamentMatches.length) {
+						if (tttWinners.length === 2) {
+							startSemiFinalMatch();
+						}
+					} else {
+						setTimeout(startNextMatch, 1000);
+					}
+				});
+			}, 500);        }
     }
+	
+	function startSemiFinalMatch() {
+		if (tttSemiFinalists.length < 2) return;
+	
+		const [semi1, semi2] = tttSemiFinalists;
+		alert(`⚔️ Demi-finale : ${semi1} vs ${semi2}`);
+	
+		startTournamentTicTacToeGame(semi1, semi2, (winner) => {
+			let loser = semi1 === winner ? semi2 : semi1;
+	
+			tttFinalRanking.splice(2, 0, winner); 
+			tttFinalRanking.push(loser);
 
-    function startFinalMatch() {
-        if (tttWinners.length < 2)
-            return;
+			setTimeout(() => {
+				startFinalMatch(); 
+			}, 500);
+		});
+	}
+		
+	function startThirdPlaceMatch() {
+		if (tttLosers.length < 2) return;
+	
+		const [loser1, loser2] = tttLosers;
+		alert(`⚔️ Match pour la 3ème place : ${loser1} vs ${loser2}`);
+	
+		startTournamentTicTacToeGame(loser1, loser2, (winner) => {
+			let fourthPlace = loser1 === winner ? loser2 : loser1;
+	
+			tttFinalRanking.splice(2, 0, winner);
+			tttFinalRanking.push(fourthPlace);
+	
+			setTimeout(() => {
+				startFinalMatch();
+			}, 500);
+		});
+	}
+	
 
-        const [finalist1, finalist2] = tttWinners;
-        alert(`🏆 Grand Finale : ${finalist1} vs ${finalist2}`);
-
-        startTournamentTicTacToeGame(finalist1, finalist2, (winner) => {
-            let runnerUp = finalist1 === winner ? finalist2 : finalist1;
-
-            tttFinalRanking.unshift(winner);
-            tttFinalRanking.splice(1, 0, runnerUp);
-
-            setTimeout(() => {
-                declareWinner(winner);
-            }, 500);
-        });
-    }
+	function startFinalMatch() {
+		if (tttWinners.length < 2) return;
+	
+		const [finalist1, finalist2] = tttWinners;
+		alert(`🏆 Grand Finale : ${finalist1} vs ${finalist2}`);
+	
+		startTournamentTicTacToeGame(finalist1, finalist2, (winner) => {
+			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
+	
+			tttFinalRanking.unshift(winner);
+			tttFinalRanking.splice(1, 0, runnerUp)
+	
+			setTimeout(() => {
+				startThirdPlaceMatch();
+			}, 500);
+		});
+	}
+	
+	function startFinalMatch() {
+		if (tttWinners.length < 2) return;
+	
+		const [finalist1, finalist2] = tttWinners;
+		alert(`🏆 Grand Finale : ${finalist1} vs ${finalist2}`);
+	
+		startTournamentTicTacToeGame(finalist1, finalist2, (winner) => {
+			let runnerUp = finalist1 === winner ? finalist2 : finalist1;
+	
+			tttFinalRanking.unshift(winner);
+			tttFinalRanking.splice(1, 0, runnerUp);
+	
+			setTimeout(() => {
+				declareWinner(tttFinalRanking[0]);
+			}, 500);
+		});
+	}	
 
     function declareWinner(winner) {
         alert(`🏆 The tournament is over! The big winner is ${winner} !`);
+
+		tttFinalRanking = [...new Set(tttFinalRanking)];
 
         localStorage.setItem("finalRanking", JSON.stringify(tttFinalRanking));
 
         navigate("/results");
 
-        // Reset du tournoi
         tttTournamentPlayers = [];
         tttTournamentMatches = [];
         tttLosers = [];
@@ -161,4 +219,40 @@ export function setupTicTacToeTournament() {
         joinButton.disabled = false;
         playerNameInput.disabled = false;
     }
+}
+
+function startTournamentTicTacToeGame(player1, player2, onGameEnd) {
+    console.log(`🎮 Démarrage du match: ${player1} vs ${player2}`);
+
+    const gameContainer = document.getElementById("ttt-container");
+    if (!gameContainer) {
+        console.error("❌ Le container ttt-container est introuvable !");
+        return;
+    }
+
+    gameContainer.innerHTML = `
+        <h2>🏆 ${player1} 🆚 ${player2}</h2>
+        <div id="tic-tac-toe-board"></div>
+    `;
+
+    gameContainer.classList.remove("hidden");
+    gameContainer.style.display = "block";
+
+	tournamentPlayerMap = { "X": player1, "O": player2 };
+
+    function waitForBoard() {
+        const board = document.getElementById("tic-tac-toe-board");
+        if (board) {
+            console.log("🟢 tic-tac-toe-board détecté, démarrage du jeu !");
+            startTicTacToeGame(board, "tournament", (winner) => {
+				const realWinner = tournamentPlayerMap[winner] || "Unknown";
+                console.log(`🏆 Fin du match, vainqueur: ${realWinner}`);
+                onGameEnd(realWinner);
+            });
+        } else {
+            console.warn("⏳ tic-tac-toe-board non trouvé, on attend...");
+            requestAnimationFrame(waitForBoard);
+        }
+    }
+    requestAnimationFrame(waitForBoard);
 }

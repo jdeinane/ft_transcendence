@@ -55,18 +55,24 @@ export function setupTicTacToeGame() {
 	});
 }
 
-function startTicTacToeGame(boardElement, mode) {
+export function startTicTacToeGame(boardElement, mode, onGameEnd = null) {
     let board = ["", "", "", "", "", "", "", "", ""];
     let currentPlayer = "X";
     let gameActive = true;
 
-    const backButton = document.getElementById("back-to-mode-selection");
-    backButton.style.display = "block"; 
-    backButton.addEventListener("click", () => {
-        boardElement.style.display = "none";
-        backButton.style.display = "none";
-        document.querySelector(".mode-selection-container").style.display = "block";
-    });
+	const backButton = document.getElementById("back-to-mode-selection");
+
+	if (mode !== "tournament" && backButton) {
+		backButton.style.display = "block"; 
+		backButton.addEventListener("click", () => {
+			boardElement.style.display = "none";
+			backButton.style.display = "none";
+			document.querySelector(".mode-selection-container").style.display = "block";
+		});
+	} else if (mode !== "tournament") {
+		console.warn("⚠️ 'back-to-mode-selection' introuvable. Ignoré.");
+	}
+		
 
     function renderBoard() {
         boardElement.innerHTML = "";
@@ -123,38 +129,53 @@ function startTicTacToeGame(boardElement, mode) {
         return null;
     }
 
-    function checkWinner() {
-        let winner = getWinner(board);
-        if (winner) {
-            gameActive = false;
-            displayWinner(`${winner} wins!`, winner);
-            return true;
-        }
-        if (!board.includes("")) {
-            gameActive = false;
-            displayWinner("It's a draw...", "draw");
-            return true;
-        }
-        return false;
-    }
+	function checkWinner() {
+		let winner = getWinner(board);
+		if (winner) {
+			gameActive = false;
+			displayWinner(`${winner} wins!`, winner, mode, onGameEnd);
+			return true;
+		}
+		if (!board.includes("")) {
+			gameActive = false;
+			displayWinner("It's a draw...", "draw", mode, onGameEnd);
+			return true;
+		}
+		return false;
+	}
+	
 
-    function displayWinner(message, winner) {
+	function displayWinner(message, winner, mode = "solo", onGameEnd = null) {
 		sendTicTacToeEndGameRequest(winner);
-
-        const resultContainer = document.createElement("div");
-        resultContainer.classList.add("result-popup");
-        resultContainer.innerHTML = `
-            <p>${message}</p>
-            <button id="restart-game">Restart</button>
-        `;
-
-        document.body.appendChild(resultContainer);
-
-        document.getElementById("restart-game").addEventListener("click", () => {
-            document.body.removeChild(resultContainer);
-        	startTicTacToeGame(document.getElementById("tic-tac-toe-board"), "solo");
-        });
-    }
+	
+		const resultContainer = document.createElement("div");
+		resultContainer.classList.add("result-popup");
+	
+		if (mode === "tournament") {
+			console.log(`✅ Mode tournoi: Affichage du vrai gagnant ${winner}`);
+			resultContainer.innerHTML = `
+				<p>🏆 ${winner} wins the match!</p>
+				<button id="next-match">Next Match</button>
+			`;
+			document.body.appendChild(resultContainer);
+	
+			document.getElementById("next-match").addEventListener("click", () => {
+				document.body.removeChild(resultContainer);
+				if (onGameEnd) onGameEnd(winner);
+			});
+		} else {
+			resultContainer.innerHTML = `
+				<p>${message}</p>
+				<button id="restart-game">Restart</button>
+			`;
+			document.body.appendChild(resultContainer);
+	
+			document.getElementById("restart-game").addEventListener("click", () => {
+				document.body.removeChild(resultContainer);
+				startTicTacToeGame(document.getElementById("tic-tac-toe-board"), "solo");
+			});
+		}
+	}	
     renderBoard();
 }
 
@@ -178,7 +199,6 @@ async function fetchAIMove(board, difficulty = "medium") {
             body: JSON.stringify({ board, difficulty })
         });
 
-        // 🔴 Si le token a expiré (Erreur 401 Unauthorized)
         if (response.status === 401) {  
             console.warn("🔄 Token expiré, tentative de rafraîchissement...");
 
@@ -190,10 +210,8 @@ async function fetchAIMove(board, difficulty = "medium") {
                 return null;
             }
 
-            // 🔄 Récupérer le nouveau token après rafraîchissement
             token = localStorage.getItem("access_token");
 
-            // 🔄 Refaire la requête avec le token rafraîchi
             response = await fetch(`${API_BASE_URL}/api/game/tictactoe-ai-move/`, {
                 method: "POST",
                 headers: {
@@ -204,7 +222,6 @@ async function fetchAIMove(board, difficulty = "medium") {
             });
         }
 
-        // 🚨 Si toujours une erreur après le refresh, on affiche le message du backend
         if (!response.ok) {
             const errorData = await response.json();
             console.error(`❌ Erreur API Tic-Tac-Toe AI (Status ${response.status})`);
@@ -212,7 +229,6 @@ async function fetchAIMove(board, difficulty = "medium") {
             return null;
         }
 
-        // ✅ Si tout est bon, récupérer la réponse JSON et retourner le move
         const data = await response.json();
         console.log(`🤖 Backend AI Move: ${data.move}`);
         return data.move;
@@ -233,7 +249,7 @@ async function sendTicTacToeEndGameRequest(winner) {
 
     try {
         const requestBody = {
-            game_mode: "multiplayer",  // 🔹 Change en fonction du mode
+            game_mode: "multiplayer",
             score_player1: winner === "X" ? 1 : 0,
             score_player2: winner === "O" ? 1 : 0,
             is_draw: winner === "draw"
