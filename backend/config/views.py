@@ -1,7 +1,6 @@
 import json
 import requests
 import threading, random, time, pyotp
-from datetime import datetime, timedelta
 from rest_framework import views, viewsets, status
 from rest_framework.views import APIView
 from rest_framework.decorators import api_view
@@ -11,7 +10,7 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from rest_framework.decorators import api_view, permission_classes
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from config.models import MatchHistory, Tournament, PongGame, TicTacToeGame, UserTwoFactor
+from config.models import MatchHistory, Tournament, PongGame, TicTacToeGame, UserTwoFactor, User, Leaderboard
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
 from config.utils import generate_and_send_2fa_code, generate_otp_secret
@@ -24,6 +23,7 @@ from django.utils.translation import gettext as _
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth import get_user_model, authenticate
 from django.utils.timezone import localtime
+from django.db.models import F
 
 User = get_user_model()
 
@@ -123,6 +123,14 @@ def end_game(request):
             score_player2=score_player2
         )
 
+        leaderboard_entry, _ = Leaderboard.objects.get_or_create(user=player1)
+        leaderboard_entry.games_played = F("games_played") + 1
+        if winner == player1:
+            leaderboard_entry.games_won = F("games_won") + 1
+            leaderboard_entry.points = F("points") + 3 
+        leaderboard_entry.save()
+
+
         player1.increment_games_played()
 
         return Response({
@@ -177,6 +185,13 @@ def end_tic_tac_toe_game(request):
             score_player2=score_player2
         )
 
+        leaderboard_entry, _ = Leaderboard.objects.get_or_create(user=player1)
+        leaderboard_entry.games_played = F("games_played") + 1
+        if winner == player1:
+            leaderboard_entry.games_won = F("games_won") + 1
+            leaderboard_entry.points = F("points") + 3 
+        leaderboard_entry.save()
+
         player1.increment_games_played()
 
         return Response({
@@ -210,6 +225,14 @@ def end_tournament_game(request):
             score_player2=score_player2,
             winner=winner
         )
+
+        leaderboard_entry, _ = Leaderboard.objects.get_or_create(user=player1)
+        leaderboard_entry.games_played = F("games_played") + 1
+        if winner == player1:
+            leaderboard_entry.games_won = F("games_won") + 1
+            leaderboard_entry.points = F("points") + 3 
+        leaderboard_entry.save()
+
 
         player1.increment_games_played()
 
@@ -607,3 +630,45 @@ def match_history(request):
     } for match in matches]
 
     return Response({"matches": match_data}, status=200)
+
+@api_view(["GET"])
+@permission_classes([AllowAny])
+def get_leaderboard(request):
+    """
+    Retourne le classement des joueurs basé sur les points.
+    """
+    try:
+        top_players = Leaderboard.objects.select_related("user").order_by("-points")[:10]  # Top 10 joueurs
+        
+        leaderboard_data = [
+            {
+                "rank": idx + 1,
+                "username": player.user.username,
+                "score": player.points
+            }
+            for idx, player in enumerate(top_players)
+        ]
+        
+        return Response(leaderboard_data, status=200)
+    
+    except Exception as e:
+        print("❌ Erreur lors du chargement du leaderboard:", str(e))
+        return Response({"error": "Erreur serveur"}, status=500)
+
+@api_view(["GET"])
+@permission_classes([IsAuthenticated])
+def get_user_rank(request):
+    """
+    Retourne le classement d'un utilisateur spécifique.
+    """
+    try:
+        user_leaderboard = Leaderboard.objects.filter(user=request.user).first()
+        if not user_leaderboard:
+            return Response({"error": "Utilisateur non classé"}, status=404)
+
+        rank = Leaderboard.objects.filter(points__gt=user_leaderboard.points).count() + 1
+        return Response({"rank": rank, "points": user_leaderboard.points}, status=200)
+
+    except Exception as e:
+        print("❌ Erreur lors de la récupération du classement utilisateur:", str(e))
+        return Response({"error": "Erreur serveur"}, status=500)

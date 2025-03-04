@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework.routers import DefaultRouter
-from config.views import UserViewSet, pong_ai_move, tictactoe_ai_move, login_view, register, get_current_user, join_tournament, leave_tournament, list_tournaments, Generate2FAView, Enable2FAView, Disable2FAView, Verify2FAView, update_avatar, set_language, end_game, end_tic_tac_toe_game, end_tournament_game, oauth_callback, match_history
+from config.views import UserViewSet, get_leaderboard, get_user_rank, pong_ai_move, tictactoe_ai_move, login_view, register, get_current_user, join_tournament, leave_tournament, list_tournaments, Generate2FAView, Enable2FAView, Disable2FAView, Verify2FAView, update_avatar, set_language, end_game, end_tic_tac_toe_game, end_tournament_game, oauth_callback, match_history
 from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 
 router = DefaultRouter()
@@ -30,4 +30,6 @@ urlpatterns = [
 	path("api/game/end-tournament-game/", end_tournament_game, name="end_tournament_game"),
 	path('api/auth/42/callback/', oauth_callback, name='oauth_callback'),
 	path("api/match-history/", match_history, name="match_history"),
+    path("api/leaderboard/", get_leaderboard, name="get_leaderboard"),
+    path("api/user/rank/", get_user_rank, name="get_user_rank"),
 ]
