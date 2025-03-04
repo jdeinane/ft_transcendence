@@ -1,19 +1,47 @@
 import random
 
 class PongAI:
-	def __init__(self, difficulty="medium"):
-		self.difficulty = difficulty
+    def __init__(self):
+        self.target_y = None  
 
-	def move(self, ball_position, paddle_position, ball_speed=1):
-		reaction_speed = {"easy": 2, "medium": 4, "hard": 6}
-		speed = reaction_speed.get(self.difficulty, 4)
+    def predict_ball_position(self, ball_position, ball_speed, ball_direction, paddle_x, ball_x):
+        """
+        Prédit où la balle atteindra la zone du paddle
+        """
+        frames_until_paddle = (paddle_x - ball_x) / ball_speed if ball_speed != 0 else 1
+        predicted_y = ball_position + (ball_speed * ball_direction * frames_until_paddle)
 
-		predicted_position = ball_position + ball_speed * 10 
+        # Gérer les rebonds avec un terrain de 400px de hauteur
+        while predicted_y < 0 or predicted_y > 400:
+            if predicted_y < 0:
+                predicted_y = -predicted_y  # Rebond sur le haut
+            elif predicted_y > 400:
+                predicted_y = 800 - predicted_y  # Rebond sur le bas
+        
+        return predicted_y
 
-		if abs(predicted_position - paddle_position) > 10:
-			return 1 if predicted_position > paddle_position else -1
+    def move(self, ball_position, ball_speed, ball_direction, paddle_position, paddle_speed, ball_x, paddle_x):
+        """
+        Ajuste la raquette pour intercepter la balle à son point d'arrivée.
+        """
+        print(f"🔍 DEBUG AI: Ball={ball_position}, Paddle={paddle_position}, Speed={ball_speed}, Dir={ball_direction}")
 
-		return 0  
+        if not isinstance(ball_position, (int, float)) or not isinstance(paddle_position, (int, float)):
+            print("❌ Erreur: ball_position ou paddle_position invalide")
+            return 0
+
+        # Prédire où la balle atteindra la zone du paddle
+        self.target_y = self.predict_ball_position(ball_position, ball_speed, ball_direction, paddle_x, ball_x)
+
+        # Mouvement plus naturel : ne bouge que si nécessaire
+        if abs(self.target_y - paddle_position) > 10:
+            if self.target_y > paddle_position:
+                return 1  
+            else:
+                return -1  
+
+        return 0  
+
 
 class TicTacToeAI:
 	def __init__(self, difficulty="medium"):

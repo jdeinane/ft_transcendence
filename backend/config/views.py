@@ -3,7 +3,7 @@ import requests
 import threading, random, time, pyotp
 from rest_framework import views, viewsets, status
 from rest_framework.views import APIView
-from rest_framework.decorators import api_view
+from rest_framework.decorators import api_view, permission_classes
 from rest_framework.response import Response
 from rest_framework.generics import RetrieveAPIView
 from rest_framework.permissions import IsAuthenticated
@@ -245,22 +245,22 @@ def end_tournament_game(request):
         print("❌ Erreur lors de l'enregistrement du match de tournoi :", str(e))
         return Response({"error": "Erreur serveur"}, status=500)
 
-# API pour IA
+
 @api_view(["POST"])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])  # Assure que seul un utilisateur authentifié peut appeler cette API
 def pong_ai_move(request):
-	"""
-	Retourne le mouvement de l'IA en fonction de la position de la balle
-	"""
-	data = request.data
-	ball_position = data.get("ball_position")
-	paddle_position = data.get("paddle_position")
-	difficulty = data.get("difficulty", "medium")
+    print(f"🔍 Utilisateur authentifié : {request.user}")
 
-	ai = PongAI(difficulty)
-	move = ai.move(ball_position, paddle_position)
-	return Response({"move": move})
+    # Vérifie si l'utilisateur existe dans la base de données
+    if not request.user.is_authenticated:
+        return Response({"detail": "User not found", "code": "user_not_found"}, status=401)
 
+    # Log des données reçues pour debug
+    print(f"📡 Données reçues pour IA: {request.data}")
+
+    # Exemple de logique simple de mouvement de l’IA
+    ai_move = calculate_ai_move(request.data)
+    return Response({"move": ai_move})
 
 @api_view(["POST"])
 def tictactoe_ai_move(request):
