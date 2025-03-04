@@ -1,24 +1,15 @@
-let users = [
-    { username: "Alice", avatar: "assets/avatars/avatargirl1.png", blocked: false },
-    { username: "Bob", avatar: "assets/avatars/avatarboy1.png", blocked: false },
-    { username: "Charlie", avatar: "assets/avatars/avatargirl2.png", blocked: false }
-];
-
-let conversations = {}; //
 
 import { routes } from "./routes.js"
-import { loadLanguage, setupLanguageSelector } from "./language.js";
-import { translations } from "./language.js";
-import { createUser, loginUser, logoutUser, getCurrentUser } from "./user.js";
+import { loadLanguage, setupLanguageSelector, translations } from "./language.js";
+import { createUser, loginUser, refreshToken, getCurrentUser } from "./user.js";
 import { setupPongGame, handleModeSelection } from "./pongGame.js";
 import { setupTicTacToeGame } from "./tttGame.js";
+import { setupTicTacToeTournament } from "./tttTournament.js";
 import { initializeClock } from "./decorationClock.js";
 import { initializeCalendar } from "./decorationCalendar.js";
 import { setupTournament } from "./tournament.js";
 import { setupLeaderboard } from "./leaderboard.js";
-import { loadProfile, loadEditProfile } from "./profile.js";
-import { refreshToken } from "./user.js";
-import { savePreferredLanguage } from "./profile.js";
+import { loadProfile, loadEditProfile, savePreferredLanguage, loadMatchHistory } from "./profile.js";
   // NAVIGATION: Change dynamiquement le contenu de la page en fonction de la route
 
 export function navigate(path, addToHistory = true) {
@@ -84,8 +75,25 @@ export function navigate(path, addToHistory = true) {
 
 	if (cleanPath === "/profile") {
 		loadProfile();
+		loadMatchHistory();
 	}
-	  
+
+	if (cleanPath === "/match-history") {
+		setTimeout(() => {
+			const backButton = document.getElementById("back-to-profile");
+			if (backButton) {
+				console.log("✅ Ajout de l'événement au bouton 'Back'");
+				backButton.addEventListener("click", () => {
+					console.log("🔙 Retour vers le profil");
+					navigate("#/profile");
+				});
+			} else {
+				console.error("❌ Impossible de détecter le bouton 'Back'");
+			}
+		}, 500);
+	}
+	
+
 	if (cleanPath === "/edit-profile") {
 		loadEditProfile();
 	
@@ -156,6 +164,10 @@ export function navigate(path, addToHistory = true) {
 		setupTournament();
 	}
 
+	if (cleanPath === "/tic-tac-toe-tournament") {
+		setupTicTacToeTournament();
+	}
+	
 	if (cleanPath === "/results") {
 		const rankingList = document.getElementById("ranking-list");
 		const backButton = document.getElementById("back-to-home");
@@ -177,70 +189,6 @@ export function navigate(path, addToHistory = true) {
 	if (cleanPath === "/leaderboard") {
 		setupLeaderboard();
 	}
-
-	if (cleanPath === "/livechat") {
-		const chatMessages = document.getElementById("chat-messages");
-		const messageInput = document.getElementById("message-input");
-		const sendMessageBtn = document.getElementById("send-message-btn");
-		const userList = document.getElementById("user-list");
-	
-		let selectedUser = null;
-	
-		function renderUserList() {
-			userList.innerHTML = "";
-			users.forEach(user => {
-				if (!user.blocked) {
-					const li = document.createElement("li");
-					li.innerHTML = `<img src="${user.avatar}" /> ${user.username}`;
-					li.addEventListener("click", () => openChat(user.username));
-					userList.appendChild(li);
-				}
-			});
-		}
-	
-		function openChat(username) {
-			selectedUser = username;
-			chatMessages.innerHTML = "";
-			if (conversations[username]) {
-				conversations[username].forEach(msg => {
-					addMessage(msg.text, msg.sender);
-				});
-			}
-		}
-	
-		function addMessage(text, sender) {
-			const messageElement = document.createElement("div");
-			messageElement.classList.add("chat-message", sender);
-			messageElement.textContent = text;
-			chatMessages.appendChild(messageElement);
-			chatMessages.scrollTop = chatMessages.scrollHeight;
-	
-			if (!conversations[selectedUser]) {
-				conversations[selectedUser] = [];
-			}
-			conversations[selectedUser].push({ text, sender });
-		}
-	
-		sendMessageBtn.addEventListener("click", () => {
-			const message = messageInput.value.trim();
-			if (message !== "" && selectedUser) {
-				addMessage(message, "user");
-				messageInput.value = "";
-	
-				setTimeout(() => {
-					addMessage("This is a simulated response.", "bot");
-				}, 1000);
-			}
-		});
-	
-		messageInput.addEventListener("keypress", (e) => {
-			if (e.key === "Enter")
-				sendMessageBtn.click();
-		});
-	
-		renderUserList();
-	}
-	
 
 	const savedLanguage = localStorage.getItem("preferredLanguage") || "en";
 	loadLanguage(savedLanguage);
@@ -357,3 +305,38 @@ document.addEventListener("DOMContentLoaded", () => {
 
 
 setInterval(refreshToken, 15 * 60 * 1000);
+
+function handleOAuthCallback() {
+    const hashParams = new URLSearchParams(window.location.hash.split("?")[1]);
+    const accessToken = hashParams.get("access_token");
+    const userId = hashParams.get("user_id");
+    const username = hashParams.get("username");
+	const avatarUrl = hashParams.get("avatar_url");
+	const finalAvatar = avatarUrl && avatarUrl.startsWith("http") ? avatarUrl : `assets/avatars/${avatarUrl || "avataralien.png"}`;
+	const email = hashParams.get("email");
+    const language = hashParams.get("language") || "en";
+    const numberOfGamesPlayed = hashParams.get("number_of_games_played") || 0;
+    const lastSeen = hashParams.get("last_seen") || "N/A";
+
+    if (accessToken) {
+        localStorage.setItem("access_token", accessToken);
+        localStorage.setItem(
+			"loggedInUser",
+			JSON.stringify({ userId, username, avatarUrl, language, email, numberOfGamesPlayed, lastSeen }
+			));
+
+        console.log("🔑 Connexion réussie avec OAuth !");
+		localStorage.setItem("preferredLanguage", language);
+		const avatarFileName = avatarUrl.startsWith("http") ? avatarUrl : `assets/avatars/${avatarUrl}`;
+		localStorage.setItem("selectedAvatar", finalAvatar);
+		loadLanguage(language);
+        navigate("#/profile"); 
+    } else {
+        console.error("❌ Échec de la connexion OAuth");
+        navigate("#/login");
+    }
+}
+
+if (window.location.hash.startsWith("#/oauth-success")) {
+    handleOAuthCallback();
+}

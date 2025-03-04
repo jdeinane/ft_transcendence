@@ -5,7 +5,7 @@ from rest_framework_simplejwt.views import TokenRefreshView, TokenObtainPairView
 from config.views import (
     UserViewSet, register, set_language, pong_ai_move, tictactoe_ai_move, login_view, get_current_user, oauth_callback,
     create_tournament, join_tournament, leave_tournament, list_tournaments, get_tournament_details, end_tournament_game,
-    list_tournament_matches, submit_match_result, get_tournament_winner,
+    list_tournament_matches, submit_match_result, get_tournament_winner, get_leaderboard, get_user_rank, match_history,
     Generate2FAView, Enable2FAView, Disable2FAView, Verify2FAView, update_avatar, end_game, end_tic_tac_toe_game
 )
 
@@ -40,4 +40,8 @@ urlpatterns = [
 	path("api/tournaments/<int:tournament_id>/matches/", list_tournament_matches, name="list-matches"),
 	path("api/tournaments/match/result/", submit_match_result, name="submit-match-result"),
 	path("api/tournaments/<int:tournament_id>/winner/", get_tournament_winner, name="tournament-winner"),
+	path('api/auth/42/callback/', oauth_callback, name='oauth_callback'),
+	path("api/match-history/", match_history, name="match_history"),
+    path("api/leaderboard/", get_leaderboard, name="get_leaderboard"),
+    path("api/user/rank/", get_user_rank, name="get_user_rank"),
 ]

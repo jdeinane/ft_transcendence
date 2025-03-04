@@ -4,6 +4,7 @@
 	  "play": "play!",
 	  "profile": "profile",
 	  "about": "about",
+	  "login-header": "login",
 	  "welcome": "Welcome to ft_transcendence",
 	  "play-now": "Play now",
 	  "game-selection": "Choose your battle!",
@@ -25,7 +26,7 @@
 	  "matchmaking": "Matchmaking",
 	  "waiting-for-players": "Waiting for players...",
 	  "play-match": "Play Match",
-	  "login": "login",
+	  "login": "Login",
 	  "username": "Username",
 	  "password": "Password",
 	  "confirm-password": "Confirm Password",
@@ -67,13 +68,19 @@
 	  "cancel": "Cancel",
 	  "select-avatar": "Select an avatar: ",
 	  "select-language": "Choose your language:",
-	  "save-language": "Save language"
+	  "save-language": "Save language",
+	  "view-match-history": "View Match History",
+	  "oauth-42-btn": "Login with 42",
+	  "match-history": "Match History",
+	  "back-to-profile": "Back",
+	  "loading": "Loading match history..."
 
 	},
 	"fr": {
 	  "home": "accueil",
 	  "profile": "profil",
 	  "welcome": "Bienvenue sur ft_transcendance",
+	  "login-header": "se connecter",
 	  "play-now": "Jouer maintenant",
 	  "play": "jouer!",
 	  "game-selection": "Choisis un jeu!",
@@ -95,7 +102,7 @@
 	  "matchmaking": "Matchmaking",
 	  "waiting-for-players": "En attente de joueurs...",
 	  "play-match": "Jouer le match",
-	  "login": "se connecter",
+	  "login": "Se connecter",
 	  "username": "Nom d'utilisateur",
 	  "password": "Mot de passe",
 	  "confirm-password": "Confirmer le mot de passe",
@@ -138,7 +145,12 @@
 	  "cancel": "Annuler",
 	  "select-avatar": "Sélectionner un avatar: ",
 	  "select-language": "Choisir la langue: ",
-	  "save-language": "Enregistrer la langue"
+	  "save-language": "Enregistrer la langue",
+	  "view-match-history": "Voir l'Historique des Matchs",
+	  "oauth-42-btn": "Connexion avec 42",
+	  "match-history": "Historique des Matchs",
+	  "back-to-profile": "Retour",
+	  "loading": "Chargement de l'historique des matchs..."
 
 	},
 	"es": {
@@ -147,6 +159,7 @@
 	  "welcome": "Bienvenido a ft_transcendence",
 	  "play-now": "Jugar ahora",
 	  "play": "¡jugar!",
+	  "login-header": "iniciar sesión",
 	  "game-selection": "Elige tu batalla!",
 	  "pong": "Pong",
 	  "tic-tac-toe": "Tres en Raya",
@@ -166,7 +179,7 @@
 	  "matchmaking": "Emparejamiento",
 	  "waiting-for-players": "Esperando jugadores...",
 	  "play-match": "Jugar partido",
-	  "login": "iniciar sesión",
+	  "login": "Iniciar Sesión",
 	  "username": "Nombre de usuario",
 	  "password": "Contraseña",
 	  "confirm-password": "Confirmar contraseña",
@@ -209,7 +222,12 @@
 	  "cancel": "Cancelar",
 	  "select-avatar": "Selecciona un avatar: ",
 	  "select-language": "Elige el idioma: ",
-	  "save-language": "Guardar idioma"
+	  "save-language": "Guardar idioma",
+	  "view-match-history": "Ver Historical de Partidos",
+	  "oauth-42-btn": "Iniciar sesión con 42",
+	  "match-history": "Historical de Partidos",
+	  "back-to-profile": "Atrás",
+	  "loading": "Cargando historial de partidos..."
 
 	}
   }

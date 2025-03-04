@@ -1,26 +1,35 @@
 import { navigate } from "./app.js";
 
-export function setupLeaderboard() {
+export async function setupLeaderboard() {
     const leaderboardList = document.getElementById("leaderboard-list");
     const backButton = document.getElementById("back-to-home");
 
     if (!leaderboardList) return;
 
+    leaderboardList.innerHTML = "<tr><td colspan='3'>Loading...</td></tr>";
 
-    const leaderboard = JSON.parse(localStorage.getItem("leaderboard")) || {};
-    
-    const sortedPlayers = Object.entries(leaderboard).sort((a, b) => b[1] - a[1]);
+    try {
+        const response = await fetch("/api/leaderboard/");
+        if (!response.ok) throw new Error("Failed to fetch leaderboard");
+        
+        const leaderboard = await response.json();
+        
+        leaderboardList.innerHTML = ""; // Vider la table avant d'ajouter les données
+        
+        leaderboard.forEach(({ rank, username, score }) => {
+            const row = document.createElement("tr");
+            row.innerHTML = `
+                <td>${rank}</td>
+                <td>${username}</td>
+                <td>${score}</td>
+            `;
+            leaderboardList.appendChild(row);
+        });
 
-    leaderboardList.innerHTML = "";
-    sortedPlayers.forEach(([player, wins], index) => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-            <td>${index + 1}</td>
-            <td>${player}</td>
-            <td>${wins}</td>
-        `;
-        leaderboardList.appendChild(row);
-    });
+    } catch (error) {
+        console.error("Error loading leaderboard:", error);
+        leaderboardList.innerHTML = "<tr><td colspan='3'>Error loading leaderboard</td></tr>";
+    }
 
     backButton.addEventListener("click", () => {
         navigate("/");

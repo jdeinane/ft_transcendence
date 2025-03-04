@@ -124,6 +124,29 @@ export const routes = {
 		</div>
 	`,
 
+	"/tic-tac-toe-tournament": `
+		<h1 data-translate="tournament-title">🏆 Tic-Tac-Toe Tournament</h1>
+		<div id="tournament-container">
+			<div id="tournament-setup">
+				<input type="text" id="tournament-player-name" placeholder="Enter alias" data-translate="tournament-placeholder">
+				<button id="join-ttt-tournament" data-translate="join-button">Join</button>
+			</div>
+
+			<div id="players-list-container">
+				<h2 data-translate="players-title"> Players: </h2>
+				<ul id="players-list"></ul>
+			</div>
+
+			<div id="bracket-container" class="hidden">
+				<h2 data-translate="bracket-title">Bracket</h2>
+				<div id="bracket"></div>
+				<button id="start-next-ttt-match" class="hidden" data-translate="start-match-button">Start next match!</button>
+			</div>
+
+			<div id="ttt-container" class="hidden"></div>
+		</div>
+	`,
+
 	"/results": `
 		<div class="results-container">
 			<h1 data-translate="results-title"> Tournament Final Ranking</h1>
@@ -142,8 +165,8 @@ export const routes = {
 					<button type="submit" data-translate="login">Login</button>
 					<p id="login-error" class="error-message"></p>
 			</form>
-			<button onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
-				Login with 42
+			<button class="oauth-42-btn" data-translate="oauth-42-btn" onclick="window.location.href='https://api.intra.42.fr/oauth/authorize?client_id=u-s4t2ud-909db2fd934587c7acecac5dab184a8690b3b53de09c75d5470664a4c766c572&redirect_uri=http://localhost:4000/api/auth/42/callback/&response_type=code'">
+				<img src="assets/icons/42.png" alt="42 Logo"> Login with 42
 			</button>
 		</div>
 	<p class="no-account-text" data-translate="no-account">No account?</p>
@@ -176,11 +199,24 @@ export const routes = {
 				<p><strong data-translate="email">Email:</strong> <span id="profile-email">Loading...</span></p>
 				<p><strong data-translate="number-of-games">Games Played:</strong> <span id="profile-games">0</span></p>
 				<p><strong data-translate="last-seen">Last Seen:</strong> <span id="profile-last-seen">N/A</span></p>
-				</div>
+			</div>
+
+        	<button id="view-match-history" data-translate="view-match-history"> View Match History</button>
+
 			<div class="profile-buttons">
 				<button id="edit-profile-btn" data-translate="edit-profile">Edit Profile</button>
 				<button id="logout-btn" data-translate="logout">Logout</button>
 			</div>
+		</div>
+	`,
+
+	"/match-history": `
+		<div class="match-history-page">
+			<h1 data-translate="match-history">Match History</h1>
+			<div id="match-history">
+				<p data-translate="loading">Loading match history...</p>
+			</div>
+			<button id="back-to-profile" data-translate="back-to-profile" class="back-button">Back</button>
 		</div>
 	`,
 

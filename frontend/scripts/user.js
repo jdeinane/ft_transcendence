@@ -1,7 +1,7 @@
 import { navigate, updateNavigation } from "./app.js"
 import { translate } from "./language.js";
 import { verify2FA } from "./2fa.js";
-import { loadProfile } from "./profile.js";
+import { loadMatchHistory, loadProfile } from "./profile.js";
 import { loadLanguage } from "./language.js";
 
 const API_BASE_URL = "http://127.0.0.1:4000";
@@ -41,6 +41,7 @@ export async function createUser(username, password, email, confirmPassword) {
 		const data = await response.json();
 		if (response.ok) {
 			alert("Account successfully created!");
+			localStorage.setItem("selectedAvatar", "assets/avatars/avataralien.png");
 			navigate("#/login");
 		} else {
 			showError("signup-error", data.error || "Registration failed");
@@ -105,10 +106,15 @@ export async function loginUser(username, password) {
                     console.log(`🌍 Langue définie sur : ${user.language}`);
                 }
             }
-			
 			await fetchUserProfile();
-            navigate("#/profile");
-            return true;
+
+			setTimeout(async () => {
+				await fetchMatchHistory();
+				loadMatchHistory();
+				navigate("#/profile");
+			}, 500);
+
+			return true;
         } else {
             showError("login-error", data.error || "Identifiants invalides.");
             return false;
@@ -124,6 +130,7 @@ export function logoutUser() {
     localStorage.removeItem("access_token");
     localStorage.removeItem("refresh_token");
     localStorage.removeItem("loggedInUser");
+	localStorage.removeItem("selectedAvatar")
     navigate("#/");
     updateNavigation();
 }
@@ -150,7 +157,7 @@ export async function fetchUserProfile() {
             const user = await response.json();
             console.log("👤 Profil utilisateur récupéré :", user);
             localStorage.setItem("loggedInUser", JSON.stringify(user));
-			localStorage.setItem("selectedAvatar", `assets/avatars/${user.avatar_url}`);
+            localStorage.setItem("selectedAvatar", user.avatar_url.startsWith("http") ? user.avatar_url : `assets/avatars/${user.avatar_url}`);
 			document.getElementById("profile-games").textContent = user.number_of_games_played || 0;
 			loadProfile();
             updateNavigation();
@@ -199,5 +206,35 @@ export async function refreshToken() {
         console.error("❌ Erreur lors du rafraîchissement du token:", error);
         logoutUser();
         return false;
+    }
+}
+
+export async function fetchMatchHistory() {
+    let token = localStorage.getItem("access_token");
+    if (!token) {
+        console.warn("No access token found, cannot fetch match history.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://127.0.0.1:4000/api/match-history/", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`,
+                "Content-Type": "application/json"
+            }
+        });
+
+        if (response.ok) {
+            const data = await response.json();
+            console.log("📜 Match history retrieved:", data.matches);
+            localStorage.setItem("matchHistory", JSON.stringify(data.matches));
+
+			loadMatchHistory();
+        } else {
+            console.warn("Failed to fetch match history");
+        }
+    } catch (error) {
+        console.error("Error fetching match history:", error);
     }
 }

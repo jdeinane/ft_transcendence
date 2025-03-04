@@ -33,6 +33,26 @@ export function setupTicTacToeGame() {
     gameSelectionButton.addEventListener("click", () => {
         navigate("#/game");
     });
+
+
+	document.querySelectorAll(".mode-button").forEach(button => {
+		button.addEventListener("click", () => {
+			document.querySelectorAll(".mode-button").forEach(btn => btn.classList.remove("active-mode"));
+			button.classList.add("active-mode");
+			selectedMode = button.dataset.mode;
+		});
+	});
+	
+	document.getElementById("start-ttt-game").addEventListener("click", () => {
+		if (selectedMode === "tournament") {
+			navigate("#/tic-tac-toe-tournament");
+		} else {
+			const board = document.getElementById("tic-tac-toe-board");
+			board.style.display = "grid"; 
+			document.querySelector(".mode-selection-container").style.display = "none";
+			startTicTacToeGame(board, selectedMode);
+		}
+	});
 }
 
 function startTicTacToeGame(boardElement, mode) {

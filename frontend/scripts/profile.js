@@ -1,7 +1,7 @@
 import { navigate } from "./app.js";
 import { refreshToken } from "./user.js";
 import { check2FAStatus } from "./2fa.js"
-import { fetchUserProfile } from "./user.js";
+import { fetchUserProfile, fetchMatchHistory } from "./user.js";
 import { loadLanguage } from "./language.js";
 
 export function getCurrentUser() {
@@ -16,15 +16,13 @@ export function loadProfile() {
         return;
     }
 
-
-    // Vérifier si les éléments existent avant de les modifier
     const profileUsername = document.getElementById("profile-username");
     const profileEmail = document.getElementById("profile-email");
     const profileGames = document.getElementById("profile-games");
     const profileLastSeen = document.getElementById("profile-last-seen");
     const avatarImg = document.getElementById("avatar-img");
 
-    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatars/avataralien.png";
+    const savedAvatar = localStorage.getItem("selectedAvatar") || "assets/avatar/avataralien.png";
     avatarImg.src = savedAvatar;
 
     if (profileUsername) profileUsername.textContent = user.username || "Unknown";
@@ -36,6 +34,18 @@ export function loadProfile() {
     if (editProfileBtn) {
         editProfileBtn.addEventListener("click", () => navigate("#/edit-profile"));
     }
+
+	document.getElementById("view-match-history").addEventListener("click", async () => {
+		console.log("📤 Fetching Match History before navigating...");
+		await fetchMatchHistory(); // Récupère d'abord les données
+		navigate("#/match-history");
+	
+		setTimeout(() => {
+			console.log("🚀 Loading Match History after navigation...");
+			loadMatchHistory();
+		}, 300);
+	});
+	
 
     const logoutBtn = document.getElementById("logout-btn");
     if (logoutBtn) {
@@ -153,8 +163,61 @@ export async function savePreferredLanguage() {
     }
 }
 
+export function loadMatchHistory() {
+    console.log("🔄 Chargement du Match History...");
+    
+    setTimeout(() => {
+        const historyContainer = document.getElementById("match-history");
+        const backButton = document.getElementById("back-to-profile");
+
+        if (!historyContainer) {
+            console.error("❌ Erreur: L'élément match-history est introuvable !");
+            return;
+        }
+
+        historyContainer.innerHTML = "<p>🔄 Chargement en cours...</p>";
+
+        const matchHistory = JSON.parse(localStorage.getItem("matchHistory")) || [];
+        if (!Array.isArray(matchHistory) || matchHistory.length === 0) {
+            console.warn("⚠️ Aucun match trouvé ou format incorrect.");
+            historyContainer.innerHTML = "<p>Aucun match enregistré</p>";
+            return;
+        }
+
+        console.log("✅ Match history chargé :", matchHistory);
+        historyContainer.innerHTML = "";
+
+        matchHistory.forEach(match => {
+            const matchDiv = document.createElement("div");
+            matchDiv.classList.add("match-entry");
+            matchDiv.innerHTML = `
+                <p><strong>${match.game_type}</strong>
+                <p>Score: ${match.score_player1} - ${match.score_player2}</p>
+                <p data-translate="winner">Winner: ${match.winner}</p>
+                <p>Date: ${match.created_at}</p>
+            `;
+            historyContainer.appendChild(matchDiv);
+        });
+
+        if (backButton) {
+            backButton.addEventListener("click", () => {
+                console.log("🔙 Bouton 'Back' cliqué, redirection vers #/profile");
+                navigate("#/profile");
+            });
+        }
+    }, 300);
+}
+
+window.addEventListener("hashchange", () => {
+    if (window.location.hash === "#/match-history") {
+        console.log("🔄 Page Match History détectée, chargement des matchs...");
+        setTimeout(loadMatchHistory, 300);
+    }
+});
+
 
 document.addEventListener("DOMContentLoaded", check2FAStatus);
+
 
 document.addEventListener("DOMContentLoaded", () => {
     const saveLanguageBtn = document.getElementById("save-language-btn");

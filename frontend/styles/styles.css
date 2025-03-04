@@ -162,3 +162,29 @@ button:hover {
 .result-popup button:hover {
     background: #ffaa00;
 }
+
+.oauth-42-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: black;
+    color: black;
+    font-size: 18px;
+    font-weight: bold;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+    width: 100%;
+}
+
+.oauth-42-btn img {
+    width: 24px;
+    height: 24px;
+    margin-right: 10px;
+}
+
+.oauth-42-btn:hover {
+    background-color: #294866;
+}
