@@ -9,6 +9,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from rest_framework_simplejwt.tokens import RefreshToken, UntypedToken
 from django.conf import settings
 from django.db import connections
+from django.db.models import Count
 from django.utils import timezone
 from django.utils.timezone import localtime
 from django.http import JsonResponse
@@ -17,7 +18,7 @@ from django.contrib.auth import get_user_model, authenticate
 from config.models import Tournament, TournamentPlayer, TournamentMatch, PongGame, TicTacToeGame, UserTwoFactor
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer, TournamentSerializer, TournamentMatchSerializer
 from config.ai import PongAI, TicTacToeAI
-from config.utils import generate_and_send_2fa_code, generate_otp_secret
+from config.utils import generate_and_send_2fa_code, generate_otp_secret, generate_tournament_bracket, generate_next_round
 from django.utils.translation import activate
 from django.utils.translation import gettext as _
 
@@ -165,17 +166,17 @@ def set_language(request):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def create_tournament(request):
-	"""
-	Permet à un utilisateur authentifié de créer un tournoi.
-	"""
 	serializer = TournamentSerializer(data=request.data, context={"request": request})
     
 	if serializer.is_valid():
-		serializer.save(creator=request.user)
+		tournament = serializer.save(creator=request.user)
+
+		# le créateur automatiquement un joueur
+		TournamentPlayer.objects.create(tournament=tournament, player=request.user)
+
 		return Response(serializer.data, status=status.HTTP_201_CREATED)
     
 	return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
 
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
@@ -185,19 +186,16 @@ def join_tournament(request, tournament_id):
 	if tournament.status != "Pending":
 		return Response({"error": "Le tournoi a déjà commencé."}, status=status.HTTP_400_BAD_REQUEST)
 
-	if tournament.players.count() >= tournament.max_players:
-		return Response({"error": "Le tournoi est complet."}, status=status.HTTP_400_BAD_REQUEST)
-
-	# Vérifier si l'utilisateur est déjà inscrit
 	if TournamentPlayer.objects.filter(tournament=tournament, player=request.user).exists():
-		return Response({"error": "Vous êtes déjà inscrit."}, status=status.HTTP_400_BAD_REQUEST)
+		return Response({"error": "Vous êtes déjà inscrit à ce tournoi."}, status=status.HTTP_400_BAD_REQUEST)
 
 	TournamentPlayer.objects.create(tournament=tournament, player=request.user)
 
+	# Vérifier si le tournoi atteint le max de joueurs
 	if tournament.players.count() == tournament.max_players:
+		generate_tournament_bracket(tournament)
 		tournament.status = "Ongoing"
 		tournament.save()
-		generate_tournament_bracket(tournament)  # Génère les matchs
 
 	return Response({"message": "Inscription réussie !"}, status=status.HTTP_200_OK)
 
@@ -231,6 +229,7 @@ def list_tournaments(request):
     return Response(serializer.data)
 
 @api_view(["GET"])
+@permission_classes([AllowAny])
 def list_tournament_matches(request, tournament_id):
 	matches = TournamentMatch.objects.filter(tournament_id=tournament_id).order_by("round_number")
 	serializer = TournamentMatchSerializer(matches, many=True)
@@ -239,6 +238,9 @@ def list_tournament_matches(request, tournament_id):
 @api_view(["POST"])
 @permission_classes([IsAuthenticated])
 def submit_match_result(request):
+	"""
+	Enregistre le résultat d'un match et génère la phase suivante si nécessaire.
+	"""
 	match = get_object_or_404(TournamentMatch, id=request.data.get("match_id"))
 
 	if match.winner:
@@ -251,12 +253,10 @@ def submit_match_result(request):
 	match.loser = loser
 	match.save()
 
-	# Vérifier si le tournoi est terminé
-	remaining_players = match.tournament.players.exclude(id__in=match.tournament.matches.values_list("loser_id", flat=True))
-	if remaining_players.count() == 1:
-		match.tournament.declare_winner(remaining_players.first())
+	# vérifier si le tournoi est terminé ou s'il faut générer la finale
+	generate_next_round(match.tournament)
 
-	return Response({"message": "Résultat enregistré !"}, status=status.HTTP_200_OK)
+	return Response({"message": f"Résultat enregistré ! {winner.username} remporte le match."}, status=status.HTTP_200_OK)
 
 @api_view(["GET"])
 def get_tournament_winner(request, tournament_id):

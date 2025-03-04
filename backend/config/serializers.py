@@ -56,8 +56,12 @@ class TournamentMatchSerializer(serializers.ModelSerializer):
 		fields = ["id", "tournament", "round_number", "player1", "player2", "winner", "created_at"]
 
 class TournamentSerializer(serializers.ModelSerializer):
-	creator = serializers.StringRelatedField(read_only=True)
+	creator = serializers.StringRelatedField(read_only=True)  
+	players = serializers.SerializerMethodField()
 
 	class Meta:
 		model = Tournament
-		fields = ["id", "name", "max_players", "is_public", "status", "creator"]
+		fields = ["id", "name", "max_players", "is_public", "status", "creator", "players"]
+
+	def get_players(self, obj):
+		return [player.username for player in obj.players.all()]

@@ -1,12 +1,13 @@
 import os
 from pathlib import Path
+from datetime import timedelta, datetime
 
 # --------------------
 # Base settings
 # --------------------
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'change_me')
-DEBUG = os.getenv('DJANGO_DEBUG', 'True') == 'True'
+DEBUG = False
 
 ALLOWED_HOSTS = [
     "localhost", "127.0.0.1",
@@ -143,6 +144,14 @@ AUTH_USER_MODEL = "config.User"
 # Default Auto Field
 # --------------------
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# --------------------
+# JWT Settings
+# --------------------
+SIMPLE_JWT = {
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=4),
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=14),
+}
 
 # --------------------
 # Languages
