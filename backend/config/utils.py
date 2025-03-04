@@ -6,6 +6,7 @@ from django.contrib.auth import get_user_model
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+import os
 
 User = get_user_model()
 
@@ -72,8 +73,8 @@ def send_2fa_email(user, otp):
 	# Configuration
 	smtp_server = "smtp.gmail.com"  # SMTP de Gmail
 	smtp_port = 587  # Port pour TLS
-	email_sender = "tanota.dev@gmail.com"
-	email_password = "viuv obzx aigm manu"
+	email_sender = os.getenv("EMAIL_HOST_USER")
+	email_password = os.getenv("EMAIL_HOST_PASSWORD")
 	email_receiver = user.email
 	# Création du message
 	msg = MIMEMultipart()
