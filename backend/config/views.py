@@ -13,7 +13,7 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from config.models import MatchHistory, Tournament, PongGame, TicTacToeGame, UserTwoFactor, User, Leaderboard
 from config.serializers import UserSerializer, Enable2FASerializer, Verify2FASerializer
 from config.ai import PongAI, TicTacToeAI
-from config.utils import generate_and_send_2fa_code, generate_otp_secret
+from config.utils import generate_and_send_2fa_code, generate_otp_secret, send_2fa_email
 from django.http import JsonResponse
 from django.conf import settings
 from django.db import connections
@@ -332,11 +332,17 @@ def login_view(request):
 
 	if user is not None:
 		if user.is_2fa_enabled:
+			totp = pyotp.TOTP(user.two_factor_secret)
+			otp = totp.now()
+			send_2fa_email(user, otp)
+
 			return Response({
 				'otp_required': True, 
 				'user_id': user.id
 			}, status=200)
+		
 		print(f"🟡 Debug 2FA: is_2fa_enabled={user.is_2fa_enabled}, last_2fa_verified={user.last_2fa_verified}")
+		
 		refresh = RefreshToken.for_user(user)
 		return Response({
 			'access': str(refresh.access_token),
@@ -461,6 +467,9 @@ class Enable2FAView(APIView):
 		user.two_factor_secret = generate_otp_secret()
 		user.save()
 
+		totp = pyotp.TOTP(user.two_factor_secret)
+		otp = totp.now()
+		send_2fa_email(user, otp)
 		print("✅ 2FA activé avec succès !")
 		return Response({"message": "2FA activé avec succès.", "otp_secret": user.two_factor_secret}, status=200)
 
@@ -505,6 +514,8 @@ class Verify2FAView(APIView):
             if totp.verify(otp_code):
                 print("✅ 2FA validé, génération du token...")
                 refresh = RefreshToken.for_user(user)
+                user.register_2fa_success()
+
                 return Response({
                     "message": "Vérification réussie.",
                     "access": str(refresh.access_token),

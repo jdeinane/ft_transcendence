@@ -3,6 +3,9 @@ import pyotp
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth import get_user_model
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 User = get_user_model()
 
@@ -61,3 +64,33 @@ def send_welcome_email(user):
         [user.email],
         fail_silently=False,
     )
+
+def send_2fa_email(user, otp):
+	"""
+	Envoie le code 2FA par email.
+	"""
+	# Configuration
+	smtp_server = "smtp.gmail.com"  # SMTP de Gmail
+	smtp_port = 587  # Port pour TLS
+	email_sender = "tanota.dev@gmail.com"
+	email_password = "viuv obzx aigm manu"
+	email_receiver = user.email
+	# Création du message
+	msg = MIMEMultipart()
+	msg["From"] = email_sender
+	msg["To"] = email_receiver
+	msg["Subject"] = "Votre code 2FA"
+	# Corps du message
+	message = f"Voici votre code de vérification 2FA : {otp}"
+	msg.attach(MIMEText(message, "plain"))
+
+	try:
+		# Connexion au serveur SMTP
+		server = smtplib.SMTP(smtp_server, smtp_port)
+		server.starttls()  # Sécurisation de la connexion
+		server.login(email_sender, email_password)  # Connexion
+		server.sendmail(email_sender, email_receiver, msg.as_string())  # Envoi de l'email
+		server.quit()  # Fermeture de la connexion
+		print("Email envoyé avec succès !")
+	except Exception as e:
+		print(f"Erreur lors de l'envoi : {e}")

@@ -75,7 +75,7 @@
 	  "back-to-profile": "Back",
 	  "loading": "Loading match history...",
 	  "2fa-required": "🔑 2FA Required",
-	  "enter-OTP": "Enter the code from your authenticator app.",
+	  "enter-OTP": "Enter the code received by email.",
 	  "verify-otp": "Verify"
 
 	},
@@ -155,7 +155,7 @@
 	  "back-to-profile": "Retour",
 	  "loading": "Chargement de l'historique des matchs...",
 	  "2fa-required": "🔑 2FA Requis",
-	  "enter-OTP": "Entrez le code de votre application d'authentification.",
+	  "enter-OTP": "Entrez le code reçu par email.",
 	  "verify-otp": "Vérifier"
 
 	},
@@ -235,7 +235,7 @@
 	  "back-to-profile": "Atrás",
 	  "loading": "Cargando historial de partidos...",
 	  "2fa-required": "🔑 Se Requiere 2FA",
-	  "enter-OTP": "Ingrese el código de su aplicación de autenticación.",
+	  "enter-OTP": "Introduce el código recibido por correo electrónico.",
 	  "verify-otp": "Verificar"
 
 	}
